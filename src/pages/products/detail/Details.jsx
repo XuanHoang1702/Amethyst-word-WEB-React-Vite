@@ -13,6 +13,7 @@ const Details = () => {
     oldPrice: 300,
     rating: 4.5,
     reviews: 405,
+    discount: 40,
     description: 'Chất liệu mềm, thoáng mát, phù hợp với mọi lứa tuổi.',
     longDescription:
       'Chiếc áo thun One Life là lựa chọn hoàn hảo cho những ai yêu thích phong cách tối giản mà vẫn muốn nổi bật. Được làm từ chất liệu cotton cao cấp, áo mang lại cảm giác thoải mái và thoáng khí suốt cả ngày. Thiết kế hiện đại kết hợp cùng gam màu trung tính giúp bạn dễ dàng phối đồ trong mọi hoàn cảnh.'
@@ -33,8 +34,7 @@ const Details = () => {
   ];
     return (
         <div className="justify-center items-center max-w-full p-20">
-            {/* Chi tiết sản phẩm */}
-            <ProductDetail
+        <ProductDetail
         product={product}
         colors={colors}
         sizes={sizes}
@@ -43,8 +43,6 @@ const Details = () => {
             <div className="justify-center items-center max-w-full">
                 <ProductReviews product={product.id}  />
             </div>
-
-            {/* Sản phẩm liên quan */}
             <div className="flex justify-center items-center w-full">
                 <ProductRelateList  product={product.id} />
             </div>

@@ -55,7 +55,7 @@ const ProductDetail = ({ product, colors, sizes, productThumbnails }) => {
             <div className="flex items-center mb-4">
               <span className="text-2xl font-bold mr-3">${product.price}</span>
               <span className="text-xl text-gray-400 line-through mr-3">${product.oldPrice}</span>
-              <span className="bg-red-100 text-red-600 px-2 py-1 text-sm rounded">-40%</span>
+              <span className="bg-red-100 text-red-600 px-2 py-1 text-sm rounded">-{product.discount}%</span>
             </div>
 
             <p className="text-gray-600 mb-6">{product.description}</p>
