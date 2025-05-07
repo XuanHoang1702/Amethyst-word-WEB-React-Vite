@@ -29,7 +29,6 @@ const BlogFooter = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="text-lg font-bold mb-4">Liên Kết Nhanh</h3>
             <ul className="space-y-2">
@@ -54,7 +53,6 @@ const BlogFooter = () => {
             </ul>
           </div>
 
-          {/* Categories */}
           <div>
             <h3 className="text-lg font-bold mb-4">Danh Mục</h3>
             <ul className="space-y-2">

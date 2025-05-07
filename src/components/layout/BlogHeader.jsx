@@ -10,7 +10,6 @@ const BlogHeader = () => {
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
               <img src="/api/placeholder/40/40" alt="Logo" className="h-8 w-8 mr-2" />
