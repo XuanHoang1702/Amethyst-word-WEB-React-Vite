@@ -68,8 +68,6 @@ const Navbar = () => {
             />
             <FaSearch className="absolute left-3 top-2 text-black" />
           </div>
-
-
           <button onClick={toggleSearch} className="md:hidden text-black">
             <FaSearch className="text-xl" />
           </button>
