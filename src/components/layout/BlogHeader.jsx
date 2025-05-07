@@ -17,7 +17,6 @@ const BlogHeader = () => {
             </Link>
           </div>
           
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             <Link to="/" className="text-gray-600 hover:text-blue-500 font-medium">Trang chủ</Link>
             <Link to="/blog" className="text-blue-500 font-medium">Blog</Link>
@@ -26,7 +25,6 @@ const BlogHeader = () => {
             <Link to="/contact" className="text-gray-600 hover:text-blue-500 font-medium">Liên hệ</Link>
           </nav>
           
-          {/* Desktop Right Icons */}
           <div className="hidden md:flex items-center space-x-6">
             <button
               className="text-gray-600 hover:text-blue-500"
@@ -50,7 +48,6 @@ const BlogHeader = () => {
             </div>
           </div>
           
-          {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-4">
             <button
               className="text-gray-600 hover:text-blue-500"
@@ -71,7 +68,6 @@ const BlogHeader = () => {
           </div>
         </div>
         
-        {/* Search Bar */}
         {isSearchOpen && (
           <div className="py-3 border-t border-gray-100">
             <div className="relative">

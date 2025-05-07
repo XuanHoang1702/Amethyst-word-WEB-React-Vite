@@ -32,7 +32,6 @@ const Footer = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
-                    {/* Giới thiệu về chúng tôi */}
                     <div>
                         <h3 className="font-bold mb-4">VỀ CHÚNG TÔI</h3>
                         <p className="text-white">
@@ -40,7 +39,7 @@ const Footer = () => {
                         </p>
                     </div>
 
-                    {/* Đăng ký nhận tin */}
+    
                     <div>
                         <h3 className="font-bold mb-4">ĐĂNG KÝ NHẬN TIN</h3>
                         <input 
@@ -51,15 +50,12 @@ const Footer = () => {
                         <button className="bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-800">ĐĂNG KÝ</button>
                     </div>
 
-                    {/* Hỗ trợ khách hàng */}
                     <div>
                         <h3 className="font-bold mb-4">HỖ TRỢ KHÁCH HÀNG</h3>
                         <p className="text-white">
                             Nếu cần hỗ trợ, vui lòng liên hệ đội ngũ chăm sóc khách hàng của chúng tôi. Chúng tôi luôn sẵn sàng giúp bạn giải đáp mọi thắc mắc hoặc vấn đề.
                         </p>
                     </div>
-
-                    {/* Thông tin liên hệ */}
                     <div>
                         <h3 className="font-bold mb-4">THÔNG TIN LIÊN HỆ</h3>
                         <div className="text-white">
@@ -70,8 +66,6 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Phần bản quyền */}
                 <div className="border-t border-gray-700 mt-8 pt-4 text-center">
                     <p className="text-white">© 2024 Bản quyền thuộc về Free Html Templates</p>
                 </div>
