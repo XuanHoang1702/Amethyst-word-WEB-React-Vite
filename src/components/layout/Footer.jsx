@@ -3,7 +3,6 @@ import { FaEnvelope, FaFacebookF, FaHeadset, FaInstagram, FaMapMarkerAlt, FaPhon
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
-    // Dữ liệu giả lập cho thông tin liên hệ
     const contactInfo = {
         address: '123 Đường Chính, Thành phố, Quốc gia',
         phone: '+123 456 7890',
@@ -14,7 +13,7 @@ const Footer = () => {
     return (
         <footer className="bg-[#6666e5] text-white py-10 ">
             <div className="container mx-auto px-4">
-                {/* Phần các biểu tượng mạng xã hội */}
+   
                 <div className="flex justify-center mb-6">
                     <a href="#" className="mx-2 text-white hover:text-purple-700"><FaFacebookF /></a>
                     <a href="#" className="mx-2 text-white hover:text-purple-700"><FaTwitter /></a>
@@ -22,7 +21,6 @@ const Footer = () => {
                     <a href="#" className="mx-2 text-white hover:text-purple-700"><FaYoutube /></a>
                 </div>
 
-                {/* Phần menu giống Navbar */}
                 <div className="flex justify-center mb-6 space-x-6 uppercase font-medium text-sm">
                     <Link to="/" className="hover:text-purple-700">Trang Chủ</Link>
                     <Link to="/man" className="hover:text-purple-700">Nam</Link>
@@ -33,7 +31,6 @@ const Footer = () => {
                     <Link to="/contact" className="hover:text-purple-700">Liên Hệ</Link>
                 </div>
 
-                {/* Phần nội dung chính của footer */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
                     {/* Giới thiệu về chúng tôi */}
                     <div>
