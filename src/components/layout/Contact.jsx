@@ -18,11 +18,9 @@ const ContactPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý gửi form - ở đây chỉ hiển thị trạng thái thành công
     console.log("Form submitted:", formData);
     setIsSubmitted(true);
     setTimeout(() => setIsSubmitted(false), 3000);
-    // Reset form
     setFormData({
       name: "",
       email: "",
