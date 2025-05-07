@@ -34,7 +34,7 @@
 //   return (
 //     <div
 //       className="bg-white p-7 rounded-lg shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300 ease-out cursor-pointer"
-//       onClick={() => navigate(`/details/${product.id}`)}
+//       onClick={() => navigate(`/details/${product.producT_ID}`)}
 //     >
 //       <img
 //         src={product.src}
@@ -62,15 +62,15 @@
 
 // export default ProductCard;
 import React from 'react';
-import { FaHeart, FaShoppingCart, FaEye, FaStar } from 'react-icons/fa';
+import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import {formatPrice} from '../../../utils/formatUtils';
+import { formatPrice } from '../../../utils/formatUtils';
 
 /**
  * Render stars based on rating
  * @param {Object} props
  * @param {Object} props.product -
- * @param {number} props.product.id 
+ * @param {number} props.product.producT_ID 
  * @param {string} props.product.name
  * @param {number} props.product.price 
  * @param {string} props.product.src 
@@ -99,10 +99,10 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
       <div className="relative">
         <img
-          src={product.src}
+          src={`https://imgur.com/${product.imagE_NAME}`}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
-          onClick={() => navigate(`/details/${product.id}`)}
+          onClick={() => navigate(`/details/${product.producT_ID}`)}
         />
 
         {/* Badge mới */}
@@ -129,7 +129,7 @@ const ProductCard = ({ product }) => {
           </button>
           <button
             className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
-            onClick={() => navigate(`/details/${product.id}`)}
+            onClick={() => navigate(`/details/${product.producT_ID}`)}
           >
             <FaEye size={18} />
           </button>
@@ -139,9 +139,9 @@ const ProductCard = ({ product }) => {
       <div className="p-4">
         <h3
           className="font-medium text-gray-800 hover:text-blue-500 transition-colors mb-1 cursor-pointer text-center"
-          onClick={() => navigate(`/details/${product.id}`)}
+          onClick={() => navigate(`/details/${product.producT_ID}`)}
         >
-          {product.name}
+          {product.producT_NAME}
         </h3>
 
         {/* Đánh giá sao */}
@@ -156,15 +156,15 @@ const ProductCard = ({ product }) => {
             {product.salePrice ? (
               <>
                 <span className="font-medium text-red-500">{formatPrice(product.salePrice)}</span>
-                <span className="text-gray-400 text-sm line-through ml-1">{formatPrice(product.price)}</span>
+                <span className="text-gray-400 text-sm line-through ml-1">{formatPrice(product.producT_PRICE)}</span>
               </>
             ) : (
-              <span className="font-medium text-gray-800">{formatPrice(product.price)}</span>
+              <span className="font-medium text-gray-800">{formatPrice(product.producT_PRICE)}</span>
             )}
           </div>
           <button
             className="text-blue-500 text-sm hover:underline"
-            onClick={() => navigate(`/details/${product.id}`)}
+            onClick={() => navigate(`/details/${product.producT_ID}`)}
           >
             Mua ngay
           </button>
