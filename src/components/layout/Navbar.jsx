@@ -57,12 +57,6 @@ const Navbar = () => {
               </Link>
             ))
           )}
-          {/* /* <Link to="/" className="text-white hover:text-black">Trang Chủ</Link>
-          <Link to="/woman" className="text-white hover:text-black">Nữ</Link>
-          <Link to="/man" className="text-white hover:text-black">Nam</Link>
-          <Link to="/shop"  className="text-white hover:text-black">Các Sản phẩm</Link>
-          <Link to="/blog" className="text-white hover:text-black">Blog</Link>
-          <Link to="/contact" className="text-white hover:text-black">Liên Hệ</Link>  */}
         </div>
 
         <div className="flex items-center space-x-4 md:space-x-5 overflow-x-auto scrollbar-hide max-w-full md:max-w-none">
