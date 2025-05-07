@@ -1,15 +1,15 @@
 /** @file src/components/product/bestSeller/BestSellerCard.jsx */
 import React from 'react';
 // import { FaHeart, FaShoppingCart } from 'react-icons/fa';
-import { FaHeart, FaShoppingCart, FaStar, FaStarHalfAlt, FaRegStar, FaEye} from 'react-icons/fa';
+import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import {formatPrice} from '../../../utils/formatUtils';
+import { formatPrice } from '../../../utils/formatUtils';
 
 /**
  * BestSellerCard component for displaying a best-selling product
  * @param {Object} props
  * @param {Object} props.product -
- * @param {number} props.product.id 
+ * @param {number} props.product.producT_ID 
  * @param {string} props.product.name
  * @param {number} props.product.price 
  * @param {string} props.product.src 
@@ -34,24 +34,17 @@ const SaleCard = ({ product }) => {
   const navigate = useNavigate();
 
   return (
-   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
+  <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-            src={product.src}
+            src={`https://imgur.com/${product.imagE_NAME}`}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
-            onClick={() => navigate(`/details/${product.id}`)}
+            onClick={() => navigate(`/details/${product.producT_ID}`)}
           />
   
-          {/* Badge mới */}
-          {product.isNew && (
-            <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
-              MỚI
-            </div>
-          )}
-  
           {/* Badge giảm giá */}
-          {product.salePrice && (
+          {product.discounT_PERCENT && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
               GIẢM GIÁ
             </div>
@@ -67,7 +60,7 @@ const SaleCard = ({ product }) => {
             </button>
             <button
               className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
-              onClick={() => navigate(`/details/${product.id}`)}
+              onClick={() => navigate(`/details/${product.producT_ID}`)}
             >
               <FaEye size={18} />
             </button>
@@ -77,38 +70,38 @@ const SaleCard = ({ product }) => {
         <div className="p-4">
           <h3
             className="font-medium text-gray-800 hover:text-blue-500 transition-colors mb-1 cursor-pointer text-center"
-            onClick={() => navigate(`/details/${product.id}`)}
+            onClick={() => navigate(`/details/${product.producT_ID}`)}
           >
-            {product.name}
+            {product.producT_NAME}
           </h3>
   
           {/* Đánh giá sao */}
           <div className="flex items-center justify-center mb-2">
-            {renderStars(product.rating)}
+            {renderStars(product.rate)}
             <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
           </div>
   
           {/* Giá sản phẩm */}
           <div className="flex items-center justify-between">
             <div>
-              {product.salePrice ? (
+              {product.discounT_PERCENT ? (
                 <>
-                  <span className="font-medium text-red-500">{formatPrice(product.salePrice)}</span>
-                  <span className="text-gray-400 text-sm line-through ml-1">{formatPrice(product.price)}</span>
+                  <span className="font-medium text-red-500">{formatPrice(product.producT_PRICE * product.discounT_PERCENT / 100)}</span>
+                  <span className="text-gray-400 text-sm line-through ml-1">{formatPrice(product.producT_PRICE)}</span>
                 </>
               ) : (
-                <span className="font-medium text-gray-800">{formatPrice(product.price)}</span>
+                <span className="font-medium text-gray-800">{formatPrice(product.producT_PRICE)}</span>
               )}
             </div>
             <button
               className="text-blue-500 text-sm hover:underline"
-              onClick={() => navigate(`/details/${product.id}`)}
+              onClick={() => navigate(`/details/${product.producT_ID}`)}
             >
               Mua ngay
             </button>
           </div>
         </div>
-      </div>
+  </div>
   );
 };
 

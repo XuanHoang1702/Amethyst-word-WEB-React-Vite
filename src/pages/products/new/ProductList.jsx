@@ -10,7 +10,6 @@ const ProductList = () => {
         try {
             const response = await ProductNew(12);
             setNewProducts(response);
-            console.log('New products:', response);
         } catch (error) {
             console.error('Error fetching new products:', error);
         }
