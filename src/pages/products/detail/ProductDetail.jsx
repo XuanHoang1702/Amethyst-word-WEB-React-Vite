@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Star, ChevronDown, Minus, Plus, MoreHorizontal } from 'lucide-react';
 import img1 from '../../../assets/image/p01.jpg'
 import img2 from '../../../assets/image/p02.jpg'
+
+
 export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('Lớn');
