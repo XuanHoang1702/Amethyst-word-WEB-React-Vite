@@ -3,12 +3,39 @@ import { API_URL } from './Api';
 
 export const login = async (useR_EMAIL, useR_PASSWORD) => {
     try {
-        const response = await axios.post(`${API_URL}/User/Login`, {
+        const response = await axios.post(`${API_URL}/api/User/Login`, {
             useR_EMAIL,
             useR_PASSWORD
         });
+        localStorage.setItem("token", response.data.token);
         return response.data;
     } catch (error) {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 };
+
+export const GetInformation = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/User/Information`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const GetAddress = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Address/GetById`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}

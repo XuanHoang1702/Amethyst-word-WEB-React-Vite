@@ -1,16 +1,31 @@
-import { useState } from 'react';
-import ProfileSidebar from './ProfileSidebar';
-import ProfileTab from './tabs/ProfileTab';
+import { useEffect, useState } from 'react';
 import OrdersTab from '../../pages/Profile/tabs/Order/OrdersTab';
-import WishlistTab from './tabs/WishlistTab';
-import { HistoryTab, PaymentTab } from './tabs/EmtyStateTabs';
-import SettingsTab from './tabs/SettingsTab';
 import { userData } from '../../service/profileData';
+import { GetInformation } from '../../service/UserService';
+import ProfileSidebar from './ProfileSidebar';
+import { HistoryTab, PaymentTab } from './tabs/EmtyStateTabs';
+import ProfileTab from './tabs/ProfileTab';
+import SettingsTab from './tabs/SettingsTab';
+import WishlistTab from './tabs/WishlistTab';
 
 export default function FashionUserProfile() {
   const [activeTab, setActiveTab] = useState('profile');
   const [user, setUser] = useState(userData);
+  const token = localStorage.getItem("token");
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userInfo = await GetInformation(token);
+        setUser(userInfo.user_Inf);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUserData();
+  }
+  , []);
+  
   // Render tab content theo activeTab
   const renderTabContent = () => {
     switch (activeTab) {

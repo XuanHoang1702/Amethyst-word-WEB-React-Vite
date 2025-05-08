@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
-import { Star, Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Star } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { GetProductDetail } from '../../../service/ProductService';
 
-const ProductDetail = ({ product, colors, sizes, productThumbnails }) => {
+const ProductDetail = ({ id }) => {
+  const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState('Lớn');
-  const [selectedColor, setSelectedColor] = useState('olive');
-  const [mainImage, setMainImage] = useState(productThumbnails[0].image);
+
+  //const [mainImage, setMainImage] = useState(productThumbnails[0].image);
+
+  const fecthProductDetail = async () => {
+    try {
+      const response = await GetProductDetail(id);
+      setProduct(response.data);
+      console.log("Product: ", response.data);
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
+  };
+  useEffect(() => {
+    fecthProductDetail();
+  }, [id]);
+
 
   const renderStars = (rating) => {
     const stars = [];
@@ -21,9 +36,9 @@ const ProductDetail = ({ product, colors, sizes, productThumbnails }) => {
     return stars;
   };
 
-  const handleThumbnailClick = (thumbnailImage) => {
-    setMainImage(thumbnailImage);
-  };
+  // const handleThumbnailClick = (thumbnailImage) => {
+  //   setMainImage(thumbnailImage);
+  // };
 
   return (
     <div className="bg-white">
@@ -31,10 +46,10 @@ const ProductDetail = ({ product, colors, sizes, productThumbnails }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col md:flex-row">
             <div className="bg-gray-100 rounded-lg p-4 flex-1 flex items-center justify-center mb-4 md:mb-0 ">
-              <img src={mainImage} alt="Sản phẩm" className="w-full h-full object-cover" />
+              <img src={`https://imgur.com/${product.imagE_NAME}`} alt="Sản phẩm" className="w-full h-full object-cover" />
             </div>
             <div className="flex items-center flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 ml-3 p-1">
-              {productThumbnails.map((thumbnail) => (
+              {/* {productThumbnails.map((thumbnail) => (
                 <div
                   key={thumbnail.id}
                   className="border border-gray-200 p-2 rounded cursor-pointer hover:border-black transition-colors"
@@ -42,39 +57,39 @@ const ProductDetail = ({ product, colors, sizes, productThumbnails }) => {
                 >
                   <img src={thumbnail.image} alt={thumbnail.alt} className="w-16 h-20 object-cover md:w-24 md:h-28" />
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
           <div>
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+            <h1 className="text-3xl font-bold mb-2">{product.producT_NAME}</h1>
             <div className="flex items-center mb-4">
-              <div className="flex">{renderStars(product.rating)}</div>
+              <div className="flex">{renderStars(product.rate)}</div>
               <span className="ml-2 text-gray-500">{product.reviews}</span>
             </div>
 
             <div className="flex items-center mb-4">
-              <span className="text-2xl font-bold mr-3">${product.price}</span>
+              <span className="text-2xl font-bold mr-3">${product.producT_PRICE}</span>
               <span className="text-xl text-gray-400 line-through mr-3">${product.oldPrice}</span>
               <span className="bg-red-100 text-red-600 px-2 py-1 text-sm rounded">-{product.discount}%</span>
             </div>
 
-            <p className="text-gray-600 mb-6">{product.description}</p>
+            <p className="text-gray-600 mb-6">{product.producT_DESCRIPTION}</p>
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-3">Chọn màu</h3>
               <div className="flex space-x-3">
-                {colors.map((color) => (
+                {/* {colors.map((color) => (
                   <button
                     key={color.id}
                     className={`w-8 h-8 rounded-full ${color.color} ${selectedColor === color.id ? 'ring-2 ring-offset-2 ring-black' : ''}`}
                     onClick={() => setSelectedColor(color.id)}
                   />
-                ))}
+                ))} */}
               </div>
             </div>
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-3">Chọn kích cỡ</h3>
               <div className="flex space-x-3">
-                {sizes.map((size) => (
+                {/* {sizes.map((size) => (
                   <button
                     key={size}
                     className={`px-4 py-2 border rounded-md ${
@@ -84,7 +99,7 @@ const ProductDetail = ({ product, colors, sizes, productThumbnails }) => {
                   >
                     {size}
                   </button>
-                ))}
+                ))} */}
               </div>
             </div>
             <div className="flex space-x-4">
