@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import bg1 from '../../assets/image/phoi-do-voi-mau-tim-pastel_672db6744d5545cfb058f353237dd4d4.webp';
 import { login } from "../../service/UserService";
+
 const Login = ()=>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,26 +14,29 @@ const Login = ()=>{
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
-    try{
-      const response = await login(email, password)
-      console.log("Đăng Nhập thành công :", response);
-      alert("Đăng Nhập Thành Công");
-      navigate('/home');
-
-
-    }catch(error){
-      console.log("Đăng Nhập thất bại:", error);
+  
+    try {
+      await login(email, password);
+      toast.success("Đăng nhập thành công!", {
+        autoClose: 1000,
+      });
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000);
+    } catch (error) {
+      toast.error("Sai tài khoản hoặc mật khẩu", {
+        autoClose: 3000,
+      });
       setError(error.message || "Đăng nhập thất bại!");
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
+  
 
   const handleGoogleLoginSuccess = (credentialResponse) => {
     console.log("Google Login Success:", credentialResponse);

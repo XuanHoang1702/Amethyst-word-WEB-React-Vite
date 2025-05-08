@@ -48,3 +48,19 @@ export const ProductSaleNoPaging = async (input) => {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
+export const GetProductDetail = async (input) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Product/Detail`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                input: input,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}

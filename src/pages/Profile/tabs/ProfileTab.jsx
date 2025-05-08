@@ -1,6 +1,28 @@
-import { User, Mail, Phone, MapPin, Edit2 } from 'lucide-react';
+import { Edit2, Mail, MapPin, Phone, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { GetAddress } from '../../../service/UserService';
 
 export default function ProfileTab({ user }) {
+  const token = localStorage.getItem("token");
+  const [address, setAddress] = useState([]);
+
+  const fecthAddress = async () => {
+    try {
+      const response = await GetAddress(token);
+      setAddress(response);
+      console.log("Address data:", response);
+    }
+    catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
+
+  useEffect(() => {
+    fecthAddress();
+  }, []);
+
+
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-slate-800 mb-6">Thông tin cá nhân</h1>
@@ -21,7 +43,7 @@ export default function ProfileTab({ user }) {
                 <label className="block text-sm font-medium text-slate-500 mb-1">Họ và tên</label>
                 <div className="flex items-center">
                   <User size={16} className="text-slate-400 mr-2" />
-                  <p className="text-slate-700">{user.name}</p>
+                  <p className="text-slate-700">{user.USER_FIRST_NAME} {user.USER_LAST_NAME}</p>
                 </div>
               </div>
               
@@ -29,7 +51,7 @@ export default function ProfileTab({ user }) {
                 <label className="block text-sm font-medium text-slate-500 mb-1">Email</label>
                 <div className="flex items-center">
                   <Mail size={16} className="text-slate-400 mr-2" />
-                  <p className="text-slate-700">{user.email}</p>
+                  <p className="text-slate-700">{user.USER_EMAIL}</p>
                 </div>
               </div>
             </div>
@@ -39,7 +61,7 @@ export default function ProfileTab({ user }) {
                 <label className="block text-sm font-medium text-slate-500 mb-1">Số điện thoại</label>
                 <div className="flex items-center">
                   <Phone size={16} className="text-slate-400 mr-2" />
-                  <p className="text-slate-700">{user.phone}</p>
+                  <p className="text-slate-700">{user.USER_PHONE}</p>
                 </div>
               </div>
               
@@ -47,7 +69,11 @@ export default function ProfileTab({ user }) {
                 <label className="block text-sm font-medium text-slate-500 mb-1">Địa chỉ</label>
                 <div className="flex items-center">
                   <MapPin size={16} className="text-slate-400 mr-2" />
-                  <p className="text-slate-700">{user.address}</p>
+                  {address.map((item, index) => (
+                    <p key={index}>
+                      {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -71,12 +97,18 @@ export default function ProfileTab({ user }) {
                 <span className="inline-block px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-medium mr-2">
                   Mặc định
                 </span>
-                <p className="font-medium text-slate-800">{user.name}</p>
+                <p className="font-medium text-slate-800">{user.USER_FIRST_NAME} {user.USER_LAST_NAME}</p>
               </div>
               <button className="text-indigo-600 hover:text-indigo-700 text-sm">Chỉnh sửa</button>
             </div>
-            <p className="text-slate-600 text-sm mb-1">{user.phone}</p>
-            <p className="text-slate-600 text-sm">{user.address}</p>
+            <p className="text-slate-600 text-sm mb-1">{user.USER_PHONE}</p>
+            <p className="text-slate-600 text-sm">
+              {address.map((item, index) => (
+                <p key={index}>
+                  {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
+                </p>
+              ))}
+            </p>
           </div>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import React, { lazy } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ContactUs from './components/layout/Contact';
 import UserLayout from './components/layout/UserLayout';
 import FashionBlog from './pages/Blog/FashionBlog';
@@ -42,6 +44,7 @@ const App  = () => {
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>
+      <ToastContainer />
     </Router>
   );
 };
