@@ -1,38 +1,32 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import React ,{lazy, Suspense} from 'react';
-// import Home from './pages/home/Home';
-import Shop from './pages/shop/Shop';
-import WomanShop from './pages/shop/WomanShop';
+import React, { lazy } from 'react';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ContactUs from './components/layout/Contact';
-import Wishlist from './pages/Wishlist/Wishlist';
-// import Details from './pages/products/detail/Details';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
 import UserLayout from './components/layout/UserLayout';
-// import PersonalInfoPage from './pages/checkout/PersonalInfoPage';
-// import About from './pages/About/ABout';
-import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
-import FashionCheckout from './pages/checkout/FashionCheckout';
-// import Profile from './pages/Profile/Profile';
 import FashionBlog from './pages/Blog/FashionBlog';
 import FashionUserProfile from './pages/Profile/FashionUserProfile';
+import Wishlist from './pages/Wishlist/Wishlist';
+import Login from './pages/auth/Login';
 import OTPForm from './pages/auth/OTPForm';
+import Register from './pages/auth/Register';
+import FashionCheckout from './pages/checkout/FashionCheckout';
+import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
 import AccessoryShop from './pages/shop/AccessoryShop';
 import ManShop from './pages/shop/ManShop';
-// import UserProfile from './pages/Profile/UserProfile';
+import Shop from './pages/shop/Shop';
+import WomanShop from './pages/shop/WomanShop';
+import ScrollToTop from './utils/ScrollToTop';
 const Details = lazy(() => import('./pages/products/detail/Details'));
 const Home = lazy(()=>import('./pages/home/Home'));
-
-// const Cart = lazy(() => import('./pages/Cart'));
 
 const App  = () => {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<UserLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-         <Route path='/otp' element={<OTPForm />} />
+          <Route path='/otp' element={<OTPForm />} />
           <Route index element={<Home />} /> 
           <Route path="/shop" element={<Shop />} />
           <Route path="/woman" element={<WomanShop />} />
