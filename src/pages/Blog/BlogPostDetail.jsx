@@ -7,7 +7,7 @@ import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogFooter from '../../components/layout/BlogFooters';
 import { relatedProducts } from '../../service/ProductData';
 import ProductRelateCard from '../products/related/ProductRelateCard';
-
+import img1 from '../../assets/image/sale04.jpg'
 const BlogPostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -51,11 +51,11 @@ const BlogPostDetail = () => {
           tags: ['Thời trang mùa hè', 'Xu hướng 2025', 'Thời trang bền vững', 'Phong cách'],
           author: {
             name: 'Nguyễn Thị Minh',
-            avatar: '/api/placeholder/100/100',
+            avatar: img1,
             bio: 'Chuyên gia thời trang với hơn 10 năm kinh nghiệm trong ngành. Thường xuyên đưa ra những phân tích sâu sắc về xu hướng thời trang toàn cầu.'
           },
           date: '2025-04-20',
-          image: '/api/placeholder/1200/600',
+          image: img1,
           views: 1254,
           rating: 4.8,
           commentCount: 24,

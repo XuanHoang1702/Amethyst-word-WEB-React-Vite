@@ -26,9 +26,6 @@ const renderStars = (rating) => {
     </div>
   );
 };
-
-// Format price function
-
 const ProductRelateCard = ({ product }) => {
   const navigate = useNavigate();
 
@@ -41,22 +38,17 @@ const ProductRelateCard = ({ product }) => {
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.id}`)}
         />
-
-        {/* Badge mới */}
         {product.isNew && (
           <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
             MỚI
           </div>
         )}
 
-        {/* Badge giảm giá */}
         {product.salePrice && (
           <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
             GIẢM GIÁ
           </div>
         )}
-
-        {/* Hover buttons */}
         <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
           <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors">
             <FaShoppingCart size={18} />
@@ -80,14 +72,10 @@ const ProductRelateCard = ({ product }) => {
         >
           {product.name}
         </h3>
-
-        {/* Đánh giá sao */}
         <div className="flex items-center justify-center mb-2">
           {renderStars(product.rating)}
           <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
         </div>
-
-        {/* Giá sản phẩm */}
         <div className="flex items-center justify-between">
           <div>
             {product.salePrice ? (

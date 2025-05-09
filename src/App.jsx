@@ -11,7 +11,7 @@ import Login from './pages/auth/Login';
 import OTPForm from './pages/auth/OTPForm';
 import Register from './pages/auth/Register';
 import FashionCheckout from './pages/checkout/FashionCheckout';
-import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
+// import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
 import ManShop from './pages/shop/ManShop';
 import Shop from './pages/shop/Shop';
 import WomanShop from './pages/shop/WomanShop';
@@ -39,7 +39,7 @@ const App  = () => {
           <Route path="/wishlist" element={<Wishlist />} /> 
           <Route path="details/:id" element={<Details />} />
           <Route path="/checkout" element={<FashionCheckout/>}/>
-          <Route path="/paymentqr" element={<QRPaymentDisplay/>}/>
+          {/* <Route path="/paymentqr" element={<QRPaymentDisplay/>}/> */}
           <Route path="/blog" element={<FashionBlog/>}/>
           <Route path="/blog/:id" element={<BlogPostDetail />} />
           <Route path ='/profile' element={<FashionUserProfile />}/>

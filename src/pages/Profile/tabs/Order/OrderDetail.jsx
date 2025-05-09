@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, Truck, Package, Check, AlertCircle } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-// Giả lập dữ liệu chi tiết đơn hàng - trong thực tế sẽ lấy từ API dựa trên orderId
 const getOrderDetail = (orderId) => {
-  // Trong thực tế, đây sẽ là một API call
   return {
     id: orderId,
     date: '2023-06-15',
