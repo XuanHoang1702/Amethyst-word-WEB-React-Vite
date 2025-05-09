@@ -1,7 +1,7 @@
   /** @file src/data/categories.js */
   import React from 'react';
-  import { FaTshirt, FaShoePrints, FaHatCowboy, FaShoppingBag, FaGlasses } from 'react-icons/fa';
-  import { BiTimeFive } from 'react-icons/bi'; 
+import { BiTimeFive } from 'react-icons/bi';
+import { FaGlasses, FaHatCowboy, FaShoePrints, FaShoppingBag, FaTshirt } from 'react-icons/fa';
   export const CategoryData = [
     {
       id: 1,
@@ -192,7 +192,6 @@
         }
       ]
     },
-
     {
       id: 6,
       name: "Kính mát",
