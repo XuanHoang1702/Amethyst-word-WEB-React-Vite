@@ -1,24 +1,11 @@
 import axios from 'axios';
 import { API_URL } from './Api';
 
-export const login = async (useR_EMAIL, useR_PASSWORD) => {
+export const GetWishList = async (token) => {
     try {
-        const response = await axios.post(`${API_URL}/api/User/Login`, {
-            useR_EMAIL,
-            useR_PASSWORD
-        });
-        localStorage.setItem("token", response.data.token);
-        console.log("Token: ", localStorage.getItem("token"));
-        return response.data;
-    } catch (error) {
-        throw error.response || { message: 'Lỗi kết nối server' };
-    }
-};
-
-export const GetInformation = async (token) => {
-    try {
-        const response = await axios.get(`${API_URL}/api/User/Information`, {
+        const response = await axios.get(`${API_URL}/api/WishList/GetAll`, {
             headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
             }
         });
@@ -28,9 +15,27 @@ export const GetInformation = async (token) => {
     }
 }
 
-export const GetAddress = async (token) => {
+export const AddWishList = async (token, productId) => {
     try {
-        const response = await axios.get(`${API_URL}/api/Address/GetById`, {
+        const response = await axios.post(`${API_URL}/api/Wish_list/Create`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            params: {
+                id: productId,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const DeleteWishList = async (token, productId) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/WishList/Delete`, {
+            productId
+        }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

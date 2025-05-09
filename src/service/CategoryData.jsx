@@ -1,7 +1,7 @@
   /** @file src/data/categories.js */
   import React from 'react';
-  import { FaTshirt, FaShoePrints, FaHatCowboy, FaShoppingBag, FaGlasses } from 'react-icons/fa';
-  import { BiTimeFive } from 'react-icons/bi'; 
+import { BiTimeFive } from 'react-icons/bi';
+import { FaGlasses, FaHatCowboy, FaShoePrints, FaShoppingBag, FaTshirt } from 'react-icons/fa';
   export const CategoryData = [
     {
       id: 1,
@@ -192,28 +192,28 @@
         }
       ]
     },
-    // {
-    //   id: 6,
-    //   name: "Kính mát",
-    //   icon: <FaGlasses />,
-    //   subcategories: [
-    //     {
-    //       id: 601,
-    //       name: "Kính thời trang",
-    //       subsubcategories: [
-    //         { id: 6011, name: "Kính mắt aviator" },
-    //         { id: 6012, name: "Kính mắt tròn" }
-    //       ]
-    //     },
-    //     {
-    //       id: 602,
-    //       name: "Kính bảo vệ mắt",
-    //       subsubcategories: [
-    //         { id: 6021, name: "Kính bảo vệ mắt thể thao" },
-    //         { id: 6022, name: "Kính bảo vệ mắt chống UV" }
-    //       ]
-    //     }
-    //   ]
-    // }
+    {
+      id: 6,
+      name: "Kính mát",
+      icon: <FaGlasses />,
+      subcategories: [
+        {
+          id: 601,
+          name: "Kính thời trang",
+          subsubcategories: [
+            { id: 6011, name: "Kính mắt aviator" },
+            { id: 6012, name: "Kính mắt tròn" }
+          ]
+        },
+        {
+          id: 602,
+          name: "Kính bảo vệ mắt",
+          subsubcategories: [
+            { id: 6021, name: "Kính bảo vệ mắt thể thao" },
+            { id: 6022, name: "Kính bảo vệ mắt chống UV" }
+          ]
+        }
+      ]
+    }
   ];
   
