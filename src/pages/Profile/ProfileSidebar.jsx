@@ -1,5 +1,6 @@
 import { Camera, ChevronRight, Clock, CreditCard, Heart, LogOut, Settings, ShoppingBag, User } from 'lucide-react';
 import { profileTabs } from '../../../src/service/profileData';
+import { useNavigate } from 'react-router-dom';
 
 const iconComponents = {
   User: User,
@@ -10,11 +11,13 @@ const iconComponents = {
   Settings: Settings
 };
 
+
 export default function ProfileSidebar({ user, activeTab, setActiveTab }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigator('/');
   }
+
 
   return (
     <div className="w-full md:w-72 bg-white border-r border-slate-200 md:min-h-screen">
@@ -64,6 +67,7 @@ export default function ProfileSidebar({ user, activeTab, setActiveTab }) {
       </nav>
 
       <div className="p-4 mt-auto">
+   
         <button className="flex items-center text-slate-600 hover:text-red-500 px-4 py-2 rounded-lg w-full hover:bg-slate-100 transition"  onClick={handleLogout}>
           <LogOut size={18} className="mr-3"/>
           <span>Đăng xuất</span>

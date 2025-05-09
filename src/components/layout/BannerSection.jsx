@@ -38,10 +38,11 @@ const BannerSection = () => {
         </div>
       </div>
 
-      {/* Banner grid 2 hàng */}
+    
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Hàng 1: Hydrophobic Shorts */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
+        <Link to="/shop" className="relative rounded-lg overflow-hidden shadow-lg">
+      
           <img 
             className="w-full h-auto object-cover" 
             src={bannerHydrophobic} 
@@ -51,28 +52,28 @@ const BannerSection = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-blue-600">HYDROPHOBIC</h2>
             <h3 className="text-2xl md:text-3xl font-bold text-blue-600">SHORTS</h3>
           </div>
-        </div>
+        </Link>
 
         {/* Hàng 1: Model với quần áo */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
+        <Link to="/shop" className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
           <img 
             className="w-full h-auto object-cover" 
             src={modelImage3} 
             alt="Model với quần áo thời trang" 
           />
-        </div>
+        </Link>
 
         {/* Hàng 2: Elegant Vibrance - Hình 1 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
+        <Link className="relative rounded-lg overflow-hidden shadow-lg">
           <img 
             className="w-full h-auto object-cover" 
             src={bannerElegant1} 
             alt="Elegant Vibrance Collection - Model 1" 
           />
-        </div>
+        </Link>
 
         {/* Hàng 2: Elegant Vibrance - Hình 2 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
+        <Link to ="/shop" className="relative rounded-lg overflow-hidden shadow-lg">
           <img 
             className="w-full h-auto object-cover" 
             src={bannerElegant2} 
@@ -84,7 +85,7 @@ const BannerSection = () => {
             <p className="text-sm text-white mt-2">SUMMER CAMPAIGN'24</p>
             <p className="text-sm text-white">NEW COLLECTION</p>
           </div>
-        </div>
+        </Link>
       </div>
     </section>
   );

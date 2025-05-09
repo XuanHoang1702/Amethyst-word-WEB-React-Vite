@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { ArrowLeft, Star, MessageCircle, Share2, Facebook, Twitter, Instagram, Mail, Copy, User, Calendar, Tag, Heart, ShoppingBag, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import BlogHeader from '../../components/layout/BlogHeaderr';
+import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft, Star, MessageCircle, Share2, Facebook, Twitter, Instagram, Mail, Copy, User, Calendar, Tag, Heart, ShoppingBag, Clock, ChevronRight } from 'lucide-react';
+import { FaArrowRight } from 'react-icons/fa';
+import BlogHeader from '../../components/layout/BlogHeader';
 import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogFooter from '../../components/layout/BlogFooters';
-import RelatedProducts from '../../pages/';
+import { relatedProducts } from '../../service/ProductData';
+import ProductRelateCard from '../products/related/ProductRelateCard';
 
 const BlogPostDetail = () => {
   const { id } = useParams();
@@ -19,138 +20,62 @@ const BlogPostDetail = () => {
   const [likeCount, setLikeCount] = useState(24);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
-
-  // Fetch post data
+  const [error, setError] = useState(null);
   useEffect(() => {
-    // In a real app, you would fetch post data from an API
-    // For this example, we'll simulate fetching
+ 
     setIsLoading(true);
-    setTimeout(() => {
-      // Sample post data
-      const postData = {
-        id: parseInt(id),
-        title: 'Xu hướng thời trang mùa hè 2025: Tươi mới và Bền vững',
-        subtitle: 'Khám phá những phong cách mới nhất cho mùa hè năm nay từ các sàn diễn thời trang hàng đầu',
-        content: `
-          <p>Mùa hè năm 2025 đang đến gần và các nhà thiết kế thời trang hàng đầu đã giới thiệu những bộ sưu tập với nhiều xu hướng mới mẻ và thú vị. Đây là thời điểm để cập nhật tủ đồ của bạn với những phong cách hot nhất.</p>
-          
-          <h2>1. Thời trang bền vững lên ngôi</h2>
-          <p>Không chỉ là một xu hướng tạm thời, thời trang bền vững đang trở thành tiêu chuẩn mới trong ngành công nghiệp thời trang. Các thương hiệu lớn đều đang chuyển hướng sang sử dụng những chất liệu thân thiện với môi trường và quy trình sản xuất có trách nhiệm.</p>
-          <p>Vải tái chế, cotton hữu cơ và các sợi tự nhiên như linen, hemp đang được ưa chuộng hơn bao giờ hết. Không chỉ thân thiện với môi trường, những chất liệu này còn mang lại cảm giác thoáng mát, rất phù hợp cho mùa hè.</p>
-          
-          <h2>2. Màu sắc tươi sáng và họa tiết đậm nét</h2>
-          <p>Sau nhiều năm màu đơn sắc và tông trung tính thống trị, mùa hè 2025 chứng kiến sự trở lại mạnh mẽ của các màu sắc tươi sáng. Màu xanh dương đậm, vàng nghệ, cam san hô và xanh lá mạ là những gam màu nổi bật nhất.</p>
-          <p>Bên cạnh đó, họa tiết in cũng trở nên đậm nét và táo bạo hơn. Đặc biệt, họa tiết nhiệt đới, hoa lá và các họa tiết hình học cỡ lớn đang rất được ưa chuộng.</p>
-          
-          <h2>3. Áo crop top và quần ống rộng</h2>
-          <p>Áo crop top tiếp tục là một trong những xu hướng thời trang nóng nhất cho mùa hè. Từ kiểu dáng thể thao đến phong cách thanh lịch, áo crop top đa dạng phù hợp với nhiều dịp khác nhau.</p>
-          <p>Kết hợp với áo crop top là quần ống rộng - một sự thay thế thoải mái cho quần skinny. Quần ống rộng không chỉ mang lại cảm giác thoáng mát mà còn tạo nên vẻ ngoài thời thượng và thanh lịch.</p>
-
-          <h2>4. Đầm midi và maxi nhẹ nhàng</h2>
-          <p>Đầm midi và maxi với chất liệu mỏng nhẹ, bay bổng sẽ là lựa chọn hoàn hảo cho những ngày hè nóng bức. Các thiết kế có chi tiết xẻ tà, khoét lưng hoặc vai trần không chỉ giúp tản nhiệt hiệu quả mà còn tạo nên vẻ ngoài nữ tính, quyến rũ.</p>
-          
-          <h2>5. Phụ kiện từ thiên nhiên</h2>
-          <p>Túi cói, sandal đế xuồng bằng dây thừng, mũ rộng vành bằng raffia... những phụ kiện lấy cảm hứng từ thiên nhiên sẽ là điểm nhấn hoàn hảo cho trang phục mùa hè. Không chỉ thân thiện với môi trường, chúng còn mang đến cảm giác gần gũi với thiên nhiên - điều mà nhiều người tìm kiếm sau thời gian dài sống trong không gian đô thị.</p>
-
-          <p>Với những xu hướng đa dạng, mùa hè 2025 hứa hẹn sẽ là một mùa thời trang sôi động và thú vị. Hãy thử nghiệm và tìm ra phong cách phù hợp nhất với bạn!</p>
-        `,
-        category: 'Xu hướng thời trang',
-        tags: ['Thời trang mùa hè', 'Xu hướng 2025', 'Thời trang bền vững', 'Phong cách'],
-        author: {
-          name: 'Nguyễn Thị Minh',
-          avatar: '/api/placeholder/100/100',
-          bio: 'Chuyên gia thời trang với hơn 10 năm kinh nghiệm trong ngành. Thường xuyên đưa ra những phân tích sâu sắc về xu hướng thời trang toàn cầu.'
-        },
-        date: '2025-04-20',
-        image: '/api/placeholder/1200/600',
-        views: 1254,
-        rating: 4.8,
-        commentCount: 24,
-        relatedProductIds: [101, 102, 103, 104, 105, 106]
-      };
-      setPost(postData);
-      
-      // Sample comments data
-      const commentsData = [
-        {
-          id: 1,
-          name: 'Trần Thị Hoa',
-          date: '2025-04-22',
-          content: 'Bài viết rất hay và hữu ích! Tôi đặc biệt thích xu hướng thời trang bền vững. Đã đến lúc chúng ta cần quan tâm nhiều hơn đến môi trường.',
-          rating: 5
-        },
-        {
-          id: 2,
-          name: 'Lê Văn Nam',
-          date: '2025-04-21',
-          content: 'Cảm ơn bạn đã chia sẻ. Tôi đang tìm kiếm một số gợi ý cho tủ đồ mùa hè của mình và bài viết này đã cho tôi nhiều ý tưởng.',
-          rating: 4
-        },
-        {
-          id: 3,
-          name: 'Phạm Minh Anh',
-          date: '2025-04-21',
-          content: 'Phần giới thiệu về phụ kiện từ thiên nhiên rất thú vị. Tôi vừa mua một chiếc túi cói và nó phối với hầu hết trang phục mùa hè của tôi!',
-          rating: 5
-        }
-      ];
-      setComments(commentsData);
+    setError(null);
+    if (!id) {
+      setError('ID bài viết không hợp lệ');
       setIsLoading(false);
-    }, 1000);
-  }, [id]);
-
-  // Handle comment form changes
-  const handleCommentChange = (e) => {
-    const { name, value } = e.target;
-    setNewComment(prev => ({ ...prev, [name]: value }));
-  };
-
-  // Handle comment submission
-  const handleSubmitComment = (e) => {
-    e.preventDefault();
-    
-    // Validate inputs
-    if (!newComment.name || !newComment.email || !newComment.content) {
-      alert('Vui lòng điền đầy đủ thông tin.');
       return;
     }
     
-    // Create new comment
-    const newCommentObj = {
-      id: comments.length + 1,
-      name: newComment.name,
-      date: new Date().toISOString().split('T')[0],
-      content: newComment.content,
-      rating: rating
-    };
-    
-    // Add comment to list
-    setComments(prev => [newCommentObj, ...prev]);
-    
-    // Reset form
-    setNewComment({ name: '', email: '', content: '' });
-    setRating(0);
-  };
+    try {
+      setTimeout(() => {
 
-  // Handle like click
-  const handleLikeClick = () => {
-    if (liked) {
-      setLikeCount(prev => prev - 1);
-    } else {
-      setLikeCount(prev => prev + 1);
+        const postData = {
+          id: parseInt(id),
+          title: 'Xu hướng thời trang mùa hè 2025: Tươi mới và Bền vững',
+          subtitle: 'Khám phá những phong cách mới nhất cho mùa hè năm nay từ các sàn diễn thời trang hàng đầu',
+          content: `
+            <p>Mùa hè năm 2025 đang đến gần và các nhà thiết kế thời trang hàng đầu đã giới thiệu những bộ sưu tập với nhiều xu hướng mới mẻ và thú vị. Đây là thời điểm để cập nhật tủ đồ của bạn với những phong cách hot nhất.</p>
+            
+            <h2>1. Thời trang bền vững lên ngôi</h2>
+            <p>Không chỉ là một xu hướng tạm thời, thời trang bền vững đang trở thành tiêu chuẩn mới trong ngành công nghiệp thời trang. Các thương hiệu lớn đều đang chuyển hướng sang sử dụng những chất liệu thân thiện với môi trường và quy trình sản xuất có trách nhiệm.</p>
+            <p>Vải tái chế, cotton hữu cơ và các sợi tự nhiên như linen, hemp đang được ưa chuộng hơn bao giờ hết. Không chỉ thân thiện với môi trường, những chất liệu này còn mang lại cảm giác thoáng mát, rất phù hợp cho mùa hè.</p>
+            
+            <!-- Nội dung đầy đủ... -->
+          `,
+          category: 'Xu hướng thời trang',
+          tags: ['Thời trang mùa hè', 'Xu hướng 2025', 'Thời trang bền vững', 'Phong cách'],
+          author: {
+            name: 'Nguyễn Thị Minh',
+            avatar: '/api/placeholder/100/100',
+            bio: 'Chuyên gia thời trang với hơn 10 năm kinh nghiệm trong ngành. Thường xuyên đưa ra những phân tích sâu sắc về xu hướng thời trang toàn cầu.'
+          },
+          date: '2025-04-20',
+          image: '/api/placeholder/1200/600',
+          views: 1254,
+          rating: 4.8,
+          commentCount: 24,
+          relatedProductIds: [101, 102, 103, 104, 105, 106]
+        };
+        setPost(postData);
+   
+        const commentsData = [
+        ];
+        setComments(commentsData);
+        setIsLoading(false);
+      }, 1000);
+    } catch (err) {
+      setError('Có lỗi xảy ra khi tải dữ liệu bài viết');
+      setIsLoading(false);
+      console.error('Error fetching post data:', err);
     }
-    setLiked(!liked);
-  };
+  }, [id]);
 
-  // Copy link to clipboard
-  const copyLinkToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setLinkCopied(true);
-    setTimeout(() => {
-      setLinkCopied(false);
-      setShowShareOptions(false);
-    }, 2000);
-  };
+  
 
   if (isLoading) {
     return (
@@ -164,23 +89,81 @@ const BlogPostDetail = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div>
+        <BlogHeader />
+        <div className="container mx-auto px-4 py-16 text-center">
+          <h2 className="text-2xl font-bold mb-4">Lỗi</h2>
+          <p className="text-red-500">{error}</p>
+          <Link to="/blog" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Quay lại Blog
+          </Link>
+        </div>
+        <BlogFooter />
+      </div>
+    );
+  }
+
   if (!post) {
     return (
       <div>
         <BlogHeader />
         <div className="container mx-auto px-4 py-16 text-center">
           <h2 className="text-2xl font-bold mb-4">Bài viết không tồn tại</h2>
-          </div>
+          <Link to="/blog" className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Quay lại Blog
+          </Link>
+        </div>
         <BlogFooter />
       </div>
     );
   }
+  const handleCommentChange = (e) => {
+    const { name, value } = e.target;
+    setNewComment(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitComment = (e) => {
+    e.preventDefault();
+    
+    if (!newComment.name || !newComment.email || !newComment.content) {
+      alert('Vui lòng điền đầy đủ thông tin.');
+      return;
+    }
+    const newCommentObj = {
+      id: comments.length + 1,
+      name: newComment.name,
+      date: new Date().toISOString().split('T')[0],
+      content: newComment.content,
+      rating: rating
+    };
+    setComments(prev => [newCommentObj, ...prev]);
+    setNewComment({ name: '', email: '', content: '' });
+    setRating(0);
+  };
+  const handleLikeClick = () => {
+    if (liked) {
+      setLikeCount(prev => prev - 1);
+    } else {
+      setLikeCount(prev => prev + 1);
+    }
+    setLiked(!liked);
+  };
+
+  const copyLinkToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setLinkCopied(true);
+    setTimeout(() => {
+      setLinkCopied(false);
+      setShowShareOptions(false);
+    }, 2000);
+  };
 
   return (
     <div>
       <BlogHeader />
       <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Main Content */}
         <div className="md:col-span-8">
           <Link to="/blog" className="flex items-center mb-4 text-blue-600 hover:underline">
             <ArrowLeft className="w-4 h-4 mr-1" /> Quay lại Blog
@@ -225,8 +208,6 @@ const BlogPostDetail = () => {
               </div>
             )}
           </div>
-
-          {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-8">
             {post.tags.map((tag, index) => (
               <span key={index} className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center gap-1">
@@ -234,8 +215,6 @@ const BlogPostDetail = () => {
               </span>
             ))}
           </div>
-
-          {/* Comments */}
           <h2 className="text-2xl font-semibold mb-4">Bình luận ({comments.length})</h2>
           <form onSubmit={handleSubmitComment} className="mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -299,17 +278,28 @@ const BlogPostDetail = () => {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="md:col-span-4">
-          <BlogSidebar />
+          <BlogSidebar 
+            popularPosts={[post].filter(Boolean)} 
+            categories={['Thời trang', 'Phong cách', 'Mùa hè', 'Xu hướng']} 
+          />
         </div>
       </div>
-
-      {/* Related Products */}
-      <div className="container mx-auto px-4 mt-12">
-        <h3 className="text-2xl font-semibold mb-6">Sản phẩm liên quan</h3>
-        <RelatedProducts productIds={post.relatedProductIds} />
-      </div>
+ <div className="bg-gray-100 py-12">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold">Sản Phẩm Nổi Bật</h2>
+              <a href="/shop" className="flex items-center text-blue-500 hover:underline">
+                Xem tất cả <ChevronRight size={16} />
+              </a>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map(product => (
+                <ProductRelateCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </div>
 
       <BlogFooter />
     </div>
