@@ -8,7 +8,6 @@ export const login = async (useR_EMAIL, useR_PASSWORD) => {
             useR_PASSWORD
         });
         localStorage.setItem("token", response.data.token);
-        console.log("Token: ", localStorage.getItem("token"));
         return response.data;
     } catch (error) {
         throw error.response || { message: 'Lỗi kết nối server' };

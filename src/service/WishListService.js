@@ -17,19 +17,20 @@ export const GetWishList = async (token) => {
 
 export const AddWishList = async (token, productId) => {
     try {
-        const response = await axios.post(`${API_URL}/api/Wish_list/Create`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            params: {
-                id: productId,
+        const response = await axios.post(`${API_URL}/api/Wish_list/Create`, productId,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
             }
-        });
+        );
         return response.data;
     } catch (error) {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
 
 export const DeleteWishList = async (token, productId) => {
     try {
