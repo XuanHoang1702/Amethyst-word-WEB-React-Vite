@@ -192,28 +192,29 @@
         }
       ]
     },
-    // {
-    //   id: 6,
-    //   name: "Kính mát",
-    //   icon: <FaGlasses />,
-    //   subcategories: [
-    //     {
-    //       id: 601,
-    //       name: "Kính thời trang",
-    //       subsubcategories: [
-    //         { id: 6011, name: "Kính mắt aviator" },
-    //         { id: 6012, name: "Kính mắt tròn" }
-    //       ]
-    //     },
-    //     {
-    //       id: 602,
-    //       name: "Kính bảo vệ mắt",
-    //       subsubcategories: [
-    //         { id: 6021, name: "Kính bảo vệ mắt thể thao" },
-    //         { id: 6022, name: "Kính bảo vệ mắt chống UV" }
-    //       ]
-    //     }
-    //   ]
-    // }
+
+    {
+      id: 6,
+      name: "Kính mát",
+      icon: <FaGlasses />,
+      subcategories: [
+        {
+          id: 601,
+          name: "Kính thời trang",
+          subsubcategories: [
+            { id: 6011, name: "Kính mắt aviator" },
+            { id: 6012, name: "Kính mắt tròn" }
+          ]
+        },
+        {
+          id: 602,
+          name: "Kính bảo vệ mắt",
+          subsubcategories: [
+            { id: 6021, name: "Kính bảo vệ mắt thể thao" },
+            { id: 6022, name: "Kính bảo vệ mắt chống UV" }
+          ]
+        }
+      ]
+    }
   ];
   

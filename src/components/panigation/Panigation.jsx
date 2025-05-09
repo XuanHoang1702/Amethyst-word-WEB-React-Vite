@@ -7,16 +7,16 @@ const FashionPagination = ({ currentPage, totalPages, onPageChange }) => {
     const maxPagesToShow = 5;
     
     if (totalPages <= maxPagesToShow) {
-      // Nếu tổng số trang ít hơn hoặc bằng số trang tối đa hiển thị, hiện tất cả
+
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Luôn hiển thị trang đầu và trang cuối
+     
       let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
       let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
       
-      // Điều chỉnh startPage nếu endPage đạt giới hạn
+ 
       if (endPage === totalPages) {
         startPage = Math.max(1, totalPages - maxPagesToShow + 1);
       }

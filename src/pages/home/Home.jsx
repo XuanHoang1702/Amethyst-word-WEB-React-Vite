@@ -9,7 +9,7 @@ import BestSellerList from '../products/best_seller/BestSellerList';
 import bannermiddle from '../../assets/image/banner-thoi-trang-nu.jpg'
 import SaleList from '../products/sale/SaleList';
 import SaleBanner from '../../components/layout/BannerSale';
-import BlogPostCard from '../Blog/BlogPostCard ';
+import BlogPostCard from '../Blog/BlogPostCard';
 import samplePosts from '../../service/BlogData';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';

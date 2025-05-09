@@ -1,6 +1,10 @@
 import { ChevronRight } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
 export default function OrdersTable({ orders, total }) {
+  const navigate = useNavigate();
+  const handleViewDetail = (orderId) => {
+    navigate(`/profile/orders/${orderId}`);
+  };
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div className="overflow-x-auto">
@@ -26,7 +30,8 @@ export default function OrdersTable({ orders, total }) {
                   </span>
                 </td>
                 <td className="px-6 py-5 text-right">
-                  <button className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                  <button className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center"
+                  onClick={() => handleViewDetail(order.id)}>
                     Chi tiết <ChevronRight size={16} className="ml-1" />
                   </button>
                 </td>

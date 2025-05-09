@@ -17,19 +17,18 @@ const Shop = () => {
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   
-  // Trạng thái cho phân trang
+ 
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(8); // Số sản phẩm hiển thị trên mỗi trang
+  const [productsPerPage] = useState(8); 
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Xử lý phân trang
+
   useEffect(() => {
-    // Tính toán tổng số trang
+
     const calculatedTotalPages = Math.ceil(uniqueProducts.length / productsPerPage);
     setTotalPages(calculatedTotalPages);
     
-    // Lấy sản phẩm cho trang hiện tại
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -37,9 +36,7 @@ const Shop = () => {
     setDisplayedProducts(currentProducts);
   }, [currentPage, productsPerPage]);
 
-  // Xử lý thay đổi trang
   const handlePageChange = (pageNumber) => {
-    // Cuộn lên đầu khi chuyển trang
     window.scrollTo({
       top: 0,
       behavior: "smooth"
