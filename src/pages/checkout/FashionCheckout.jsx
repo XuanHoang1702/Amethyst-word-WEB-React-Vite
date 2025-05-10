@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { CreditCard, Copy, CheckCircle, ArrowRight, Truck, Clock, Wallet, ChevronRight, Home, ShoppingBag, Check, ChevronLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'
+import { ArrowRight, Check, CheckCircle, ChevronLeft, ChevronRight, Clock, Copy, CreditCard, Home, ShoppingBag, Truck, Wallet } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getCart } from '../../service/CartService';
+import { GetAddress, GetInformation } from '../../service/UserService';
 export default function FashionCheckout() {
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('qr');
@@ -8,15 +10,49 @@ export default function FashionCheckout() {
   const [activeTab, setActiveTab] = useState('qr');
   const [orderNumber, setOrderNumber] = useState('FASHION-2425789');
   const navigate = useNavigate();
-  
-  const cartItems = [
-    { id: 1, name: "Áo Sơ Mi Nam Dài Tay", size: "L", color: "Trắng", price: "450,000 VND", quantity: 1, image: "/api/placeholder/100/120" },
-    { id: 2, name: "Quần Jeans Nữ Ống Rộng", size: "M", color: "Xanh đậm", price: "650,000 VND", quantity: 1, image: "/api/placeholder/100/120" }
-  ];
+  const token = localStorage.getItem("token");
+  const [user, setUser] = useState({});
+  const [address, setAddress] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+
   const handleHome = () => {
     navigate('/');
-};
+  };
 
+  const fetchUserData = async () => {
+    try {
+      const userInfo = await GetInformation(token);
+      setUser(userInfo.user_Inf);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const fetchAddress = async () => {
+    try {
+      const response = await GetAddress(token);
+      setAddress(response);
+    }
+    catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
+
+  const fetchCart = async () => {
+    try {
+      const response = await getCart(token);
+      setCartItems(response);
+    }
+    catch (error) {
+      console.error("Error fetching cart:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    fetchAddress();
+    fetchCart();
+  }, []);
   
   const bankInfo = {
     bankName: "BIDV",
@@ -53,30 +89,36 @@ export default function FashionCheckout() {
   };
 
   const renderOrderSummary = () => {
+    const total = cartItems.reduce((sum, item) => {
+      const price = Number(item.producT_PRICE);
+      return sum + price * item.quantity;
+    }, 0);
+  
     return (
-      <div className="bg-gray-50 p-6 rounded-lg ">
+      <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="font-bold text-lg mb-4 text-gray-800">Tóm tắt đơn hàng</h3>
-        <div className="space-y-4 mb-6">
+        <div className="space-y-4 mb-6 max-h-[320px] overflow-y-auto pr-2">
           {cartItems.map(item => (
             <div key={item.id} className="flex space-x-4">
-              <img src={item.image} alt={item.name} className="w-16 h-20 object-cover rounded" />
+              <img src={`https://imgur.com/${item.imagE_NAME}`} alt={item.producT_NAME} className="w-16 h-20 object-cover rounded" />
               <div className="flex-1">
-                <h4 className="font-medium text-gray-800">{item.name}</h4>
+                <h4 className="font-medium text-gray-800">{item.producT_NAME}</h4>
                 <div className="text-sm text-gray-500">
                   <span>Size: {item.size}</span> | <span>Màu: {item.color}</span>
                 </div>
                 <div className="flex justify-between mt-2">
                   <span className="text-gray-500">x{item.quantity}</span>
-                  <span className="font-medium">{item.price}</span>
+                  <span className="font-medium">{item.producT_PRICE}</span>
                 </div>
               </div>
             </div>
           ))}
         </div>
+  
         <div className="border-t border-gray-200 pt-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-600">Tạm tính</span>
-            <span>1,100,000 VND</span>
+            <span>{total} VND</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Phí vận chuyển</span>
@@ -84,13 +126,13 @@ export default function FashionCheckout() {
           </div>
           <div className="flex justify-between font-bold text-lg mt-4">
             <span>Tổng cộng</span>
-            <span>1,100,000 VND</span>
+            <span>{total} VND</span>
           </div>
         </div>
       </div>
     );
   };
-
+  
   const renderAddressStep = () => {
     return (
       <div className="mb-8">
@@ -98,19 +140,26 @@ export default function FashionCheckout() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-700 mb-2">Họ và tên</label>
-            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" placeholder="Nguyễn Văn A" />
+            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" value = { user.USER_LAST_NAME } />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Số điện thoại</label>
-            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" placeholder="0901234567" />
+            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" value={ user.USER_PHONE} />
           </div>
           <div className="md:col-span-2">
             <label className="block text-gray-700 mb-2">Email</label>
-            <input type="email" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" placeholder="email@example.com" />
+            <input type="email" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" value={ user.USER_EMAIL } />
           </div>
           <div className="md:col-span-2">
             <label className="block text-gray-700 mb-2">Địa chỉ</label>
-            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" placeholder="123 Đường ABC, Phường XYZ" />
+            <input
+              type="text"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              value={address.map(item =>
+                `${item.typE_ADDRESS}: ${item.housE_NUMBER}, ${item.street}, ${item.city}, ${item.country} (${item.postaL_CODE})`
+              ).join(' | ')}
+              readOnly
+            />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Tỉnh/Thành phố</label>
@@ -192,6 +241,10 @@ export default function FashionCheckout() {
   };
 
   const renderQRPayment = () => {
+    const total = cartItems.reduce((sum, item) => {
+      const price = Number(item.producT_PRICE);
+      return sum + price * item.quantity;
+    }, 0);
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         {/* Tab Navigation */}
@@ -214,7 +267,7 @@ export default function FashionCheckout() {
           <div className="p-6 flex flex-col items-center">
             <div className="border-2 border-gray-200 rounded-lg p-2 mb-4">
               <img 
-                src="https://qr.sepay.vn/img?bank=BIDV&acc=6150889954&template=compact&amount=10000" 
+                src={`https://qr.sepay.vn/img?bank=BIDV&acc=6150889954&template=compact&amount=${total}`} 
                 alt="QR Code Payment" 
                 className="w-64 h-64"
               />
@@ -225,7 +278,7 @@ export default function FashionCheckout() {
             <div className="bg-gray-50 p-3 rounded-lg w-full">
               <div className="flex justify-between items-center">
                 <span className="text-gray-700">Số tiền:</span>
-                <span className="font-bold text-black">{bankInfo.amount}</span>
+                <span className="font-bold text-black">{total}</span>
               </div>
             </div>
           </div>

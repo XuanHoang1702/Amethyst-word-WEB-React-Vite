@@ -26,6 +26,7 @@ const Login = ()=>{
       });
       setTimeout(() => {
         navigate('/home');
+        window.location.reload();
       }, 2000);
     } catch (error) {
       toast.error("Sai tài khoản hoặc mật khẩu", {

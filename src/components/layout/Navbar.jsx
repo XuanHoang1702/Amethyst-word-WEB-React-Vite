@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaHeart, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
@@ -25,13 +25,14 @@ const Navbar = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token){
+        if (token === null) {
           setUsername(null);
           return;
-        };
-        const userInfo = await GetInformation(token);
-        console.log(userInfo);
-        setUsername(userInfo.user_Inf.USER_LAST_NAME);
+        } else {
+          const userInfo = await GetInformation(token);
+          console.log(userInfo);
+          setUsername(userInfo.user_Inf.USER_LAST_NAME);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
