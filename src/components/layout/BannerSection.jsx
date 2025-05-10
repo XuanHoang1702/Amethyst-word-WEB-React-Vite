@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Giả sử các hình ảnh đã được import
 import bannerHydrophobic from '../../assets/image/AMARO - Sale.jpeg';
 import bannerFashion from '../../assets/image/elle-viet-nam-trang-phuc-mau-tim-quoc-te-phu-nu-2019-3.jpg';
 import modelImage3 from '../../assets/image/tải xuống.jpeg';
@@ -9,7 +8,6 @@ import modelImage3 from '../../assets/image/tải xuống.jpeg';
 const BannerSection = () => {
   return (
     <section className="w-full my-12">
-      {/* Banner chính - công thức mix match */}
       <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
         <div className="relative">
           <img 
@@ -33,12 +31,8 @@ const BannerSection = () => {
           </div>
         </div>
       </div>
-
-    
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Hàng 1: Hydrophobic Shorts */}
         <Link to="/shop" className="relative rounded-lg overflow-hidden shadow-lg">
-      
           <img 
             className="w-full h-auto object-cover" 
             src={bannerHydrophobic} 
@@ -49,15 +43,13 @@ const BannerSection = () => {
             <h3 className="text-2xl md:text-3xl font-bold text-blue-600">SHORTS</h3>
           </div>
         </Link>
-
-        {/* Hàng 1: Model với quần áo */}
         <Link to="/shop" className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
           <img 
             className="w-full h-auto object-cover" 
             src={modelImage3} 
             alt="Model với quần áo thời trang" 
           />
-        </div>
+        </Link>
       </div>
     </section>
   );
