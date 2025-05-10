@@ -7,7 +7,7 @@ export const cartProducts = [
     size: 'M',
     color: 'Trắng',
     quantity: 1,
-    price: 150000,
+    price: 1000,
     image: 'https://picsum.photos/200?random=1'
   },
   {
@@ -16,7 +16,7 @@ export const cartProducts = [
     size: 'M',
     color: 'Trắng',
     quantity: 1,
-    price: 150000,
+    price: 1000,
     image: 'https://picsum.photos/200?random=2'
   },
   {
@@ -25,16 +25,7 @@ export const cartProducts = [
     size: 'M',
     color: 'Trắng',
     quantity: 1,
-    price: 150000,
-    image: 'https://picsum.photos/200?random=2'
-  },
-  {
-    id: 4,
-    name: 'Áo sơ mi dài tay màu đen',
-    size: 'M',
-    color: 'Trắng',
-    quantity: 1,
-    price: 150000,
+    price: 1000,
     image: 'https://picsum.photos/200?random=2'
   },
   

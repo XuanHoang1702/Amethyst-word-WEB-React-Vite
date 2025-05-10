@@ -24,12 +24,12 @@ const CartItem = ({ product }) => {
     <div className="flex items-start justify-between py-4 border-b">
       <div className="flex items-start">
         <img
-          src={product.image}
+          src={`https://imgur.com/${product.imagE_NAME}`}
           alt={product.name}
           className="w-20 h-24 object-cover mr-4 rounded border-2 border-[#6666e5]"
         />
         <div>
-          <h3>{product.name}</h3>
+          <h3>{product.producT_NAME}</h3>
           <p className="text-sm text-gray-500">
             Size: {product.size} | Color: {product.color}
           </p>
@@ -51,7 +51,7 @@ const CartItem = ({ product }) => {
         </div>
       </div>
       <div>
-        <p className="font-medium">{formatPrice(product.price)}</p>
+        <p className="font-medium">{formatPrice(product.producT_PRICE)}</p>
         <button>
           <MdDelete className="h-6 w-6 mt-2 text-gray-600" />
         </button>

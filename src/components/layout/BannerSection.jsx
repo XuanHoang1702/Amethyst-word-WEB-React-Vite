@@ -2,12 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // Giả sử các hình ảnh đã được import
-import bannerFashion from '../../assets/image/elle-viet-nam-trang-phuc-mau-tim-quoc-te-phu-nu-2019-3.jpg'
 import bannerHydrophobic from '../../assets/image/AMARO - Sale.jpeg';
-import bannerElegant1 from '../../assets/image/Girly & Cute Dresses and Accessories _ Feminine, Functional & Classic.jpeg';
-import bannerElegant2 from '../../assets/image/Magazin online cu designeri romani.jpeg';
-import modelImage1 from '../../assets/image/Trendy Clothing & Fashion.jpeg';
-import modelImage2 from '../../assets/image/Girly & Cute Dresses and Accessories _ Feminine, Functional & Classic.jpeg';
+import bannerFashion from '../../assets/image/elle-viet-nam-trang-phuc-mau-tim-quoc-te-phu-nu-2019-3.jpg';
 import modelImage3 from '../../assets/image/tải xuống.jpeg';
 
 const BannerSection = () => {
@@ -60,30 +56,6 @@ const BannerSection = () => {
             src={modelImage3} 
             alt="Model với quần áo thời trang" 
           />
-        </div>
-
-        {/* Hàng 2: Elegant Vibrance - Hình 1 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
-          <img 
-            className="w-full h-auto object-cover" 
-            src={bannerElegant1} 
-            alt="Elegant Vibrance Collection - Model 1" 
-          />
-        </div>
-
-        {/* Hàng 2: Elegant Vibrance - Hình 2 */}
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
-          <img 
-            className="w-full h-auto object-cover" 
-            src={bannerElegant2} 
-            alt="Elegant Vibrance Collection - Model 2" 
-          />
-          <div className="absolute bottom-0 right-0 p-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-blue-700">Elegant</h2>
-            <h3 className="text-3xl md:text-4xl font-light text-white">vibrance</h3>
-            <p className="text-sm text-white mt-2">SUMMER CAMPAIGN'24</p>
-            <p className="text-sm text-white">NEW COLLECTION</p>
-          </div>
         </div>
       </div>
     </section>

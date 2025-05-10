@@ -10,7 +10,6 @@ export default function ProfileTab({ user }) {
     try {
       const response = await GetAddress(token);
       setAddress(response);
-      console.log("Address data:", response);
     }
     catch (error) {
       console.error("Error fetching address:", error);

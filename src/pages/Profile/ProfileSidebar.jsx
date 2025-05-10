@@ -1,4 +1,5 @@
 import { Camera, ChevronRight, Clock, CreditCard, Heart, LogOut, Settings, ShoppingBag, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { profileTabs } from '../../../src/service/profileData';
 
 const iconComponents = {
@@ -11,9 +12,11 @@ const iconComponents = {
 };
 
 export default function ProfileSidebar({ user, activeTab, setActiveTab }) {
+  const navigator = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigator('/');
+    window.location.reload();
   }
 
   return (
