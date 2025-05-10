@@ -72,6 +72,66 @@ const samplePosts = [
     commentCount: 15,
     relatedProductIds: [116, 117, 118]
   }
+  , {
+    id: 7,
+    title: 'Cách bảo quản quần áo len mùa đông',
+    excerpt: 'Những mẹo hữu ích để bảo quản quần áo len không bị xù lông và giữ form dáng.',
+    category: 'Bảo quản quần áo',
+    author: 'Trịnh Minh Châu',
+    date: '2025-03-28',
+    image: img1,
+    rating: 4.4,
+    commentCount: 15,
+    relatedProductIds: [116, 117, 118]
+  },
+  {
+    id: 8,
+    title: 'Cách bảo quản quần áo len mùa đông',
+    excerpt: 'Những mẹo hữu ích để bảo quản quần áo len không bị xù lông và giữ form dáng.',
+    category: 'Bảo quản quần áo',
+    author: 'Trịnh Minh Châu',
+    date: '2025-03-28',
+    image: img1,
+    rating: 4.4,
+    commentCount: 15,
+    relatedProductIds: [116, 117, 118]
+  },
+  {
+    id: 9,
+    title: 'Cách bảo quản quần áo len mùa đông',
+    excerpt: 'Những mẹo hữu ích để bảo quản quần áo len không bị xù lông và giữ form dáng.',
+    category: 'Bảo quản quần áo',
+    author: 'Trịnh Minh Châu',
+    date: '2025-03-28',
+    image: img1,
+    rating: 4.4,
+    commentCount: 15,
+    relatedProductIds: [116, 117, 118]
+  },
+  {
+    id: 10,
+    title: 'Cách bảo quản quần áo len mùa đông',
+    excerpt: 'Những mẹo hữu ích để bảo quản quần áo len không bị xù lông và giữ form dáng.',
+    category: 'Bảo quản quần áo',
+    author: 'Trịnh Minh Châu',
+    date: '2025-03-28',
+    image: img1,
+    rating: 4.4,
+    commentCount: 15,
+    relatedProductIds: [116, 117, 118]
+  },
+  {
+    id: 10,
+    title: 'Cách bảo quản quần áo len mùa đông',
+    excerpt: 'Những mẹo hữu ích để bảo quản quần áo len không bị xù lông và giữ form dáng.',
+    category: 'Bảo quản quần áo',
+    author: 'Trịnh Minh Châu',
+    date: '2025-03-28',
+    image: img1,
+    rating: 4.4,
+    commentCount: 15,
+    relatedProductIds: [116, 117, 118]
+  }
 ];
 
 export default samplePosts;

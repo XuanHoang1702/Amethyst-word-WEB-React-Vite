@@ -118,10 +118,7 @@ const ProductDetail = ({ id }) => {
             </div>
           </div>
         </div>
-        <div className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">Mô tả sản phẩm</h2>
-          <p className="text-gray-600">{product.longDescription}</p>
-        </div>
+      
       </div>
     </div>
   );

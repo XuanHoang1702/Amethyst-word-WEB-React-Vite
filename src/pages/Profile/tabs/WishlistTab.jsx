@@ -1,13 +1,27 @@
 import { Heart } from 'lucide-react';
-import { wishlistData } from '../../../service/profileData';
-
+import { useState } from 'react';
+import { wishlistData } from '../../../service/WishlistData';
+import FashionPagination from '../../../components/panigation/Panigation';
 export default function WishlistTab() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; 
+  const totalPages = Math.ceil(wishlistData.length / itemsPerPage);
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = wishlistData.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-slate-800 mb-6">Sản phẩm yêu thích</h1>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {wishlistData.map(item => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        {currentItems.map(item => (
           <div key={item.id} className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm group hover:shadow-md transition">
             <div className="aspect-h-4 aspect-w-3 relative overflow-hidden">
               <img 
@@ -39,6 +53,14 @@ export default function WishlistTab() {
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <FashionPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 }

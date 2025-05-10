@@ -1,50 +1,77 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../components/layout/Header";
-import ProductCard from "../products/new/ProductCard";
+import ProductCard from '../products/new/ProductCard';
+import ProductListCard from '../products/new/ProductListCard';
 import { uniqueProducts } from "../../service/ProductData";
 import PromotionBanner from '../../components/layout/PromotionBanner';
 import Breadcrumb from '../../components/BreadCrumb';
 import ProductSort from '../../pages/products/ProductSort';
-import { Filter, X } from 'lucide-react';
+import { Filter, X, Grid, List } from 'lucide-react';
 import ProductFilters from '../../components/ui/ProductFilter';
-import { ShoppingCart, Heart, Eye } from 'lucide-react';
 import { Link } from "react-router-dom";
 import bg1 from '../../assets/image/banner03.jpg'
 import FashionPagination from "../../components/panigation/Panigation";
+
+// Component ViewModeToggle
+const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
+  return (
+    <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+      <button
+        className={`p-2 ${viewMode === 'grid' ? 'bg-gray-200' : 'bg-white'}`}
+        onClick={() => onViewModeChange('grid')}
+        aria-label="Chế độ xem lưới"
+      >
+        <Grid size={18} />
+      </button>
+      <button
+        className={`p-2 ${viewMode === 'list' ? 'bg-gray-200' : 'bg-white'}`}
+        onClick={() => onViewModeChange('list')}
+        aria-label="Chế độ xem danh sách"
+      >
+        <List size={18} />
+      </button>
+    </div>
+  );
+};
 
 const Shop = () => {
   const [showPromotion, setShowPromotion] = useState(true);
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // Thêm state cho chế độ xem
   
-  // Trạng thái cho phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(8); // Số sản phẩm hiển thị trên mỗi trang
+  const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); // Điều chỉnh số sản phẩm hiển thị theo chế độ xem
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Xử lý phân trang
+
   useEffect(() => {
-    // Tính toán tổng số trang
-    const calculatedTotalPages = Math.ceil(uniqueProducts.length / productsPerPage);
+    // Cập nhật lại số sản phẩm mỗi trang dựa vào chế độ xem
+    const itemsPerPage = viewMode === 'grid' ? 8 : 5;
+    
+    const calculatedTotalPages = Math.ceil(uniqueProducts.length / itemsPerPage);
     setTotalPages(calculatedTotalPages);
     
-    // Lấy sản phẩm cho trang hiện tại
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const indexOfLastProduct = currentPage * itemsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
     
     setDisplayedProducts(currentProducts);
-  }, [currentPage, productsPerPage]);
+  }, [currentPage, viewMode]); // Thêm viewMode vào dependencies
 
-  // Xử lý thay đổi trang
   const handlePageChange = (pageNumber) => {
-    // Cuộn lên đầu khi chuyển trang
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
     setCurrentPage(pageNumber);
+  };
+
+  // Hàm chuyển đổi chế độ xem
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    setCurrentPage(1); // Reset về trang đầu tiên khi đổi chế độ xem
   };
 
   return (
@@ -53,7 +80,6 @@ const Shop = () => {
         <div className="relative">
           <div className="bg-gradient-to-r from-purple-600 to-blue-500 h-64 md:h-96 w-full">
             <img 
-              // src={bg1}
               alt="Fashion Blog Hero" 
               className="w-full h-full object-cover opacity-50"
             />
@@ -63,8 +89,6 @@ const Shop = () => {
             </div>
           </div>
         </div>
-
-        {/* Mobile Filter Drawer */}
         {showMobileFilters && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
             <div className="absolute right-0 top-0 h-full w-80 bg-white p-4 overflow-y-auto">
@@ -84,7 +108,6 @@ const Shop = () => {
 
         <div className="container mx-auto px-4 pb-16">
           <div className="flex flex-col md:flex-row gap-8">
-            {/* Filters - Mobile Toggle */}
             <div className="md:hidden w-full flex justify-between items-center py-2">
               <button 
                 onClick={() => setShowMobileFilters(true)}
@@ -93,10 +116,11 @@ const Shop = () => {
                 <Filter size={16} />
                 <span>Filters</span>
               </button>
-              <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
+              <div className="flex items-center gap-2">
+                <ViewModeToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+                <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
+              </div>
             </div>
-
-            {/* Filters - Desktop */}
             <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
               <ProductFilters />
             </div>
@@ -106,26 +130,41 @@ const Shop = () => {
                 <div className="text-sm text-gray-500">
                   Hiển thị {displayedProducts.length} trong tổng số {uniqueProducts.length} sản phẩm
                 </div>
-                <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
+                <div className="flex items-center gap-4">
+                  <ViewModeToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+                  <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
+                </div>
               </div>
-
-              {/* Danh sách sản phẩm */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {displayedProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div> 
-              {totalPages > 1 && (
-                <FashionPagination 
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
+              
+              {/* Hiển thị sản phẩm theo chế độ xem lưới */}
+              {viewMode === 'grid' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {displayedProducts.map(product => (
+                    <ProductCard key={product.id || product.producT_ID} product={product} />
+                  ))}
+                </div>
               )}
-             
+              
+              {/* Hiển thị sản phẩm theo chế độ xem danh sách */}
+              {viewMode === 'list' && (
+                <div className="flex flex-col gap-4">
+                  {displayedProducts.map(product => (
+                    <ProductListCard key={product.id || product.producT_ID} product={product} />
+                  ))}
+                </div>
+              )}
+              
+              {totalPages > 1 && (
+                <div className="mt-8">
+                  <FashionPagination 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              )}
             </div>
           </div>
-         
         </div>
       </div>
     </div>

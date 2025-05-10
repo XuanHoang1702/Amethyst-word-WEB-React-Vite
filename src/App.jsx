@@ -11,12 +11,14 @@ import Login from './pages/auth/Login';
 import OTPForm from './pages/auth/OTPForm';
 import Register from './pages/auth/Register';
 import FashionCheckout from './pages/checkout/FashionCheckout';
-import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
-import AccessoryShop from './pages/shop/AccessoryShop';
+// import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
 import ManShop from './pages/shop/ManShop';
 import Shop from './pages/shop/Shop';
 import WomanShop from './pages/shop/WomanShop';
+import OrdersTab from './pages/Profile/tabs/Order/OrdersTab';
+import OrderDetail from './pages/Profile/tabs/Order/OrderDetail';
 import ScrollToTop from './utils/ScrollToTop';
+import BlogPostDetail from './pages/Blog/BlogPostDetail';
 const Details = lazy(() => import('./pages/products/detail/Details'));
 const Home = lazy(()=>import('./pages/home/Home'));
 
@@ -33,14 +35,16 @@ const App  = () => {
           <Route path="/shop" element={<Shop />} />
           <Route path="/woman" element={<WomanShop />} />
           <Route path="/man" element={<ManShop />} />
-          <Route path= "/accessory" element={<AccessoryShop />} />
           <Route path="/contact" element={<ContactUs />} /> 
           <Route path="/wishlist" element={<Wishlist />} /> 
           <Route path="details/:id" element={<Details />} />
           <Route path="/checkout" element={<FashionCheckout/>}/>
-          <Route path="/paymentqr" element={<QRPaymentDisplay/>}/>
+          {/* <Route path="/paymentqr" element={<QRPaymentDisplay/>}/> */}
           <Route path="/blog" element={<FashionBlog/>}/>
+          <Route path="/blog/:id" element={<BlogPostDetail />} />
           <Route path ='/profile' element={<FashionUserProfile />}/>
+          <Route path="/profile/orders" element={<OrdersTab />} />
+          <Route path="/profile/orders/:orderId" element={<OrderDetail />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>

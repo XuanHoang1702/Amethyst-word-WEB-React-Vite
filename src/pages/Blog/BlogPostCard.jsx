@@ -37,9 +37,12 @@ const BlogPostCard = ({ post = {} }) => {
 
     return stars;
   };
+  if (!id) {
+    console.error('BlogPostCard: Missing post ID');
+    return null;
+  }
 
   return (
-
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:shadow-lg hover:-translate-y-1">
       <Link to={`/blog/${id}`}>
         <img src={image} alt={title} className="w-full h-48 md:h-56 object-cover" />
@@ -51,7 +54,7 @@ const BlogPostCard = ({ post = {} }) => {
           </span>
           <span className="text-gray-500 text-sm">{formatDate(date)}</span>
         </div>
-        <Link to={`/blog/${id}`}>
+        <Link to={`/blog/${id}`} className="block">
           <h3 className="text-xl font-bold mb-2 hover:text-blue-600 transition-colors">{title}</h3>
         </Link>
         <p className="text-gray-600 mb-4">{excerpt}</p>

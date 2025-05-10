@@ -1,4 +1,4 @@
-// src/components/shared/Avatar.js
+
 import { Camera } from 'lucide-react';
 
 export default function Avatar({ user }) {
