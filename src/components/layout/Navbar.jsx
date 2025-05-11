@@ -19,48 +19,49 @@ const Navbar = () => {
   const toggleCartDrawer = () => setDrawerOpen(!drawerOpen);
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
+  const token = localStorage.getItem("token");
 
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token === null) {
-          setUsername(null);
-          return;
-        } else {
-          const userInfo = await GetInformation(token);
-          console.log(userInfo);
-          setUsername(userInfo.user_Inf.USER_LAST_NAME);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+
+  const fetchUserData = async () => {
+    try {
+      if (token === null) {
+        setUsername(null);
+        return;
+      } else {
+        const userInfo = await GetInformation(token);
+        setUsername(userInfo.user_Inf.USER_LAST_NAME);
       }
-    };
-    fetchUserData();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const handleResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  const fetchMenuList = async () => {
+    try {
+      const data = await MenuNavBarService.getMenuList();
+      setMenuList(data);
+    } catch (error) {
+      console.error("Error fetching menu list:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    fetchUserData();
+    fetchMenuList();
     window.addEventListener('resize', handleResize);
+    handleResize();
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const FetchMenuList = async () => {
-      try {
-        const data = await MenuNavBarService.getMenuList();
-        setMenuList(data);
-      } catch (error) {
-        console.error("Error fetching menu list:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    FetchMenuList();
-  }, []);
+
 
   const menuSpacing = useMemo(() => {
     if (menuList.length <= 3) return "space-x-12";
@@ -118,7 +119,7 @@ const Navbar = () => {
             </button>
             <div className="relative">
             <Link
-                to={username !== null ? "/profile" : "/login"}
+                to={token !== null ? "/profile" : "/login"}
                 className="text-white hover:text-black flex items-center"
               >
                 <FaUser className="text-lg" />
