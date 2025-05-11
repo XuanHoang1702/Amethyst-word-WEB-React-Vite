@@ -16,6 +16,10 @@ export default function FashionUserProfile() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        if (token === null) {
+          setUser(null);
+          return;
+        }
         const userInfo = await GetInformation(token);
         setUser(userInfo.user_Inf);
       } catch (error) {

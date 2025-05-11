@@ -6,10 +6,17 @@ export default function ProfileTab({ user }) {
   const token = localStorage.getItem("token");
   const [address, setAddress] = useState([]);
 
-  const fecthAddress = async () => {
+  const fetchAddress = async () => {
+    console.log("Profile :", token);
     try {
-      const response = await GetAddress(token);
-      setAddress(response);
+      if (token === null) {
+        setAddress([]);
+        return;
+      }else {
+        const userInfo = await GetAddress(token);
+        console.log(userInfo);
+        setAddress(userInfo.user_Inf.USER_ADDRESS);
+      }
     }
     catch (error) {
       console.error("Error fetching address:", error);
@@ -17,7 +24,7 @@ export default function ProfileTab({ user }) {
   };
 
   useEffect(() => {
-    fecthAddress();
+    fetchAddress();
   }, []);
 
 
