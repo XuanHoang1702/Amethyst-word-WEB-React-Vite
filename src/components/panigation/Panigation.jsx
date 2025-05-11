@@ -1,7 +1,6 @@
 import React from 'react';
 
 const FashionPagination = ({ currentPage, totalPages, onPageChange }) => {
-  // Hiển thị tối đa 5 nút trang
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxPagesToShow = 5;
