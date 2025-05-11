@@ -1,6 +1,8 @@
 /** @file src/components/ui/CartItem.jsx */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MdDelete } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import { deleteCart } from '../../service/CartService';
 import { formatPrice } from '../../utils/formatUtils';
 /**
  * CartItem component for displaying a single product in the cart
@@ -19,7 +21,24 @@ const CartItem = ({ product }) => {
 
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
+  const token = localStorage.getItem('token');
 
+  const handleDelete = async () => {
+    try {
+      const res = await deleteCart(token, product.producT_ID);
+      if (res.code === 200) {
+        toast.success('Xóa sản phẩm thành công');
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('Xóa sản phẩm thất bại');
+    }
+  };
   return (
     <div className="flex items-start justify-between py-4 border-b">
       <div className="flex items-start">
@@ -52,7 +71,7 @@ const CartItem = ({ product }) => {
       </div>
       <div>
         <p className="font-medium">{formatPrice(product.producT_PRICE)}</p>
-        <button>
+        <button onClick={handleDelete}>
           <MdDelete className="h-6 w-6 mt-2 text-gray-600" />
         </button>
       </div>
