@@ -33,10 +33,17 @@ const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
 const Shop = () => {
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  const [viewMode, setViewMode] = useState('grid'); 
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); 
+
   const [viewMode, setViewMode] = useState('grid');
   
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5);
+
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
@@ -60,7 +67,6 @@ const Shop = () => {
 
   useEffect(() => {
     const itemsPerPage = viewMode === 'grid' ? 8 : 5;
-    
     const calculatedTotalPages = Math.ceil(uniqueProducts.length / itemsPerPage);
     setTotalPages(calculatedTotalPages);
     
@@ -69,6 +75,9 @@ const Shop = () => {
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
     
     setDisplayedProducts(currentProducts);
+
+  }, [currentPage, viewMode]);
+
     fetchProducts(currentPage, itemsPerPage);
     fetchProducts();
   }, [currentPage, viewMode]);
@@ -83,7 +92,13 @@ const Shop = () => {
 
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
+    setCurrentPage(1); 
+
+
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
     setCurrentPage(1);
+
   };
 
   return (
