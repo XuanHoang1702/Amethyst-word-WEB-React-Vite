@@ -38,18 +38,16 @@ const Shop = () => {
   const [showPromotion, setShowPromotion] = useState(true);
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // Thêm state cho chế độ xem
+  const [viewMode, setViewMode] = useState('grid'); 
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); // Điều chỉnh số sản phẩm hiển thị theo chế độ xem
+  const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); 
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
 
   useEffect(() => {
-    // Cập nhật lại số sản phẩm mỗi trang dựa vào chế độ xem
     const itemsPerPage = viewMode === 'grid' ? 8 : 5;
-    
     const calculatedTotalPages = Math.ceil(uniqueProducts.length / itemsPerPage);
     setTotalPages(calculatedTotalPages);
     
@@ -58,8 +56,7 @@ const Shop = () => {
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
     
     setDisplayedProducts(currentProducts);
-  }, [currentPage, viewMode]); // Thêm viewMode vào dependencies
-
+  }, [currentPage, viewMode]);
   const handlePageChange = (pageNumber) => {
     window.scrollTo({
       top: 0,
@@ -67,11 +64,9 @@ const Shop = () => {
     });
     setCurrentPage(pageNumber);
   };
-
-  // Hàm chuyển đổi chế độ xem
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
-    setCurrentPage(1); // Reset về trang đầu tiên khi đổi chế độ xem
+    setCurrentPage(1); 
   };
 
   return (
