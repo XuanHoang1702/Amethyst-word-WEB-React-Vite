@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { getCart } from '../../service/CartService';
-import CartItem from './CartItem';
+const CartItem = lazy(() => import('./CartItem'));
 
 const CartContent = () => {
   const [cartProducts, setCartProducts] = useState([]);
@@ -20,7 +20,9 @@ const CartContent = () => {
   return (
     <div>
     {cartProducts.length > 0 ? (
-        cartProducts.map((product) => <CartItem key={product.id} product={product} />)
+      <Suspense fallback={<p>Loading cart items...</p>}>
+        {cartProducts.map((product) => <CartItem key={product.id} product={product} />)}
+      </Suspense>
     ) : (
         <p className="text-gray-500 text-center">Your cart is empty.</p>
     )}
