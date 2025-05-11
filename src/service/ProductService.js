@@ -64,3 +64,20 @@ export const GetProductDetail = async (input) => {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
+export const ProductPaging = async (pageNumber = 1, pageSize = 8) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Product/ProductList`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
