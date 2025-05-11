@@ -11,9 +11,11 @@ import ProductFilters from '../../components/ui/ProductFilter';
 import { Link } from "react-router-dom";
 import bg1 from '../../assets/image/banner03.jpg'
 import FashionPagination from "../../components/panigation/Panigation";
+import { ProductPaging } from "../../service/ProductService";
 
 // Component ViewModeToggle
 const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
+
   return (
     <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
       <button
@@ -44,7 +46,17 @@ const Shop = () => {
   const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); 
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [products, setProducts ] = useState([]);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductPaging(1, 8);
+      const data = response.data; 
+      setProducts(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const itemsPerPage = viewMode === 'grid' ? 8 : 5;
@@ -54,7 +66,7 @@ const Shop = () => {
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-    
+    fetchProducts();
     setDisplayedProducts(currentProducts);
   }, [currentPage, viewMode]);
   const handlePageChange = (pageNumber) => {
@@ -134,7 +146,7 @@ const Shop = () => {
               {/* Hiển thị sản phẩm theo chế độ xem lưới */}
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {displayedProducts.map(product => (
+                  {products.map(product => (
                     <ProductCard key={product.id || product.producT_ID} product={product} />
                   ))}
                 </div>
@@ -143,7 +155,7 @@ const Shop = () => {
               {/* Hiển thị sản phẩm theo chế độ xem danh sách */}
               {viewMode === 'list' && (
                 <div className="flex flex-col gap-4">
-                  {displayedProducts.map(product => (
+                  {products.map(product => (
                     <ProductListCard key={product.id || product.producT_ID} product={product} />
                   ))}
                 </div>
