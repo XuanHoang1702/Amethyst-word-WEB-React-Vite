@@ -5,12 +5,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import ContactUs from './components/layout/Contact';
 import UserLayout from './components/layout/UserLayout';
 import FashionBlog from './pages/Blog/FashionBlog';
-import Wishlist from './pages/Wishlist/Wishlist';
+// import Wishlist from './pages/Wishlist/Wishlist';
 import Login from './pages/auth/Login';
 import OTPForm from './pages/auth/OTPForm';
 import Register from './pages/auth/Register';
 import FashionCheckout from './pages/checkout/FashionCheckout';
-// import QRPaymentDisplay from './pages/checkout/QRPaymentDisplay.JSX';
 import ManShop from './pages/shop/ManShop';
 import Shop from './pages/shop/Shop';
 import WomanShop from './pages/shop/WomanShop';
@@ -21,6 +20,7 @@ const Home = lazy(()=>import('./pages/home/Home'));
 const FashionUserProfile = lazy(() => import('./pages/Profile/FashionUserProfile'));
 const OrderDetail = lazy(() => import('./pages/Profile/tabs/Order/OrderDetail'));
 const OrdersTab = lazy(() => import('./pages/Profile/tabs/Order/OrdersTab'));
+const Wishlist = lazy(() => import('./pages/Wishlist/Wishlist'));
 
 const App  = () => {
   return (
