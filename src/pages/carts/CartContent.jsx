@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { getCart } from '../../service/CartService';
 const CartItem = lazy(() => import('./CartItem'));
 
@@ -8,6 +8,10 @@ const CartContent = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
+        if (token === null) {
+          setCartProducts([]);
+          return;
+        }
         const data = await getCart(token);
         setCartProducts(data);
       } catch (error) {
