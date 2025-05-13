@@ -1,20 +1,29 @@
 import { ArrowRight, Check, CheckCircle, ChevronLeft, ChevronRight, Clock, Copy, CreditCard, Home, ShoppingBag, Truck, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { getCart } from '../../service/CartService';
+import { CreateOrder, GetStatus } from '../../service/OrderService';
 import { GetAddress, GetInformation } from '../../service/UserService';
+
 export default function FashionCheckout() {
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('qr');
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('qr');
-  const [orderNumber, setOrderNumber] = useState('FASHION-2425789');
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [user, setUser] = useState({});
   const [address, setAddress] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [shippingMethod, setShippingMethod] = useState('');
+  const [shipPrice, setShipPrice] = useState(0);
+  //const orderId = localStorage.getItem("orderId");
+  const orderId = "ORDEB94080";
+  const [orderStatus, setOrderStatus] = useState(null);
+  let intervalId = null;
   const handleHome = () => {
     navigate('/');
   };
@@ -40,18 +49,72 @@ export default function FashionCheckout() {
 
   const fetchCart = async () => {
     try {
+      if (token === null) {
+        setCartItems([]);
+        return;
+      }
       const response = await getCart(token);
       setCartItems(response);
+
+      const totalQuantity = response.reduce((sum, item) => {
+        return sum + item.quantity;
+      }, 0);
+      setTotalQuantity(totalQuantity);
+
+      const totalPrice = response.reduce((sum, item) => {
+        const price = Number(item.producT_PRICE);
+        return sum + price * item.quantity;
+      }, 0);
+      setTotalPrice(totalPrice);
+
     }
     catch (error) {
       console.error("Error fetching cart:", error);
     }
   };
 
+  const fetchOrderStatus = async () => {
+    try {
+      if(orderId){
+        const response = await GetStatus(token, "ORDEB94080");
+        setOrderStatus(response);
+        if (response.result === "3") {
+          toast.success("Đặt hàng thành công");
+          setCurrentStep(4);
+          clearInterval(intervalId);
+        }
+      }
+
+    } catch (error) {
+      console.error("Error fetching order status:", error);
+    }
+  };
+
+  const handleOrder = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const data = {
+        addresS_ID: address[0].id,
+        totaL_QUANTITY: totalQuantity,
+        totaL_PRICE: totalPrice + shipPrice,
+        note: shippingMethod,
+        ordeR_STATUS: 1,
+      }
+      await CreateOrder(token, data);
+    }catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+
   useEffect(() => {
     fetchUserData();
     fetchAddress();
     fetchCart();
+    intervalId = setInterval(() => {
+      fetchOrderStatus();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
   
   const bankInfo = {
@@ -89,11 +152,6 @@ export default function FashionCheckout() {
   };
 
   const renderOrderSummary = () => {
-    const total = cartItems.reduce((sum, item) => {
-      const price = Number(item.producT_PRICE);
-      return sum + price * item.quantity;
-    }, 0);
-  
     return (
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="font-bold text-lg mb-4 text-gray-800">Tóm tắt đơn hàng</h3>
@@ -118,15 +176,19 @@ export default function FashionCheckout() {
         <div className="border-t border-gray-200 pt-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-600">Tạm tính</span>
-            <span>{total} VND</span>
+            <span>{totalPrice.toLocaleString('vi-VN')} VND</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Phí vận chuyển</span>
-            <span>Miễn phí</span>
+            <span>{shipPrice.toLocaleString('vi-VN')} VND</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Tổng số lượng</span>
+            <span>{totalQuantity} Sản phẩm</span>
           </div>
           <div className="flex justify-between font-bold text-lg mt-4">
             <span>Tổng cộng</span>
-            <span>{total} VND</span>
+            <span>{(totalPrice + shipPrice).toLocaleString('vi-VN')} VND</span>
           </div>
         </div>
       </div>
@@ -180,7 +242,9 @@ export default function FashionCheckout() {
         </div>
         <div className="flex justify-end mt-6">
           <button 
-            onClick={() => setCurrentStep(2)} 
+            onClick={() => {
+              setCurrentStep(2);
+            }}
             className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Tiếp tục <ChevronRight size={16} className="inline ml-1" />
@@ -196,7 +260,10 @@ export default function FashionCheckout() {
         <h2 className="text-2xl font-bold mb-6">Phương thức vận chuyển</h2>
         <div className="space-y-4">
           <div className="border border-gray-300 rounded-lg p-4 hover:border-black cursor-pointer relative">
-            <input type="radio" name="shipping" id="standard" className="absolute left-4 top-4" defaultChecked />
+            <input type="radio" name="shipping" id="standard" className="absolute left-4 top-4" defaultChecked onChange={() =>{ 
+              setShippingMethod("Miễn phí");
+              setShipPrice(0);
+              }}/>
             <label htmlFor="standard" className="flex items-start ml-6 cursor-pointer">
               <div className="flex-1">
                 <div className="flex items-center">
@@ -209,7 +276,10 @@ export default function FashionCheckout() {
             </label>
           </div>
           <div className="border border-gray-300 rounded-lg p-4 hover:border-black cursor-pointer relative">
-            <input type="radio" name="shipping" id="express" className="absolute left-4 top-4" />
+            <input type="radio" name="shipping" id="express" className="absolute left-4 top-4" onChange={() => {
+              setShippingMethod("Nhanh");
+              setShipPrice(30000);
+              }}/>
             <label htmlFor="express" className="flex items-start ml-6 cursor-pointer">
               <div className="flex-1">
                 <div className="flex items-center">
@@ -227,10 +297,13 @@ export default function FashionCheckout() {
             onClick={() => setCurrentStep(1)} 
             className=" border border-black text-gray-600  rounded-lg px-6 py-3 hover:text-black transition-colors"
           >
-           <ChevronLeft size={16} className="inline ml-1" /> Quay lại
+          <ChevronLeft size={16} className="inline ml-1" /> Quay lại
           </button>
           <button 
-            onClick={() => setCurrentStep(3)} 
+            onClick={() => {
+              setCurrentStep(3);
+              handleOrder();
+            }}
             className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Tiếp tục <ChevronRight size={16} className="inline ml-1" />
@@ -267,7 +340,7 @@ export default function FashionCheckout() {
           <div className="p-6 flex flex-col items-center">
             <div className="border-2 border-gray-200 rounded-lg p-2 mb-4">
               <img 
-                src={`https://qr.sepay.vn/img?bank=BIDV&acc=6150889954&template=compact&amount=${total}`} 
+                src={`https://qr.sepay.vn/img?bank=MBBank&acc=0335404974&template=compact&amount=${totalPrice + shipPrice}&des=${orderId}`}
                 alt="QR Code Payment" 
                 className="w-64 h-64"
               />
@@ -476,7 +549,7 @@ export default function FashionCheckout() {
           <div className="text-left mb-6">
             <div className="flex justify-between items-center mb-4">
               <span className="text-gray-600">Mã đơn hàng:</span>
-              <span className="font-bold">{orderNumber}</span>
+              <span className="font-bold">{orderId}</span>
             </div>
             
             <div className="flex justify-between items-center mb-4">

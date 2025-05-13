@@ -36,12 +36,14 @@ export const addToCart = async (token, productId, quantity) => {
 
 export const deleteCart = async (token, productId) => {
     try {
-        const response = await axios.delete(`${API_URL}/api/Cart/Delete`, productId, {
+        const response = await axios.delete(`${API_URL}/api/Cart/Delete`, {
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
             },
+            data: productId
         });
+        console.log('Delete response:', response.data);
         return response.data;
     }
     catch (error) {
