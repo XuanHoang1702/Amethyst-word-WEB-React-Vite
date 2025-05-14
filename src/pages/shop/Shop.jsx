@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import FashionPagination from "../../components/panigation/Panigation";
 import ProductFilters from '../../components/ui/ProductFilter';
 import ProductSort from '../../pages/products/ProductSort';
-import { uniqueProducts } from "../../service/ProductData";
+import { ProductPaging } from '../../service/ProductService';
 import ProductCard from '../products/new/ProductCard';
 import ProductListCard from '../products/new/ProductListCard';
 
@@ -31,27 +31,35 @@ const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
 };
 
 const Shop = () => {
-  const [showPromotion, setShowPromotion] = useState(true);
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); 
   
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); 
-  const [displayedProducts, setDisplayedProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductPaging(currentPage, productsPerPage);
+      setProducts(response.data);
+      setTotalPages(response.totalPages);
+      setTotalProducts(response.totalRecords);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   useEffect(() => {
     const itemsPerPage = viewMode === 'grid' ? 8 : 5;
-    const calculatedTotalPages = Math.ceil(uniqueProducts.length / itemsPerPage);
-    setTotalPages(calculatedTotalPages);
+
     
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-    const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
     
-    setDisplayedProducts(currentProducts);
+    fetchProducts();
   }, [currentPage, viewMode]);
   const handlePageChange = (pageNumber) => {
     window.scrollTo({
@@ -60,6 +68,7 @@ const Shop = () => {
     });
     setCurrentPage(pageNumber);
   };
+
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     setCurrentPage(1); 
@@ -119,7 +128,7 @@ const Shop = () => {
             <div className="w-full md:w-3/4 lg:w-4/5 p-2">
               <div className="flex justify-between items-center mb-6">
                 <div className="text-sm text-gray-500">
-                  Hiển thị {displayedProducts.length} trong tổng số {uniqueProducts.length} sản phẩm
+                  Hiển thị {products.length} trong tổng số {totalProducts} sản phẩm
                 </div>
                 <div className="flex items-center gap-4">
                   <ViewModeToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
@@ -130,7 +139,7 @@ const Shop = () => {
               {/* Hiển thị sản phẩm theo chế độ xem lưới */}
               {viewMode === 'grid' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {displayedProducts.map(product => (
+                  {products.map(product => (
                     <ProductCard key={product.id || product.producT_ID} product={product} />
                   ))}
                 </div>
@@ -139,7 +148,7 @@ const Shop = () => {
               {/* Hiển thị sản phẩm theo chế độ xem danh sách */}
               {viewMode === 'list' && (
                 <div className="flex flex-col gap-4">
-                  {displayedProducts.map(product => (
+                  {products.map(product => (
                     <ProductListCard key={product.id || product.producT_ID} product={product} />
                   ))}
                 </div>
