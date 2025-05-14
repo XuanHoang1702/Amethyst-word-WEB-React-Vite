@@ -7,15 +7,7 @@ import ProductSort from '../../pages/products/ProductSort';
 import { uniqueProducts } from "../../service/ProductData";
 import ProductCard from '../products/new/ProductCard';
 import ProductListCard from '../products/new/ProductListCard';
-import { uniqueProducts } from "../../service/ProductData";
-import PromotionBanner from '../../components/layout/PromotionBanner';
-import Breadcrumb from '../../components/BreadCrumb';
-import ProductSort from '../../pages/products/ProductSort';
-import { Filter, X, Grid, List } from 'lucide-react';
-import ProductFilters from '../../components/ui/ProductFilter';
-import { Link } from "react-router-dom";
-import bg1 from '../../assets/image/banner03.jpg'
-import FashionPagination from "../../components/panigation/Panigation";
+import { ProductPaging } from '../../service/ProductService';
 
 // Component ViewModeToggle
 const ViewModeToggle = ({ viewMode, onViewModeChange }) => {

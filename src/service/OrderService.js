@@ -9,7 +9,7 @@ export const CreateOrder = async (token, input) => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        localStorage.setItem('orderId', response.data.id);
+        localStorage.setItem('orderId', response.data.result);
         return response.data;
     } catch (error) {
         throw error.response || { message: 'Lỗi kết nối server' };

@@ -81,3 +81,21 @@ export const ProductPaging = async (pageNumber = 1, pageSize = 8) => {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
+export const ProductSearch = async (name, pageNumber, pageSize) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Product/Search`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                name: name,
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}

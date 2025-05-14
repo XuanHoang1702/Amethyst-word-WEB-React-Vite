@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import CartDrawer from "../../pages/carts/CartDrawer";
 import { MenuNavBarService } from "../../service/MenuNavBarService";
 import { GetInformation } from "../../service/UserService";
-
+import { ProductSearch } from "../../service/ProductService";
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
@@ -15,14 +15,11 @@ const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [username, setUsername] = useState("");
-
+  const [searchProduct, setSearchproduct] = useState("");
   const toggleCartDrawer = () => setDrawerOpen(!drawerOpen);
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
   const token = localStorage.getItem("token");
-
-
-
   const fetchUserData = async () => {
     try {
       if (token === null) {
@@ -34,6 +31,15 @@ const Navbar = () => {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+    }
+  };
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await ProductSearch(searchProduct);
+      console.log("Product: ", response.data);
+    } catch (error) {
+      console.error("Error fetching product", error);
     }
   };
 
@@ -107,16 +113,22 @@ const Navbar = () => {
           </div>
           <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 flex-grow-0 flex-shrink-0">
             <div className="hidden md:block relative">
+              <form onSubmit={handleSearch}>
               <input
+              onChange={setSearchproduct}
+              name={searchProduct}
                 type="text"
                 placeholder="Tìm kiếm..."
                 className="bg-white border border-white/30 rounded-full py-1 px-3 pl-8 text-black text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-white w-36 lg:w-48"
               />
               <FaSearch className="absolute left-3 top-2 text-black text-xs lg:text-sm" />
-            </div>
+            
             <button onClick={toggleSearch} className="md:hidden text-white">
               <FaSearch className="text-lg" />
             </button>
+            </form>
+            </div>
+            <button/>
             <div className="relative">
             <Link
                 to={token !== null ? "/profile" : "/login"}

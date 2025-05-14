@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { getCart } from '../../service/CartService';
 import { CreateOrder, GetStatus } from '../../service/OrderService';
 import { GetAddress, GetInformation } from '../../service/UserService';
-
+import {CreateOrderDetail} from '../../service/OrderDetailService';
 export default function FashionCheckout() {
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('qr');
@@ -16,12 +16,13 @@ export default function FashionCheckout() {
   const [user, setUser] = useState({});
   const [address, setAddress] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [orderDetail, setOrderDetails] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [shippingMethod, setShippingMethod] = useState('');
   const [shipPrice, setShipPrice] = useState(0);
-  //const orderId = localStorage.getItem("orderId");
-  const orderId = "ORDEB94080";
+  const orderId = localStorage.getItem("orderId");
+  // const orderId = "ORDEB94080";
   const [orderStatus, setOrderStatus] = useState(null);
   let intervalId = null;
   const handleHome = () => {
@@ -54,16 +55,22 @@ export default function FashionCheckout() {
         return;
       }
       const response = await getCart(token);
-      setCartItems(response);
+      const FormattedItimes = response.map(item=>({...item,
+        producT_ID: item.producT_ID,
+        quantity: item.quantity,
+        producT_PRICE: Number(item.producT_PRICE).toFixed(2),
+        subtotal:(Number(item.producT_PRICE)*item.quantity).toFixed(2)
+       
+      }))
+      setOrderDetails(FormattedItimes);
 
-      const totalQuantity = response.reduce((sum, item) => {
+      const totalQuantity = FormattedItimes.reduce((sum, item) => {
         return sum + item.quantity;
       }, 0);
       setTotalQuantity(totalQuantity);
 
-      const totalPrice = response.reduce((sum, item) => {
-        const price = Number(item.producT_PRICE);
-        return sum + price * item.quantity;
+      const totalPrice = FormattedItimes.reduce((sum, item) => {
+       return sum + Number(item.subtotal)
       }, 0);
       setTotalPrice(totalPrice);
 
@@ -76,9 +83,9 @@ export default function FashionCheckout() {
   const fetchOrderStatus = async () => {
     try {
       if(orderId){
-        const response = await GetStatus(token, "ORDEB94080");
+        const response = await GetStatus(token, orderId);
         setOrderStatus(response);
-        if (response.result === "3") {
+        if (response.result === "2") {
           toast.success("Đặt hàng thành công");
           setCurrentStep(4);
           clearInterval(intervalId);
@@ -100,11 +107,26 @@ export default function FashionCheckout() {
         note: shippingMethod,
         ordeR_STATUS: 1,
       }
+
       await CreateOrder(token, data);
     }catch (error) {
       console.error("Error placing order:", error);
     }
   }
+
+  const handleOrderDetail = async () => {
+    try {
+      const response = await CreateOrderDetail(orderId, orderDetail);
+      
+    }
+      catch(error)
+      {
+        console.error("Error placing order:", error);
+
+      }
+    }
+      
+
 
   useEffect(() => {
     fetchUserData();
@@ -303,6 +325,7 @@ export default function FashionCheckout() {
             onClick={() => {
               setCurrentStep(3);
               handleOrder();
+              handleOrderDetail();
             }}
             className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
