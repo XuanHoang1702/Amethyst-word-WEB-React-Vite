@@ -21,16 +21,19 @@ const CartContent = () => {
 
     fetchCart();
   }, [token]);
+
+  //const validCartProducts = cartProducts.filter(p => p.producT_ID !== null);
+
   return (
     <div>
-    {cartProducts.length > 0 ? (
-      <Suspense fallback={<p>Loading cart items...</p>}>
-        {cartProducts.map((product) => <CartItem key={product.id} product={product} />)}
-      </Suspense>
-    ) : (
+      {cartProducts.length > 0 ? (
+        <Suspense fallback={<p>Loading cart items...</p>}>
+          {cartProducts.map((product) => <CartItem key={product.producT_ID} product={product} />)}
+        </Suspense>
+        ) : (
         <p className="text-gray-500 text-center">Your cart is empty.</p>
-    )}
-</div>
+      )}
+  </div>
   )
 }
 
