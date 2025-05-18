@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useContext } from "react";
 import { FaHeart, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CartDrawer from "../../pages/carts/CartDrawer";
 import { MenuNavBarService } from "../../service/MenuNavBarService";
 import { GetInformation } from "../../service/UserService";
 import { ProductSearch } from "../../service/ProductService";
+import { AuthContext } from "../../context/AuthContext";
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
@@ -14,32 +16,49 @@ const Navbar = () => {
   const [menuList, setMenuList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [username, setUsername] = useState("");
-  const [searchProduct, setSearchproduct] = useState("");
+  const [searchProduct, setSearchProduct] = useState("");
+  const [searchError, setSearchError] = useState("");
+  const [searchLoading, setSearchLoading] = useState(false);
+  const { username, setUsername } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
   const toggleCartDrawer = () => setDrawerOpen(!drawerOpen);
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
-  const token = localStorage.getItem("token");
+
   const fetchUserData = async () => {
     try {
-      if (token === null) {
+      if (!token) {
         setUsername(null);
         return;
-      } else {
-        const userInfo = await GetInformation(token);
+      }
+      const userInfo = await GetInformation(token);
+      if (userInfo?.user_Inf?.USER_LAST_NAME) {
         setUsername(userInfo.user_Inf.USER_LAST_NAME);
+      } else {
+        setUsername(null);
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      setUsername(null);
     }
   };
+
   const handleSearch = async (e) => {
     e.preventDefault();
+    if (!searchProduct.trim()) {
+      setSearchError("Vui lòng nhập từ khóa tìm kiếm.");
+      return;
+    }
+    setSearchError("");
+    setSearchLoading(true);
     try {
       const response = await ProductSearch(searchProduct);
-      console.log("Product: ", response.data);
+      navigate(`/search?query=${encodeURIComponent(searchProduct)}`, { state: { results: response.data } });
     } catch (error) {
-      console.error("Error fetching product", error);
+      setSearchError("Lỗi tìm kiếm sản phẩm. Vui lòng thử lại.");
+    } finally {
+      setSearchLoading(false);
     }
   };
 
@@ -50,30 +69,33 @@ const Navbar = () => {
   const fetchMenuList = async () => {
     try {
       const data = await MenuNavBarService.getMenuList();
-      setMenuList(data);
+      if (Array.isArray(data)) {
+        setMenuList(data);
+      } else {
+        setMenuList([]);
+      }
     } catch (error) {
-      console.error("Error fetching menu list:", error);
+      setMenuList([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUserData();
     fetchMenuList();
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-
+    fetchUserData();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [token]);
 
   const menuSpacing = useMemo(() => {
-    if (menuList.length <= 3) return "space-x-12";
-    if (menuList.length <= 5) return "space-x-8";
-    if (menuList.length <= 7) return "space-x-6";
-    return "space-x-4";
+    const spacingMap = {
+      3: "space-x-12",
+      5: "space-x-8",
+      7: "space-x-6",
+      default: "space-x-4",
+    };
+    return spacingMap[Math.min(menuList.length, 7)] || spacingMap.default;
   }, [menuList.length]);
 
   const menuFontSize = useMemo(() => {
@@ -114,37 +136,37 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 flex-grow-0 flex-shrink-0">
             <div className="hidden md:block relative">
               <form onSubmit={handleSearch}>
-              <input
-              onChange={setSearchproduct}
-              name={searchProduct}
-                type="text"
-                placeholder="Tìm kiếm..."
-                className="bg-white border border-white/30 rounded-full py-1 px-3 pl-8 text-black text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-white w-36 lg:w-48"
-              />
-              <FaSearch className="absolute left-3 top-2 text-black text-xs lg:text-sm" />
-            
-            <button onClick={toggleSearch} className="md:hidden text-white">
-              <FaSearch className="text-lg" />
-            </button>
-            </form>
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm..."
+                  className="bg-white border border-white/30 rounded-full py-1 px-3 pl-8 text-black text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-white w-36 lg:w-48"
+                  value={searchProduct}
+                  onChange={(e) => setSearchProduct(e.target.value)}
+                  disabled={searchLoading}
+                />
+                <FaSearch className="absolute left-3 top-2 text-black text-xs lg:text-sm" />
+                <button type="submit" className="hidden">Tìm kiếm</button>
+                {searchError && <p className="text-red-500 text-xs mt-1">{searchError}</p>}
+                {searchLoading && <span className="text-white text-xs">Đang tìm kiếm...</span>}
+              </form>
+              <button onClick={toggleSearch} className="md:hidden text-white">
+                <FaSearch className="text-lg" />
+              </button>
             </div>
-            <button/>
             <div className="relative">
-            <Link
-                to={token !== null ? "/profile" : "/login"}
+              <Link
+                to={token ? "/profile" : "/login"}
                 className="text-white hover:text-black flex items-center"
               >
                 <FaUser className="text-lg" />
                 <span className="hidden lg:inline ml-1 text-xs lg:text-sm">
-                  {username !== null ? username : "Đăng nhập"}
+                  {username || "Đăng nhập"}
                 </span>
               </Link>
-
             </div>
             <Link to="/wishlist" className="text-white hover:text-black">
               <FaHeart className="text-lg" />
             </Link>
-
             <button onClick={toggleCartDrawer} className="text-white hover:text-black relative">
               <FaShoppingBag className="text-lg" />
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">3</span>
@@ -155,7 +177,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-
       <CartDrawer drawerOpen={drawerOpen} toggleCartDrawer={toggleCartDrawer} />
       {navDrawerOpen && (
         <>

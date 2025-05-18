@@ -41,7 +41,7 @@ const UserLayout = () => {
         />
       )}
     </div>
-  );
+  )
 };
 
 export default UserLayout;

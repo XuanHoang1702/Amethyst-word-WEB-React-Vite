@@ -82,25 +82,16 @@ export const ProductPaging = async (pageNumber = 1, pageSize = 8) => {
     }
 }
 
-
 export const ProductSearch = async (name, pageNumber, pageSize) => {
-
-export const SerchProduct = async (input, pageNumber, pageSize) => {
-
     try {
         const response = await axios.get(`${API_URL}/api/Product/Search`, {
             headers: {
                 'Content-Type': 'application/json',
             },
             params: {
-
                 name: name,
                 pageNumber: pageNumber,
                 pageSize: pageSize
-
-                name: input,
-                pageNumber: pageNumber,
-                pageSize: pageSize,
             }
         });
         return response.data;
@@ -109,23 +100,26 @@ export const SerchProduct = async (input, pageNumber, pageSize) => {
     }
 }
 
-export const FillterProduct = async (input, pageNumber, pageSize) => {
-    try {
-        const response = await axios.get(`${API_URL}/api/Product/Fillter`, {
-            headers: {
-                'Content-Type': 'application/json',
+export const ProductFilter = async(brandId=null, categoryId=null, priceMin=0, pricaMax=0, pageNumber=1, pageSize=10)=>{
+    try{
+        const response = await axios.get(`${API_URL}/api/Product/Filter`,{
+            headers:{
+                'Content-Type':'application/json'
             },
-            params: {
-                brandId: input.brandId,
-                categoryId: input.categoryId,
-                priceMin: input.priceMin,
-                pricaMax: input.priceMax,
-                pageNumber: pageNumber,
-                pageSize: pageSize,
+            params:{
+                brandId,
+                categoryId,
+                priceMin,
+                pricaMax,
+                pageNumber,
+                pageSize
             }
-        });
+          
+        })
         return response.data;
-    } catch (error) {
+    }
+    catch(error){
         throw error.response || { message: 'Lỗi kết nối server' };
+
     }
 }
