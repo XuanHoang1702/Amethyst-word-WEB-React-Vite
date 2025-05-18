@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MapPin, Phone, Mail, Clock, MessageSquare, Check } from "lucide-react";
-import Breadcrumb from "../BreadCrumb";
+import Breadcrumb from "../../components/BreadCrumb";
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: "",
