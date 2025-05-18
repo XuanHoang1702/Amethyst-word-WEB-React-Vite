@@ -55,6 +55,19 @@ const SaleCard = ({ product }) => {
     }
   };
 
+  const AddToWishList = async () => {
+      if (token) {
+        const response = await AddWishList(token, product.producT_ID);
+        if(response.code === 201) {
+          toast.success('Thêm vào danh sách yêu thích thành công!');
+        } else {
+          toast.error(response.message || 'Thêm vào danh sách yêu thích thất bại!');
+        }
+      } else {
+        toast.error('Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.');
+      }
+    }
+
   return (
   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
@@ -77,7 +90,7 @@ const SaleCard = ({ product }) => {
             <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
               <FaShoppingCart size={18} />
             </button>
-            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors">
+            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={AddToWishList}>
               <FaHeart size={18} />
             </button>
             <button

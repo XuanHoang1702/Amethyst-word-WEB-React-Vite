@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AddWishList } from '../../../service/WishListService';
 import { formatPrice } from '../../../utils/formatUtils';
+import { addToCart } from '../../../service/CartService';
 
 /**
  * Render stars based on rating
@@ -38,6 +39,27 @@ const ProductListCard = ({ product }) => {
       toast.error('Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.');
     }
   }
+
+  const handleAddToCart = async () => {
+    try {
+      if (!token) {
+        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+        return;
+      }
+      const res = await addToCart(token, product.producT_ID, 1);
+      if (res.code == 201) {
+        toast.success('Thêm vào giỏ hàng thành công');
+        setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+      }else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Thêm vào giỏ hàng thất bại');
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden group hover:shadow-lg transition-shadow">

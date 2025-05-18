@@ -81,3 +81,42 @@ export const ProductPaging = async (pageNumber = 1, pageSize = 8) => {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
+export const SerchProduct = async (input, pageNumber, pageSize) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Product/Search`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                name: input,
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const FillterProduct = async (input, pageNumber, pageSize) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Product/Fillter`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                brandId: input.brandId,
+                categoryId: input.categoryId,
+                priceMin: input.priceMin,
+                pricaMax: input.priceMax,
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
