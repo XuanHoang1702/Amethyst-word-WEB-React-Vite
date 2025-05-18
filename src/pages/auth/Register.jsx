@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   FaPhoneAlt,
   FaTransgenderAlt
@@ -10,12 +9,13 @@ import {
 import {
   RiLockPasswordFill
 } from "react-icons/ri";
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import React, { useState } from "react";
+import { register, SendOtpEmail } from "../../service/UserService";
 import bg1 from '../../assets/image/mau-tim-mac-voi-mau-gi-dep__18__fa7d6ebb66c840ac870291c9405730bc.webp';
-import { SendOtpEmail } from "../../service/UserService";
-
 const Register = () => {
   const {openOtpModal } = useOutletContext();
+  const navigate = useNavigate();
   const [formData, setFormData] =useState({ 
     firstName: "",
     lastName: "",
@@ -25,6 +25,7 @@ const Register = () => {
     gender: "",
     confirmPassword: "",
     birthDate: "",
+
   });
   const [errors, setErrors] = useState({});
 
@@ -60,13 +61,14 @@ const Register = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     try {
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       await SendOtpEmail(formData.email, fullName);
+
       openOtpModal({ email: formData.email, userData: formData, isRegistering: true });
     } catch (error) {
       setErrors({

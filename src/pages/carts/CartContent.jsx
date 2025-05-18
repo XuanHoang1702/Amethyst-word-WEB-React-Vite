@@ -13,6 +13,10 @@ const CartContent = () => {
           return;
         }
         const data = await getCart(token);
+        if(data[0].producT_ID === null){
+          setCartProducts([]);
+          return 
+        }
         setCartProducts(data);
       } catch (error) {
         console.error('Error fetching cart:', error);

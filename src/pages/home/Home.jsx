@@ -1,7 +1,7 @@
 import React from 'react';
 import Ads from '../../components/layout/Ads';
 import Banner from '../../components/layout/Banner';
-import ContactUs from '../../components/layout/Contact';
+
 import WhyUs from '../../components/layout/WhyUs';
 import CategoryList from '../categories/CategoryList';
 import { ProductList } from '../products';

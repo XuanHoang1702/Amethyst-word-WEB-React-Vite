@@ -1,71 +1,81 @@
 import { useState } from 'react';
 import { ArrowLeft, Truck, Package, Check, AlertCircle } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-const getOrderDetail = (orderId) => {
-  return {
-    id: orderId,
-    date: '2023-06-15',
-    status: 'Đang giao',
-    statusColor: 'bg-blue-100 text-blue-800',
-    total: '1.290.000₫',
-    customerName: 'Nguyễn Văn A',
-    phone: '0987654321',
-    email: 'nguyenvana@example.com',
-    address: '123 Đường Lê Lợi, Quận 1, TP.HCM',
-    paymentMethod: 'Thanh toán khi nhận hàng (COD)',
-    shippingMethod: 'Giao hàng nhanh',
-    shippingFee: '30.000₫',
-    items: [
-      {
-        id: 'PRD001',
-        name: 'Áo thun nam cổ tròn',
-        image: '/images/product1.jpg',
-        price: '290.000₫',
-        quantity: 2,
-        total: '580.000₫'
-      },
-      {
-        id: 'PRD002',
-        name: 'Quần jean nam slim fit',
-        image: '/images/product2.jpg',
-        price: '680.000₫',
-        quantity: 1,
-        total: '680.000₫'
-      }
-    ],
-    trackingHistory: [
-      {
-        status: 'Đơn hàng đã đặt',
-        date: '2023-06-15',
-        time: '10:30',
-        description: 'Đơn hàng của bạn đã được tạo thành công.'
-      },
-      {
-        status: 'Đã xác nhận',
-        date: '2023-06-15',
-        time: '11:45',
-        description: 'Đơn hàng của bạn đã được xác nhận và đang được chuẩn bị.'
-      },
-      {
-        status: 'Đang vận chuyển',
-        date: '2023-06-16',
-        time: '09:15',
-        description: 'Đơn hàng đã được giao cho đơn vị vận chuyển.'
-      },
-      {
-        status: 'Đang giao hàng',
-        date: '2023-06-17',
-        time: '08:30',
-        description: 'Đơn hàng đang được giao đến địa chỉ của bạn.'
-      }
-    ]
-  };
-};
+import { CreateOrderDetail } from '../../../../service/OrderDetailService';
+// const getOrderDetail = (orderId) => {
+//   return {
+//     id: orderId,
+//     date: '2023-06-15',
+//     status: 'Đang giao',
+//     statusColor: 'bg-blue-100 text-blue-800',
+//     total: '1.290.000₫',
+//     customerName: 'Nguyễn Văn A',
+//     phone: '0987654321',
+//     email: 'nguyenvana@example.com',
+//     address: '123 Đường Lê Lợi, Quận 1, TP.HCM',
+//     paymentMethod: 'Thanh toán khi nhận hàng (COD)',
+//     shippingMethod: 'Giao hàng nhanh',
+//     shippingFee: '30.000₫',
+//     items: [ 
+//       {
+//         id: 'PRD001',
+//         name: 'Áo thun nam cổ tròn',
+//         image: '/images/product1.jpg',
+//         price: '290.000₫',
+//         quantity: 2,
+//         total: '580.000₫'
+//       },
+//       {
+//         id: 'PRD002',
+//         name: 'Quần jean nam slim fit',
+//         image: '/images/product2.jpg',
+//         price: '680.000₫',
+//         quantity: 1,
+//         total: '680.000₫'
+//       }
+//     ],
+//     trackingHistory: [
+//       {
+//         status: 'Đơn hàng đã đặt',
+//         date: '2023-06-15',
+//         time: '10:30',
+//         description: 'Đơn hàng của bạn đã được tạo thành công.'
+//       },
+//       {
+//         status: 'Đã xác nhận',
+//         date: '2023-06-15',
+//         time: '11:45',
+//         description: 'Đơn hàng của bạn đã được xác nhận và đang được chuẩn bị.'
+//       },
+//       {
+//         status: 'Đang vận chuyển',
+//         date: '2023-06-16',
+//         time: '09:15',
+//         description: 'Đơn hàng đã được giao cho đơn vị vận chuyển.'
+//       },
+//       {
+//         status: 'Đang giao hàng',
+//         date: '2023-06-17',
+//         time: '08:30',
+//         description: 'Đơn hàng đang được giao đến địa chỉ của bạn.'
+//       }
+//     ]
+//   };
+// };
+const fetchOrderDetail = async (orderId)=>{
+  try{
+    const token = localStorage.getItem('token');
+    const data = await CreateOrderDetail(orderId, token);
+    return data
+  }
+  catch(error){
+    console.error('Error fetching order detail:', error);
+  }}
 
 export default function OrderDetail() {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const [orderDetail] = useState(() => getOrderDetail(orderId));
+  const [orderDetail] = useState(() => fetchOrderDetail(orderId));
   const [activeTab, setActiveTab] = useState('products');
 
   // Hiển thị icon tương ứng với trạng thái
@@ -94,7 +104,7 @@ export default function OrderDetail() {
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-2xl font-bold text-slate-800">Chi tiết đơn hàng #{orderDetail.id}</h1>
+        <h1 className="text-2xl font-bold text-slate-800">Chi tiết đơn hàng #{orderDetail.OrderId}</h1>
       </div>
 
       {/* Thông tin đơn hàng */}
@@ -172,20 +182,20 @@ export default function OrderDetail() {
                           </div>
                           <div>
                             <p className="font-medium text-slate-800">{item.name}</p>
-                            <p className="text-sm text-slate-500">Mã: {item.id}</p>
+                            <p className="text-sm text-slate-500">Mã: {item.producT_ID}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-right text-slate-500">{item.price}</td>
+                      <td className="px-6 py-4 text-right text-slate-500">{item.producT_PRICE}</td>
                       <td className="px-6 py-4 text-right text-slate-500">{item.quantity}</td>
-                      <td className="px-6 py-4 text-right font-medium">{item.total}</td>
+                      <td className="px-6 py-4 text-right font-medium">{item.subtotal}</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr className="bg-slate-50">
                     <td colSpan="3" className="px-6 py-4 text-right font-medium">Tổng tiền sản phẩm:</td>
-                    <td className="px-6 py-4 text-right font-medium">{orderDetail.total}</td>
+                    <td className="px-6 py-4 text-right font-medium">{orderDetail.subtotal}</td>
                   </tr>
                 </tfoot>
               </table>

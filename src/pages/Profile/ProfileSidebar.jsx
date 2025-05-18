@@ -17,6 +17,7 @@ export default function ProfileSidebar({ user, activeTab, setActiveTab }) {
   const navigator = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.clear();
     navigator('/');
     window.location.reload();
   }

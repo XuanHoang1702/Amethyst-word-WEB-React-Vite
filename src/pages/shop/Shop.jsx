@@ -7,9 +7,11 @@ import ProductSort from '../../pages/products/ProductSort';
 import { ProductPaging } from '../../service/ProductService';
 import ProductCard from '../products/new/ProductCard';
 import ProductListCard from '../products/new/ProductListCard';
+import { ProductPaging } from '../../service/ProductService';
 
 // Component ViewModeToggle
 const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
+
   return (
     <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
       <button
@@ -38,6 +40,17 @@ const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); 
   const [totalPages, setTotalPages] = useState(1);
+<<<<<<< HEAD
+  const [products, setProducts ] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductPaging(1, 8);
+      const data = response.data; 
+      setProducts(data);
+    } catch (error) {
+      console.error(error);
+=======
   const [products, setProducts] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
 
@@ -49,6 +62,7 @@ const Shop = () => {
       setTotalProducts(response.totalRecords);
     } catch (error) {
       console.error("Error fetching products:", error);
+>>>>>>> origin/main
     }
   };
 
@@ -58,8 +72,14 @@ const Shop = () => {
     
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+<<<<<<< HEAD
+    const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    fetchProducts();
+    setDisplayedProducts(currentProducts);
+=======
     
     fetchProducts();
+>>>>>>> origin/main
   }, [currentPage, viewMode]);
   const handlePageChange = (pageNumber) => {
     window.scrollTo({
