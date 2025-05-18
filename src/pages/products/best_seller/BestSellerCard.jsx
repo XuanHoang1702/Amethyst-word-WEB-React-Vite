@@ -1,8 +1,10 @@
 /** @file src/components/product/bestSeller/BestSellerCard.jsx */
-import React from 'react';
 // import { FaHeart, FaShoppingCart } from 'react-icons/fa';
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { addToCart } from '../../../service/CartService';
+import { AddWishList } from '../../../service/WishListService';
 import { formatPrice } from '../../../utils/formatUtils';
 /**
  * BestSellerCard component for displaying a best-selling product
@@ -29,6 +31,41 @@ const renderStars = (rating) => {
 
 const BestSellerCard = ({ product }) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  const handleAddToCart = async () => {
+    try {
+      if (!token) {
+        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+        return;
+      }
+      const res = await addToCart(token, product.producT_ID, 1);
+      if (res.code == 201) {
+        toast.success('Thêm vào giỏ hàng thành công');
+        setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+      }else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Thêm vào giỏ hàng thất bại');
+    }
+  };
+
+  const AddToWishList = async () => {
+      if (token) {
+        const response = await AddWishList(token, product.producT_ID);
+        if(response.code === 201) {
+          toast.success('Thêm vào danh sách yêu thích thành công!');
+        } else {
+          toast.error(response.message || 'Thêm vào danh sách yêu thích thất bại!');
+        }
+      } else {
+        toast.error('Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.');
+      }
+    }
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
@@ -56,10 +93,10 @@ const BestSellerCard = ({ product }) => {
   
           {/* Hover buttons */}
           <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors">
+            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
               <FaShoppingCart size={18} />
             </button>
-            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors">
+            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={AddToWishList}>
               <FaHeart size={18} />
             </button>
             <button

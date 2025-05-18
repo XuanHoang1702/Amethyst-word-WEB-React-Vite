@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import FashionPagination from "../../components/panigation/Panigation";
 import ProductFilters from '../../components/ui/ProductFilter';
 import ProductSort from '../../pages/products/ProductSort';
-import { uniqueProducts } from "../../service/ProductData";
+import { ProductPaging } from '../../service/ProductService';
 import ProductCard from '../products/new/ProductCard';
 import ProductListCard from '../products/new/ProductListCard';
 import { ProductPaging } from '../../service/ProductService';
@@ -33,15 +33,14 @@ const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
 };
 
 const Shop = () => {
-  const [showPromotion, setShowPromotion] = useState(true);
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); 
   
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(viewMode === 'grid' ? 8 : 5); 
-  const [displayedProducts, setDisplayedProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
+<<<<<<< HEAD
   const [products, setProducts ] = useState([]);
 
   const fetchProducts = async () => {
@@ -51,19 +50,36 @@ const Shop = () => {
       setProducts(data);
     } catch (error) {
       console.error(error);
+=======
+  const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductPaging(currentPage, productsPerPage);
+      setProducts(response.data);
+      setTotalPages(response.totalPages);
+      setTotalProducts(response.totalRecords);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+>>>>>>> origin/main
     }
   };
 
   useEffect(() => {
     const itemsPerPage = viewMode === 'grid' ? 8 : 5;
-    const calculatedTotalPages = Math.ceil(uniqueProducts.length / itemsPerPage);
-    setTotalPages(calculatedTotalPages);
+
     
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+<<<<<<< HEAD
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
     fetchProducts();
     setDisplayedProducts(currentProducts);
+=======
+    
+    fetchProducts();
+>>>>>>> origin/main
   }, [currentPage, viewMode]);
   const handlePageChange = (pageNumber) => {
     window.scrollTo({
@@ -72,6 +88,7 @@ const Shop = () => {
     });
     setCurrentPage(pageNumber);
   };
+
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     setCurrentPage(1); 
@@ -131,7 +148,7 @@ const Shop = () => {
             <div className="w-full md:w-3/4 lg:w-4/5 p-2">
               <div className="flex justify-between items-center mb-6">
                 <div className="text-sm text-gray-500">
-                  Hiển thị {displayedProducts.length} trong tổng số {uniqueProducts.length} sản phẩm
+                  Hiển thị {products.length} trong tổng số {totalProducts} sản phẩm
                 </div>
                 <div className="flex items-center gap-4">
                   <ViewModeToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
