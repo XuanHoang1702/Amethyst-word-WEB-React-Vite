@@ -67,7 +67,7 @@ const ProductListCard = ({ product }) => {
         {/* Phần hình ảnh - chiếm 30% chiều rộng trên desktop */}
         <div className="relative w-full md:w-1/3 h-64 ">
           <img
-            src={`https://imgur.com/${product.imagE_NAME}`}
+                      src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             alt={product.alt || product.producT_NAME}
             className="w-full h-full object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

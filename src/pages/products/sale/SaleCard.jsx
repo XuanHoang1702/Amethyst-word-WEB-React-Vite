@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { addToCart } from '../../../service/CartService';
 import { formatPrice } from '../../../utils/formatUtils';
+import { AddWishList } from '../../../service/WishListService';
+import { API_URL } from '../../../service/Api';
 /**
  * BestSellerCard component for displaying a best-selling product
  * @param {Object} props
@@ -72,7 +74,7 @@ const SaleCard = ({ product }) => {
   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-            src={`https://imgur.com/${product.imagE_NAME}`}
+                      src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

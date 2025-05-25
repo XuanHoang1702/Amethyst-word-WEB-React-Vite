@@ -1,23 +1,28 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { getCart } from '../../service/CartService';
+import { useCart } from '../../context/CartContext';
 const CartItem = lazy(() => import('./CartItem'));
-
 const CartContent = () => {
   const [cartProducts, setCartProducts] = useState([]);
   const token = localStorage.getItem('token');
+  const {updateCartCount} = useCart();
   useEffect(() => {
     const fetchCart = async () => {
       try {
         if (token === null) {
           setCartProducts([]);
+          await updateCartCount();
           return;
         }
         const data = await getCart(token);
         if(data[0].producT_ID === null){
           setCartProducts([]);
+          await updateCartCount();
           return 
         }
+
         setCartProducts(data);
+        await updateCartCount();
       } catch (error) {
         console.error('Error fetching cart:', error);
       }
@@ -25,8 +30,6 @@ const CartContent = () => {
 
     fetchCart();
   }, [token]);
-
-  //const validCartProducts = cartProducts.filter(p => p.producT_ID !== null);
 
   return (
     <div>
@@ -41,5 +44,5 @@ const CartContent = () => {
   )
 }
 
-export default CartContent
+export default CartContent;
 

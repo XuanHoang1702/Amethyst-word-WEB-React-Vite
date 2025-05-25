@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MapPin, Phone, Mail, Clock, MessageSquare, Check } from "lucide-react";
 import Breadcrumb from "../../components/BreadCrumb";
+import bg3 from '../../assets/image/old-fashion-rotary-dial-phone-antique-technology-concept-white-rustic-wooden-background-152862950.webp'
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -37,7 +38,7 @@ const ContactPage = () => {
       <div className="relative">
       <div className="bg-gradient-to-r from-purple-600 to-blue-500 h-64 md:h-96 w-full ">
           <img 
-            src="/api/placeholder/1920/500" 
+            src={bg3}
             alt="Fashion Blog Hero" 
             className="w-full h-full object-cover opacity-50"
           />

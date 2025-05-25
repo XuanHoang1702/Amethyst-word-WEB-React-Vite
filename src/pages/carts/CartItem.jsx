@@ -4,6 +4,7 @@ import { MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { deleteCart } from '../../service/CartService';
 import { formatPrice } from '../../utils/formatUtils';
+import { useCart } from '../../context/CartContext';
 /**
  * CartItem component for displaying a single product in the cart
  * @param {Object} props
@@ -18,19 +19,36 @@ import { formatPrice } from '../../utils/formatUtils';
  */
 const CartItem = ({ product }) => {
   const [quantity, setQuantity] = useState(product.quantity);
+  const { updateCartCount, updateQuantity } = useCart();
 
-  const increaseQuantity = () => setQuantity(quantity + 1);
-  const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
+  const increaseQuantity = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    updateQuantity(product.producT_ID, newQuantity);
+  };
+
+  const decreaseQuantity = () => {
+    const newQuantity = quantity > 1 ? quantity - 1 : 1;
+    setQuantity(newQuantity);
+    updateQuantity(product.producT_ID, newQuantity);
+  };
+
   const token = localStorage.getItem('token');
 
   const handleDelete = async () => {
     try {
+      if (!token) {
+        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+        return;
+      }
       const res = await deleteCart(token, product.producT_ID);
       if (res.code === 200) {
-        toast.success('Xóa sản phẩm thành công');
+        toast.success('Xóa sản phẩm thành cong');
+        await updateCartCount();
         setTimeout(() => {
           window.location.reload();
         }, 2000);
+
       } else {
         toast.error(res.message);
       }
@@ -39,6 +57,7 @@ const CartItem = ({ product }) => {
       toast.error('Xóa sản phẩm thất bại');
     }
   };
+
   return (
     <div className="flex items-start justify-between py-4 border-b">
       <div className="flex items-start">
@@ -66,17 +85,22 @@ const CartItem = ({ product }) => {
             >
               +
             </button>
+            
           </div>
         </div>
       </div>
+      
       <div>
-        <p className="font-medium">{formatPrice(product.producT_PRICE)}</p>
-        <button onClick={handleDelete}>
-          <MdDelete className="h-6 w-6 mt-2 text-gray-600" />
+        <p className="font-bold text-lg">{formatPrice(product.producT_PRICE * quantity)}</p>
+      </div>
+      <div>
+      <button onClick={handleDelete}>
+          <MdDelete className="h-6 w-6 mt-19 text-red-600" />
         </button>
       </div>
+      
     </div>
   );
 };
 
-export default CartItem;
+export default CartItem

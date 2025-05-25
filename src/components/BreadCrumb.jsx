@@ -25,7 +25,7 @@ const Breadcrumb = ({ items }) => {
                 {item.label}
               </span>
             ) : (
-              <span className="font-medium text-purple-400">
+              <span className="font-medium text-purple-700">
                 {item.label}
               </span>
             )}

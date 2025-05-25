@@ -7,6 +7,7 @@ import CategoryList from '../categories/CategoryList';
 import { ProductList } from '../products';
 import BestSellerList from '../products/best_seller/BestSellerList';
 import bannermiddle from '../../assets/image/banner-thoi-trang-nu.jpg'
+
 import SaleList from '../products/sale/SaleList';
 import SaleBanner from '../../components/layout/BannerSale';
 import BlogPostCard from '../Blog/BlogPostCard';
@@ -14,16 +15,15 @@ import samplePosts from '../../service/BlogData';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import BannerSection from '../../components/layout/BannerSection';
+// import BrandLogos from '../../components/layout/BrandLogo';
 const Home = () => {
     return (
       <div className="justify-center items-center max-w-full p-20">
 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 w-full">
-  {/* Category List - 3/12 cột */}
   <div className="md:col-span-3 bg-white">
     <CategoryList />
   </div>
 
-  {/* Banner - 6/12 cột */}
   <div className="md:col-span-6">
     <Banner />
   </div>
@@ -37,6 +37,7 @@ const Home = () => {
 <div className="w-full my-8">
 </div>
 <BannerSection/>
+{/* <BrandLogos/> */}
 
 <section> 
 
@@ -70,9 +71,7 @@ const Home = () => {
     </div>
   </div>
 </section>
- 
-          
-          
+     
         </div>
     );
 }

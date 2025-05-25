@@ -81,7 +81,7 @@ const FashionPagination = ({ currentPage, totalPages, onPageChange }) => {
               onClick={() => typeof page === 'number' && onPageChange(page)}
               className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 ${
                 currentPage === page
-                  ? 'bg-black text-white border border-black'
+                  ? 'bg-purple-500 text-white border border-black'
                   : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
               }`}
             >
