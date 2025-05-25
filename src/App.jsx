@@ -11,11 +11,14 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import BlogPostDetail from './pages/Blog/BlogPostDetail';
 import FashionCheckout from './pages/checkout/FashionCheckout';
+import { WishlistProvider } from './context/WishListContext';
 // import ManShop from './pages/shop/ManShop';
 import Shop from './pages/shop/Shop';
 // import WomanShop from './pages/shop/WomanShop';
 import ScrollToTop from './utils/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { ProductDetail } from './pages/products';
 const Details = lazy(() => import('./pages/products/detail/Details'));
 const Home = lazy(()=>import('./pages/home/Home'));
 const FashionUserProfile = lazy(() => import('./pages/Profile/FashionUserProfile'));
@@ -28,6 +31,8 @@ const App  = () => {
     <Router>
       <ScrollToTop />
       <AuthProvider>
+        <WishlistProvider>
+      <CartProvider>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<UserLayout />}>
@@ -36,8 +41,6 @@ const App  = () => {
             {/* <Route path="/otp/:email" element={<OTPForm />} /> */}
             <Route index element={<Home />} />
             <Route path="/shop" element={<Shop />} />
-            {/* <Route path="/woman" element={<WomanShop />} />
-            <Route path="/man" element={<ManShop />} /> */}
             <Route path="/contact" element={<ContactPage/>} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/details/:id" element={<Details />} />
@@ -51,8 +54,10 @@ const App  = () => {
           </Route>
         </Routes>
       </Suspense>
-      </AuthProvider>
       <ToastContainer />
+      </CartProvider>
+      </WishlistProvider>
+      </AuthProvider>
     </Router>
   );
 };

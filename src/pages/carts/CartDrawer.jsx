@@ -39,7 +39,7 @@ const CartDrawer = ({ drawerOpen, toggleCartDrawer }) => {
       </div>
       <div className="flex-grow p-4 overflow-y-auto">
         
-        <h2 className="text-xl font-semibold mb-4 bg-[#6666e5] text-center text-white p-2">Giỏ hàng của bạn </h2>
+        <h2 className="text-xl font-semibold mb-4 text-center text-blue-600 p-2">Giỏ hàng của bạn </h2>
         {/* Component for cart Contents */}
         <CartContent />
       </div>

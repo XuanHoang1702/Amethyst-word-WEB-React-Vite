@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useContext } from "react";
+import { useEffect, useMemo, useState, useContext, useRef } from "react";
 import { FaHeart, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
@@ -8,6 +8,9 @@ import { MenuNavBarService } from "../../service/MenuNavBarService";
 import { GetInformation } from "../../service/UserService";
 import { ProductSearch } from "../../service/ProductService";
 import { AuthContext } from "../../context/AuthContext";
+import SearchBar from "../SearchBar";
+import { useWishlist } from "../../context/WishListContext";
+import { useCart } from "../../context/CartContext";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,10 +25,15 @@ const Navbar = () => {
   const { username, setUsername } = useContext(AuthContext);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const searchInputRef = useRef(null);
+  const searchContainerRef = useRef(null);
+  const {wishlistCount} = useWishlist();
+  const {cartCount} = useCart();
 
   const toggleCartDrawer = () => setDrawerOpen(!drawerOpen);
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
-  const toggleSearch = () => setSearchOpen(!searchOpen);
+  
+
 
   const fetchUserData = async () => {
     try {
@@ -45,15 +53,22 @@ const Navbar = () => {
   };
 
   const handleSearch = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
+    
     if (!searchProduct.trim()) {
       setSearchError("Vui lòng nhập từ khóa tìm kiếm.");
       return;
     }
+    
     setSearchError("");
     setSearchLoading(true);
+    
     try {
       const response = await ProductSearch(searchProduct);
+      // Đóng thanh tìm kiếm sau khi tìm kiếm thành công
+      setSearchOpen(false);
       navigate(`/search?query=${encodeURIComponent(searchProduct)}`, { state: { results: response.data } });
     } catch (error) {
       setSearchError("Lỗi tìm kiếm sản phẩm. Vui lòng thử lại.");
@@ -61,6 +76,8 @@ const Navbar = () => {
       setSearchLoading(false);
     }
   };
+
+
 
   const handleResize = () => {
     setWindowWidth(window.innerWidth);
@@ -134,25 +151,11 @@ const Navbar = () => {
             )}
           </div>
           <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 flex-grow-0 flex-shrink-0">
-            <div className="hidden md:block relative">
-              <form onSubmit={handleSearch}>
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm..."
-                  className="bg-white border border-white/30 rounded-full py-1 px-3 pl-8 text-black text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-white w-36 lg:w-48"
-                  value={searchProduct}
-                  onChange={(e) => setSearchProduct(e.target.value)}
-                  disabled={searchLoading}
-                />
-                <FaSearch className="absolute left-3 top-2 text-black text-xs lg:text-sm" />
-                <button type="submit" className="hidden">Tìm kiếm</button>
-                {searchError && <p className="text-red-500 text-xs mt-1">{searchError}</p>}
-                {searchLoading && <span className="text-white text-xs">Đang tìm kiếm...</span>}
-              </form>
-              <button onClick={toggleSearch} className="md:hidden text-white">
-                <FaSearch className="text-lg" />
-              </button>
-            </div>
+            {/* Phần Search */}
+            <div className='overflow-hidden'>
+          <SearchBar/>
+        </div>
+
             <div className="relative">
               <Link
                 to={token ? "/profile" : "/login"}
@@ -164,12 +167,21 @@ const Navbar = () => {
                 </span>
               </Link>
             </div>
-            <Link to="/wishlist" className="text-white hover:text-black">
-              <FaHeart className="text-lg" />
-            </Link>
-            <button onClick={toggleCartDrawer} className="text-white hover:text-black relative">
-              <FaShoppingBag className="text-lg" />
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">3</span>
+            <Link to="/wishlist" className="relative">
+            <FaHeart className="h-6 w-6 text-white"  />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
+          <button onClick={toggleCartDrawer} className="relative">
+                <FaShoppingBag className='h-6 w-6 text-white'/>
+                {cartCount > 0 && (
+                    <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center'>
+                        {cartCount}
+                    </span>
+                )}
             </button>
             <button onClick={toggleNavDrawer} className="md:hidden text-white">
               {navDrawerOpen ? <IoMdClose className="text-xl" /> : <HiBars3BottomRight className="text-xl" />}

@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { addToCart } from '../../../service/CartService';
 import { AddWishList } from '../../../service/WishListService';
 import { formatPrice } from '../../../utils/formatUtils';
-
+import { API_URL } from '../../../service/Api';
+import { useWishlist } from '../../../context/WishListContext';
 /**
  * Render stars based on rating
  * @param {Object} props
@@ -29,6 +30,7 @@ const renderStars = (rating) => {
 };
 
 const ProductCard = ({ product }) => {
+  const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
 
@@ -58,6 +60,7 @@ const ProductCard = ({ product }) => {
       const response = await AddWishList(token, product.producT_ID);
       if(response.code === 201) {
         toast.success('Thêm vào danh sách yêu thích thành công!');
+        incrementCount();
       } else {
         toast.error(response.message || 'Thêm vào danh sách yêu thích thất bại!');
       }
@@ -70,7 +73,8 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
       <div className="relative">
         <img
-          src={`https://imgur.com/${product.imagE_NAME}`}
+          //           src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+          src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}

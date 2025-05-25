@@ -9,7 +9,8 @@ import ProductRelateCard from '../products/related/ProductRelateCard';
 import FashionPagination from '../../components/panigation/Panigation';
 import samplePosts from '../../service/BlogData';
 import { relatedProducts } from '../../service/ProductData';
-
+import bg2 from '../../assets/image/360_F_597940292_dmaVD664ccNHMDJqi0Wv0SCSexklLyhO.jpg'
+import ScrollToTop from '../../utils/ScrollToTop';
 const FashionBlog = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,12 +81,13 @@ const FashionBlog = () => {
   const handleCategoryChange = (category) => setSelectedCategory(category === selectedCategory ? '' : category);
 
   return (
+   
     <div className="pt-[60px]">
       <div className="min-h-screen bg-gray-50">
         <div className="relative">
           <div className="bg-gradient-to-r from-purple-600 to-blue-500 h-64 md:h-96 w-full">
             <img 
-              src="/api/placeholder/1920/500" 
+              src={bg2}
               alt="Fashion Blog Hero" 
               className="w-full h-full object-cover opacity-50"
             />

@@ -1,25 +1,67 @@
 import { Minus, Plus, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { GetProductDetail } from '../../../service/ProductService';
+import { API_URL } from '../../../service/Api';
 
 const ProductDetail = ({ id }) => {
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   //const [mainImage, setMainImage] = useState(productThumbnails[0].image);
 
-  const fecthProductDetail = async () => {
+  const fetchProductDetail = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      
+      if (id === undefined || id === null) {
+        throw new Error("ID sản phẩm không hợp lệ");
+      }
+
       const response = await GetProductDetail(id);
+      if (!response || !response.data) {
+        throw new Error("Không tìm thấy thông tin sản phẩm");
+    }
+    if (response.data.producT_ID !== parseInt(id)) {
+      throw new Error("Thông tin sản phẩm không chính xác");
+  }
       setProduct(response.data);
       console.log("Product: ", response.data);
     } catch (error) {
       console.error('Error fetching product details:', error);
+      setError(error.message || "Có lỗi xảy ra khi tải thông tin sản phẩm");
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
-    fecthProductDetail();
+    console.log("Current ID:", id); 
+    if (id !== undefined && id !== null) {
+      fetchProductDetail();
+    }
   }, [id]);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-96">
+      <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+    </div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center h-96">
+      <div className="text-red-500">{error}</div>
+    </div>;
+  }
+
+  if (!product) {
+    return <div className="flex justify-center items-center h-96">
+      <div className="text-gray-500">Không tìm thấy sản phẩm</div>
+    </div>;
+  }
+
 
 
   const renderStars = (rating) => {
@@ -46,7 +88,7 @@ const ProductDetail = ({ id }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col md:flex-row">
             <div className="bg-gray-100 rounded-lg p-4 flex-1 flex items-center justify-center mb-4 md:mb-0 ">
-              <img src={`https://imgur.com/${product.imagE_NAME}`} alt="Sản phẩm" className="w-full h-full object-cover" />
+              <img            src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'} alt="Sản phẩm" className="w-full h-full object-cover" />
             </div>
             <div className="flex items-center flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 ml-3 p-1">
               {/* {productThumbnails.map((thumbnail) => (
