@@ -99,5 +99,5 @@ const ProductRelateCard = ({ product }) => {
   );
 };
 
-export default ProductRelateCard;
+export default ProductRelateCard
 

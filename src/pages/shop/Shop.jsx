@@ -47,35 +47,6 @@ const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
-  //   try {
-  //     setLoading(true);
-  //     console.log('Fetching with filters:', filters);
-      
-  //     // Sử dụng ProductFilter thay vì ProductPaging
-  //     const response = await ProductFilter(
-  //       null, // brandId
-  //       filters.categoryId,
-  //       0, // priceMin
-  //       0, // priceMax  
-  //       filters.pageNumber,
-  //       filters.pageSize
-  //     );
-      
-  //     console.log('API response:', response);
-      
-  //     setProducts(response.data || []);
-  //     setTotalPages(response.totalPages || 1);
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     setProducts([]);
-  //     setTotalPages(1);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [filters]);
-
-  // Thêm fetchProducts function và sửa các dependencies
 const fetchProducts = useCallback(async () => {
   try {
     setLoading(true);
@@ -148,12 +119,9 @@ const handlePageChange = useCallback(async (pageNumber) => {
     setCurrentPage(1);
   }, []);
 
-  // Xử lý thay đổi trang
-
   return (
     <div className="pt-[60px]">
       <div className="flex flex-col min-h-screen bg-white">
-        {/* Header */}
         <div className="relative">
           <div className="bg-gradient-to-r from-purple-600 to-blue-400 h-64 md:h-96 w-full">
             <img 
@@ -168,7 +136,6 @@ const handlePageChange = useCallback(async (pageNumber) => {
           </div>
         </div>
 
-        {/* Mobile Filters */}
         {showMobileFilters && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
             <div className="absolute right-0 top-0 h-full w-80 bg-white p-4 overflow-y-auto">
@@ -185,11 +152,8 @@ const handlePageChange = useCallback(async (pageNumber) => {
             </div>
           </div>
         )}
-
-        {/* Main Content */}
         <div className="container mx-auto px-4 pb-16">
           <div className="flex flex-col md:flex-row gap-8">
-            {/* Mobile Controls */}
             <div className="md:hidden w-full flex justify-between items-center py-2">
               <button 
                 onClick={() => setShowMobileFilters(true)}
@@ -203,13 +167,9 @@ const handlePageChange = useCallback(async (pageNumber) => {
                 <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
               </div>
             </div>
-
-            {/* Desktop Filters */}
             <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
               <ProductFilters onFilterChange={handleFilterChange} />
             </div>
-            
-            {/* Product List */}
             <div className="w-full md:w-3/4 lg:w-4/5 p-2">
               <div className="flex justify-between items-center mb-6">
                 <div className="text-sm text-gray-500">
@@ -220,7 +180,6 @@ const handlePageChange = useCallback(async (pageNumber) => {
                   <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
                 </div>
               </div>
-
               {loading ? (
                 <div className="text-center py-8">Đang tải sản phẩm...</div>
               ) : products.length === 0 ? (

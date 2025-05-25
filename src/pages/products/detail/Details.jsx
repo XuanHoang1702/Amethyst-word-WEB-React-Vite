@@ -8,8 +8,6 @@ const Details = () => {
   const { id } = useParams();
   console.log("Product ID from params:", id); 
   const productId = parseInt(id);
-
-  // Fix: If productId is NaN or 0, treat as invalid ID and do not fetch
   if (!productId || isNaN(productId)) {
     return (
       <div className="flex justify-center items-center h-96">
@@ -17,7 +15,6 @@ const Details = () => {
       </div>
     );
   }
-
   return (
     <div className="justify-center items-center max-w-full p-20">
       <ProductDetail id = {productId}

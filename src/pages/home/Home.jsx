@@ -15,7 +15,7 @@ import samplePosts from '../../service/BlogData';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
 import BannerSection from '../../components/layout/BannerSection';
-import BrandLogos from '../../components/layout/BrandLogo';
+// import BrandLogos from '../../components/layout/BrandLogo';
 const Home = () => {
     return (
       <div className="justify-center items-center max-w-full p-20">
@@ -37,7 +37,7 @@ const Home = () => {
 <div className="w-full my-8">
 </div>
 <BannerSection/>
-<BrandLogos/>
+{/* <BrandLogos/> */}
 
 <section> 
 

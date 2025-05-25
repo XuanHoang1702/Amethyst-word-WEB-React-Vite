@@ -30,7 +30,13 @@ const Navbar = () => {
   const {wishlistCount} = useWishlist();
   const {cartCount} = useCart();
 
-  const toggleCartDrawer = () => setDrawerOpen(!drawerOpen);
+  const toggleCartDrawer = () => {
+    if (token) {
+      setDrawerOpen(!drawerOpen);
+    } else {
+      navigate('/login');
+    }
+  };
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
   
 

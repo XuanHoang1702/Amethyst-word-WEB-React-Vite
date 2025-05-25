@@ -19,12 +19,15 @@ import ScrollToTop from './utils/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ProductDetail } from './pages/products';
+// import CartPage from './pages/carts/CatePage';
+import PrivateRoute from './components/PrivateRoute';
 const Details = lazy(() => import('./pages/products/detail/Details'));
 const Home = lazy(()=>import('./pages/home/Home'));
 const FashionUserProfile = lazy(() => import('./pages/Profile/FashionUserProfile'));
 const OrderDetail = lazy(() => import('./pages/Profile/tabs/Order/OrderDetail'));
 const OrdersTab = lazy(() => import('./pages/Profile/tabs/Order/OrdersTab'));
 const Wishlist = lazy(() => import('./pages/Wishlist/Wishlist'));
+
 
 const App  = () => {
   return (
@@ -42,14 +45,15 @@ const App  = () => {
             <Route index element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/contact" element={<ContactPage/>} />
-            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/wishlist" element={<PrivateRoute element={<Wishlist />} />}/>
             <Route path="/details/:id" element={<Details />} />
-            <Route path="/checkout" element={<FashionCheckout />} />
+            <Route path="/checkout"element={<PrivateRoute element={<FashionCheckout />} />} />
             <Route path="/blog" element={<FashionBlog />} />
             <Route path="/blog/:id" element={<BlogPostDetail />} />
-            <Route path="/profile" element={<FashionUserProfile />} />
-            <Route path="/profile/orders" element={<OrdersTab />} />
-            <Route path="/profile/orders/:orderId" element={<OrderDetail />} />
+            <Route path="/profile" element={<PrivateRoute element={<FashionUserProfile />}/>} />
+            <Route path="/profile/orders" element={<PrivateRoute element={<OrdersTab />} />} />
+            <Route path="/profile/orders/:orderId" element={<PrivateRoute element={<OrderDetail />}/>} />
+            {/* <Route path="/cart" element={<PrivateRoute element={<CartPage />} />} /> */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

@@ -78,10 +78,6 @@ const ProductDetail = ({ id }) => {
     return stars;
   };
 
-  // const handleThumbnailClick = (thumbnailImage) => {
-  //   setMainImage(thumbnailImage);
-  // };
-
   return (
     <div className="bg-white">
       <div className="container mx-auto px-4 py-8">
@@ -91,15 +87,6 @@ const ProductDetail = ({ id }) => {
               <img            src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'} alt="Sản phẩm" className="w-full h-full object-cover" />
             </div>
             <div className="flex items-center flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 ml-3 p-1">
-              {/* {productThumbnails.map((thumbnail) => (
-                <div
-                  key={thumbnail.id}
-                  className="border border-gray-200 p-2 rounded cursor-pointer hover:border-black transition-colors"
-                  onClick={() => handleThumbnailClick(thumbnail.image)}
-                >
-                  <img src={thumbnail.image} alt={thumbnail.alt} className="w-16 h-20 object-cover md:w-24 md:h-28" />
-                </div>
-              ))} */}
             </div>
           </div>
           <div>
@@ -119,29 +106,11 @@ const ProductDetail = ({ id }) => {
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-3">Chọn màu</h3>
               <div className="flex space-x-3">
-                {/* {colors.map((color) => (
-                  <button
-                    key={color.id}
-                    className={`w-8 h-8 rounded-full ${color.color} ${selectedColor === color.id ? 'ring-2 ring-offset-2 ring-black' : ''}`}
-                    onClick={() => setSelectedColor(color.id)}
-                  />
-                ))} */}
               </div>
             </div>
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-3">Chọn kích cỡ</h3>
               <div className="flex space-x-3">
-                {/* {sizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`px-4 py-2 border rounded-md ${
-                      selectedSize === size ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'
-                    }`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))} */}
               </div>
             </div>
             <div className="flex space-x-4">

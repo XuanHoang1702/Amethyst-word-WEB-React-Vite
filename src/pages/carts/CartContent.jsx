@@ -31,8 +31,6 @@ const CartContent = () => {
     fetchCart();
   }, [token]);
 
-  //const validCartProducts = cartProducts.filter(p => p.producT_ID !== null);
-
   return (
     <div>
       {cartProducts.length > 0 ? (
@@ -46,5 +44,5 @@ const CartContent = () => {
   )
 }
 
-export default CartContent
+export default CartContent;
 

@@ -81,4 +81,4 @@ const WishlistItem = ({ item, OnDelete}) => {
   );
 };
 
-export default WishlistItem;
+export default WishlistItem

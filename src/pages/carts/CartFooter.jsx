@@ -9,7 +9,7 @@ const CartFooter= () =>{
   const navigate = useNavigate();
 
   useEffect(()=>{
-    const total = cartItems.reduce((sum, item)=> sum + (item.producT_PRICE * item.quantity), 0);
+    const total = cartItems.reduce((sum, item)=> sum + (item.producT_PRICE * item.quantity), 0)
     setSubtotal(total);
   }, [cartItems]);
 
@@ -39,10 +39,6 @@ const CartFooter= () =>{
     >
       Tiếp tục mua sắm
     </button>
-
-    <p className="text-sm tracking-tighter text-gray-500 mt-2 text-center">
-        Shipping, taxes, and discount codes calculated at checkout
-    </p>
 </div>
   )
 }

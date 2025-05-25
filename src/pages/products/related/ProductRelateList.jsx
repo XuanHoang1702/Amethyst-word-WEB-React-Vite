@@ -38,4 +38,4 @@ const ProductRelateList=()=> {
 </div>
   )
 }
-export default ProductRelateList
+export default ProductRelateList;

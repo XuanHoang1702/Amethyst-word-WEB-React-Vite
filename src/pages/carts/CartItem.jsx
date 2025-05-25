@@ -103,4 +103,4 @@ const CartItem = ({ product }) => {
   );
 };
 
-export default CartItem;
+export default CartItem
