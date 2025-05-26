@@ -155,7 +155,8 @@ const ProductListCard = ({ product }) => {
               </button>
             </div>
             
-            <button className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors">
+            <button className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors"
+              onClick={handleAddToCart}>
               <FaShoppingCart size={16} />
               <span>Mua ngay</span>
             </button>

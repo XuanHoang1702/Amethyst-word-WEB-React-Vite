@@ -84,7 +84,7 @@ const handleFilterChange = useCallback((newFilters) => {
     ...prev,
     ...newFilters,
     priceMin: newFilters.priceMin !== undefined ? newFilters.priceMin : prev.priceMin,
-    priceMax: newFilters.priceMax !== undefined ? newFilters.priceMax : prev.priceMax,
+    priceMax: newFilters.priceMax !== undefined ? newFilters.priceMax : prev.pricaMax,
     pageNumber: 1
   }));
   setCurrentPage(1);
