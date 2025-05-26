@@ -7,7 +7,9 @@ const CartContext = createContext();
 export const CartProvider = ({children}) => {
     const [cartCount, setCartCount] = useState(0);
     const [cartItems, setCartItems] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
     const token = localStorage.getItem('token');
+
 
     const updateCartCount = async () => {
         if(!token) {
@@ -46,12 +48,28 @@ export const CartProvider = ({children}) => {
         });
     };
 
+    const toggleSelectedItem = (productId) => {
+        setSelectedItems(prev => 
+          prev.includes(productId) 
+            ? prev.filter(id => id !== productId)
+            : [...prev, productId]
+        );
+      };
+
+    const selectAllItems = (items)=>{
+        setSelectedItems(items.map(item => item.producT_ID))
+    }
+
+    const clearSelectedItems =()=>{
+        setSelectedItems([]);
+    }
+
     useEffect(() => {
         updateCartCount();
     }, [token]);
 
     return (
-        <CartContext.Provider value={{cartCount, setCartCount, updateCartCount, cartItems, setCartItems, updateQuantity}}>
+        <CartContext.Provider value={{cartCount, setCartCount, updateCartCount, cartItems, setCartItems, updateQuantity,selectedItems, toggleSelectedItem, selectAllItems, clearSelectedItems}}>
             {children}
         </CartContext.Provider>
     );

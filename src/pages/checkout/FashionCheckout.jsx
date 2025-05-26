@@ -2,6 +2,7 @@ import { ArrowRight, Check, CheckCircle, ChevronLeft, ChevronRight, Clock, Copy,
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useCart } from '../../context/CartContext';
 import { getCart } from '../../service/CartService';
 import { CreateOrder, GetStatus } from '../../service/OrderService';
 import { GetAddress, GetInformation } from '../../service/UserService';
@@ -15,14 +16,14 @@ export default function FashionCheckout() {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState({});
   const [address, setAddress] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  // const [cartItems, setCartItems] = useState([]);
+  const {cartItems, selectedItems} = useCart();
   const [orderDetail, setOrderDetails] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [shippingMethod, setShippingMethod] = useState('');
   const [shipPrice, setShipPrice] = useState(0);
   const orderId = localStorage.getItem("orderId");
-  // const orderId = "ORDEB94080";
   const [orderStatus, setOrderStatus] = useState(null);
   let intervalId = null;
   const handleHome = () => {
@@ -48,38 +49,34 @@ export default function FashionCheckout() {
     }
   };
 
-  const fetchCart = async () => {
-    try {
-      if (token === null) {
-        setCartItems([]);
-        return;
-      }
-      const response = await getCart(token);
-      const FormattedItimes = response.map(item=>({...item,
+  useEffect(()=>{
+    if(cartItems && cartItems.length > 0)
+    {
+      const selectedProducts = cartItems.filter(item=>selectedItems.includes(item.producT_ID)
+    )
+      const formattedItems = selectedProducts.map(item=>({
         producT_ID: item.producT_ID,
         quantity: item.quantity,
-        producT_PRICE: Number(item.producT_PRICE).toFixed(2),
-        subtotal:(Number(item.producT_PRICE)*item.quantity).toFixed(2)
-       
-      }))
-      setOrderDetails(FormattedItimes);
+        producT_PRICE: Number(item.producT_PRICE),
+        subtotal: Number(item.producT_PRICE * item.quantity)
+      }
+      ))
+      setOrderDetails(formattedItems);
 
-      const totalQuantity = FormattedItimes.reduce((sum, item) => {
-        return sum + item.quantity;
-      }, 0);
-      setTotalQuantity(totalQuantity);
+      const totalQty = formattedItems.reduce((sum ,item)=>
+      sum + Number(item.quantity),0);
+      setTotalQuantity(totalQty);
 
-      const totalPrice = FormattedItimes.reduce((sum, item) => {
-       return sum + Number(item.subtotal)
-      }, 0);
-      setTotalPrice(totalPrice);
-
+      const total = formattedItems.reduce((sum, item)=>
+      sum + Number(item.subtotal),0);
+      setTotalPrice(total);
     }
-    catch (error) {
-      console.error("Error fetching cart:", error);
+    else{
+      setOrderDetails([]);
+      setTotalQuantity(0);
+      setTotalPrice(0);
     }
-  };
-
+  },[cartItems, selectedItems])
   const fetchOrderStatus = async () => {
     try {
       if(orderId){
@@ -131,7 +128,6 @@ export default function FashionCheckout() {
   useEffect(() => {
     fetchUserData();
     fetchAddress();
-    fetchCart();
     intervalId = setInterval(() => {
       fetchOrderStatus();
     }, 1000);
@@ -178,7 +174,7 @@ export default function FashionCheckout() {
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="font-bold text-lg mb-4 text-gray-800">Tóm tắt đơn hàng</h3>
         <div className="space-y-4 mb-6 max-h-[320px] overflow-y-auto pr-2">
-          {cartItems.map(item => (
+          {cartItems.filter(item=> selectedItems.includes(item.producT_ID)).map(item => (
             <div key={item.id} className="flex space-x-4">
               <img src={`https://imgur.com/${item.imagE_NAME}`} alt={item.producT_NAME} className="w-16 h-20 object-cover rounded" />
               <div className="flex-1">
