@@ -44,7 +44,7 @@ const CartDrawer = ({ drawerOpen, toggleCartDrawer }) => {
         <CartContent />
       </div>
       <div className="p-4 bg-white sticky bottom-0">
-        <CartFooter />
+        <CartFooter toggleCartDrawer={toggleCartDrawer} />
       </div>
     </div>
   );

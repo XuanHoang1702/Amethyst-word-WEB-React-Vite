@@ -6,19 +6,20 @@ import { deleteCart } from '../../service/CartService';
 import { formatPrice } from '../../utils/formatUtils';
 import { useCart } from '../../context/CartContext';
 /**
- * CartItem component for displaying a single product in the cart
+ * 
  * @param {Object} props
- * @param {Object} props.product - Product details
- * @param {number} props.product.id - Product ID
- * @param {string} props.product.name - Product name
- * @param {string} props.product.size - Product size
- * @param {string} props.product.color - Product color
- * @param {number} props.product.quantity - Product quantity
- * @param {number} props.product.price - Product price
- * @param {string} props.product.image - Product image URL
+ * @param {Object} props.product 
+ * @param {number} props.product.id 
+ * @param {string} props.product.name 
+ * @param {string} props.product.size 
+ * @param {string} props.product.color 
+ * @param {number} props.product.quantity 
+ * @param {number} props.product.price 
+ * @param {string} props.product.image
  */
 const CartItem = ({ product }) => {
   const [quantity, setQuantity] = useState(product.quantity);
+  const {selectedItems=[], toggleSelectedItem} = useCart();
   const { updateCartCount, updateQuantity } = useCart();
 
   const increaseQuantity = () => {
@@ -56,15 +57,21 @@ const CartItem = ({ product }) => {
       console.error('Error deleting product:', error);
       toast.error('Xóa sản phẩm thất bại');
     }
-  };
+  }; 
 
   return (
     <div className="flex items-start justify-between py-4 border-b">
       <div className="flex items-start">
+      <input
+          type='checkbox'
+          checked={selectedItems.includes(product.producT_ID)}
+          onChange={() => toggleSelectedItem(product.producT_ID)}
+          className="mr-4 mt-8 w-5 h-5 accent-[#6666e5]"
+        />
         <img
           src={`https://imgur.com/${product.imagE_NAME}`}
           alt={product.name}
-          className="w-20 h-24 object-cover mr-4 rounded border-2 border-[#6666e5]"
+          className="w-24 h-28 object-cover mr-4 rounded border-2 border-[#6666e5]"
         />
         <div>
           <h3>{product.producT_NAME}</h3>
@@ -90,14 +97,15 @@ const CartItem = ({ product }) => {
         </div>
       </div>
       
-      <div>
-        <p className="font-bold text-lg">{formatPrice(product.producT_PRICE * quantity)}</p>
-      </div>
-      <div>
+      <div className="text-xl text-right font-semibold">
+        <p>{formatPrice(product.producT_PRICE * quantity)} </p>
+        <div className="ml-2">
       <button onClick={handleDelete}>
-          <MdDelete className="h-6 w-6 mt-19 text-red-600" />
+          <MdDelete className="text-red-500 text-3xl mt-7" />
         </button>
       </div>
+      </div>
+     
       
     </div>
   );
