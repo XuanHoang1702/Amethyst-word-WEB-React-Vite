@@ -21,7 +21,11 @@ const CartItem = ({ product }) => {
   const [quantity, setQuantity] = useState(product.quantity);
   const {selectedItems=[], toggleSelectedItem} = useCart();
   const { updateCartCount, updateQuantity } = useCart();
-
+  console.log('Product details:', {
+    size: product.sizE_NAME,
+    color: product.coloR_NAME,
+    fullProduct: product // 
+  });
   const increaseQuantity = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
@@ -76,7 +80,7 @@ const CartItem = ({ product }) => {
         <div>
           <h3>{product.producT_NAME}</h3>
           <p className="text-sm text-gray-500">
-            Size: {product.size} | Color: {product.color}
+            Size: {product.sizE_NAME} | Color: {product.coloR_NAME}
           </p>
           <div className="flex items-center mt-2">
             <button

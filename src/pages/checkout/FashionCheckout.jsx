@@ -16,14 +16,13 @@ export default function FashionCheckout() {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState({});
   const [address, setAddress] = useState([]);
-  // const [cartItems, setCartItems] = useState([]);
   const {cartItems, selectedItems} = useCart();
   const [orderDetail, setOrderDetails] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [shippingMethod, setShippingMethod] = useState('');
   const [shipPrice, setShipPrice] = useState(0);
-  const orderId = localStorage.getItem("orderId");
+  const [orderId, setOrderId] = useState("1");
   const [orderStatus, setOrderStatus] = useState(null);
   let intervalId = null;
   const handleHome = () => {
@@ -77,15 +76,16 @@ export default function FashionCheckout() {
       setTotalPrice(0);
     }
   },[cartItems, selectedItems])
+
   const fetchOrderStatus = async () => {
     try {
       if(orderId){
         const response = await GetStatus(token, orderId);
-        setOrderStatus(response);
-        if (response.result === "2") {
+
+        setOrderStatus(response.result);
+        if (orderStatus === "2") {
           toast.success("Đặt hàng thành công");
           setCurrentStep(4);
-          clearInterval(intervalId);
         }
       }
 
@@ -105,7 +105,8 @@ export default function FashionCheckout() {
         ordeR_STATUS: 1,
       }
 
-      await CreateOrder(token, data);
+      const response = await CreateOrder(token, data);
+      setOrderId(response.result);
     }catch (error) {
       console.error("Error placing order:", error);
     }
@@ -119,26 +120,27 @@ export default function FashionCheckout() {
       catch(error)
       {
         console.error("Error placing order:", error);
-
       }
-    }
+  }
       
-
 
   useEffect(() => {
     fetchUserData();
     fetchAddress();
-    intervalId = setInterval(() => {
-      fetchOrderStatus();
-    }, 1000);
-
-    return () => clearInterval(intervalId);
+    
+    if(orderStatus !== "2"){
+      setInterval(() => {
+        fetchOrderStatus();
+      }, 5000);
+    } else {
+      clearInterval(intervalId);
+    }
   }, []);
   
   const bankInfo = {
     bankName: "BIDV",
     accountNumber: "6150889954",
-    accountName: "NGUYỄN VĂN A",
+    accountName: "Trần Xuân Hoàng",
     amount: "1,100,000 VND"
   };
   
@@ -180,11 +182,11 @@ export default function FashionCheckout() {
               <div className="flex-1">
                 <h4 className="font-medium text-gray-800">{item.producT_NAME}</h4>
                 <div className="text-sm text-gray-500">
-                  <span>Size: {item.size}</span> | <span>Màu: {item.color}</span>
+                  <span>Size: {item.sizE_NAME}</span> | <span>Màu: {item.coloR_NAME}</span>
                 </div>
                 <div className="flex justify-between mt-2">
                   <span className="text-gray-500">x{item.quantity}</span>
-                  <span className="font-medium">{item.producT_PRICE}</span>
+                  <span className="font-medium">{item.producT_PRICE.toLocaleString('vi-VN')} VND</span>
                 </div>
               </div>
             </div>
@@ -240,22 +242,6 @@ export default function FashionCheckout() {
               ).join(' | ')}
               readOnly
             />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-2">Tỉnh/Thành phố</label>
-            <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
-              <option>Hồ Chí Minh</option>
-              <option>Hà Nội</option>
-              <option>Đà Nẵng</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-2">Quận/Huyện</label>
-            <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black">
-              <option>Quận 1</option>
-              <option>Quận 2</option>
-              <option>Quận 3</option>
-            </select>
           </div>
         </div>
         <div className="flex justify-end mt-6">

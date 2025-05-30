@@ -74,7 +74,7 @@ const Wishlist = () => {
         <h1 className="text-2xl font-bold text-slate-800 mb-6">Sản phẩm yêu thích</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
             {isLoading ? (
-              <div>Đang tải...</div>
+              <div>Đang tải...</div>    
             ) : wishlist.length > 0 ? (
               currentItems.map(item => (
                 <WishlistItem key={item.producT_ID} item={item} OnDelete={handleDelete} />

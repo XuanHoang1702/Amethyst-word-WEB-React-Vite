@@ -84,6 +84,7 @@
 
 import axios from 'axios';
 import { API_URL } from './Api';
+import { userData } from './profileData';
 
 export const register = async (userData) => {
     try {
@@ -177,3 +178,20 @@ export const GetAddress = async (token) => {
         throw error.response?.data || { message: error.message || 'Lỗi lấy địa chỉ' };
     }
 };
+
+export const UpdateInformation = async (token, userData)=>{
+    try{
+        const response = await axios.put(`${API_URL}/api/User/Update`, {
+            useR_ID: userData.id,
+            useR_FIRST_NAME: userData.firstName,
+            useR_LAST_NAME: userData.lastName,
+            useR_EMAIL: userData.email,
+            useR_GENDER: userData.gender,
+            useR_PHONE: userData.phone
+        });
+        return response.data;
+    }
+    catch (error) {
+        throw error.response?.data || { message: error.message || 'Lỗi cập nhật thông tin' };
+    }
+}

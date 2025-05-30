@@ -1,3 +1,8 @@
+// // import React, { useEffect, useState, useCallback } from "react";
+
+
+
+
 import { Filter, Grid, List, X } from 'lucide-react';
 import { useEffect, useState, useCallback } from "react";
 import Breadcrumb from '../../components/BreadCrumb';
@@ -6,8 +11,9 @@ import ProductFilters from '../../pages/products/ProductFilter';
 import ProductSort from '../../pages/products/ProductSort';
 import ProductCard from '../products/new/ProductCard';
 import ProductListCard from '../products/new/ProductListCard';
-import {  ProductFilter } from '../../service/ProductService';
-import bg1 from '../../assets/image/pngtree-sustainable-fashion-featuring-clothes-made-from-organic-and-recycled-fabrics-on-picture-image_15873419.jpg'
+import { ProductFilter } from '../../service/ProductService';
+import bg1 from '../../assets/image/pngtree-sustainable-fashion-featuring-clothes-made-from-organic-and-recycled-fabrics-on-picture-image_15873419.jpg';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
   return (
@@ -33,10 +39,10 @@ const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
 const Shop = () => {
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); 
+  const [viewMode, setViewMode] = useState('grid');
   const [filters, setFilters] = useState({
-    categoryId: null,
-    brandId: null,
+    categoryId: [],
+    brandId: [],
     pageNumber: 1,
     pageSize: 8,
     priceMin: 0,
@@ -46,69 +52,72 @@ const Shop = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [cache, setCache] = useState({});
 
-const fetchProducts = useCallback(async () => {
-  try {
-    setLoading(true);
-    console.log('Fetching with filters:', filters);
-    
-    const response = await ProductFilter(
-      filters.brandId,
-      filters.categoryId,
-      filters.priceMin,
-      filters.pricaMax,  
-      filters.pageNumber,
-      filters.pageSize
-    );
-    
-    console.log('API response:', response);
-    
-    setProducts(response.data || []);
-    setTotalPages(response.totalPages || 1);
-  } catch (error) {
-    console.error('Error:', error);
-    setProducts([]);
-    setTotalPages(0);
-  } finally {
-    setLoading(false);
-  }
-}, [filters]);
+  const fetchProducts = useCallback(async () => {
+    const cacheKey = JSON.stringify(filters);
+    if (cache[cacheKey]) {
+      setProducts(cache[cacheKey].data);
+      setTotalPages(cache[cacheKey].totalPages);
+      setLoading(false);
+      return;
+    }
 
-useEffect(() => {
-  fetchProducts();
-}, [fetchProducts, filters]);
+    try {
+      setLoading(true);
+      const response = await ProductFilter(
+        filters.brandId,
+        filters.categoryId,
+        filters.priceMin,
+        filters.pricaMax,
+        filters.pageNumber,
+        filters.pageSize
+      );
+      setProducts(response.data || []);
+      setTotalPages(response.totalPages || 1);
+      setCache(prev => ({
+        ...prev,
+        [cacheKey]: { data: response.data || [], totalPages: response.totalPages || 1 }
+      }));
+    } catch (error) {
+      setProducts([]);
+      setTotalPages(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, cache]);
 
-const handleFilterChange = useCallback((newFilters) => {
-  console.log('Applying filters:', newFilters);
-  setFilters(prev => ({
-    ...prev,
-    ...newFilters,
-    priceMin: newFilters.priceMin !== undefined ? newFilters.priceMin : prev.priceMin,
-    priceMax: newFilters.priceMax !== undefined ? newFilters.priceMax : prev.pricaMax,
-    pageNumber: 1
-  }));
-  setCurrentPage(1);
-}, []);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
-const handlePageChange = useCallback(async (pageNumber) => {
-  try {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
+  const handleFilterChange = useCallback((newFilters) => {
+    setFilters(prev => {
+      const updatedFilters = {
+        ...prev,
+        ...newFilters,
+        priceMin: newFilters.priceMin !== undefined ? newFilters.priceMin : prev.priceMin,
+        pricaMax: newFilters.pricaMax !== undefined ? newFilters.pricaMax : prev.pricaMax,
+        pageNumber: newFilters.pageNumber || 1,
+      };
+      return updatedFilters;
     });
+    setCurrentPage(1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
+  const handlePageChange = useCallback(async (pageNumber) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setLoading(true);
     setCurrentPage(pageNumber);
-    
     setFilters(prev => ({
       ...prev,
       pageNumber
     }));
-    
-  } catch (error) {
-    console.error('Error changing page:', error);
-  }
-}, []);
+  }, []);
+
   const handleViewModeChange = useCallback((mode) => {
     setViewMode(mode);
     setFilters(prev => ({
@@ -125,7 +134,7 @@ const handlePageChange = useCallback(async (pageNumber) => {
         <div className="relative">
           <div className="bg-gradient-to-r from-purple-600 to-blue-400 h-64 md:h-96 w-full">
             <img 
-            src={bg1}
+              src={bg1}
               alt="Fashion Blog Hero" 
               className="w-full h-full object-cover object-center opacity-50"
             />
@@ -181,7 +190,9 @@ const handlePageChange = useCallback(async (pageNumber) => {
                 </div>
               </div>
               {loading ? (
-                <div className="text-center py-8">Đang tải sản phẩm...</div>
+                <div className="text-center py-8">
+                  <span className="animate-pulse">Đang tải sản phẩm...</span>
+                </div>
               ) : products.length === 0 ? (
                 <div className="text-center py-8">Không tìm thấy sản phẩm nào</div>
               ) : (
@@ -196,7 +207,6 @@ const handlePageChange = useCallback(async (pageNumber) => {
                       ))}
                     </div>
                   )}
-
                   {viewMode === 'list' && (
                     <div className="flex flex-col gap-4">
                       {products.map(product => (
@@ -209,7 +219,6 @@ const handlePageChange = useCallback(async (pageNumber) => {
                   )}
                 </>
               )}
-
               {!loading && totalPages > 0 && (
                 <div className="mt-8">
                   <FashionPagination 
@@ -228,3 +237,5 @@ const handlePageChange = useCallback(async (pageNumber) => {
 };
 
 export default Shop;
+
+//new, best , sale, 
