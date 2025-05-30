@@ -25,7 +25,7 @@ export default function ProfileSidebar({ user, activeTab, setActiveTab }) {
 
   return (
     <div className="w-full md:w-72 bg-white border-r border-slate-200 md:min-h-screen">
-      <div className="flex flex-col items-center p-8 border-b border-slate-100">
+      {/* <div className="flex flex-col items-center p-8 border-b border-slate-100">
         <div className="relative">
           <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-slate-100 shadow-sm">
             <img 
@@ -40,7 +40,7 @@ export default function ProfileSidebar({ user, activeTab, setActiveTab }) {
         </div>
         <h2 className="mt-4 text-xl font-semibold text-slate-800">{user.name}</h2>
         <p className="text-slate-500 text-sm">{user.email}</p>
-      </div>
+      </div> */}
 
       <nav className="p-4">
         <ul className="space-y-1">
