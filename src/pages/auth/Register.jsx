@@ -11,7 +11,6 @@ import {
 } from "react-icons/ri";
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import React, { useState } from "react";
-import { register, SendOtpEmail } from "../../service/UserService";
 import bg1 from '../../assets/image/mau-tim-mac-voi-mau-gi-dep__18__fa7d6ebb66c840ac870291c9405730bc.webp';
 const Register = () => {
   const {openOtpModal } = useOutletContext();
@@ -67,7 +66,6 @@ const Register = () => {
 
     try {
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
-      await SendOtpEmail(formData.email, fullName);
 
       openOtpModal({ email: formData.email, userData: formData, isRegistering: true });
     } catch (error) {

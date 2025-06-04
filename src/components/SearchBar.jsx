@@ -6,7 +6,7 @@ import { HiMagnifyingGlass, HiMiniXMark } from 'react-icons/hi2'
 import { ProductSearch } from '../service/ProductService';
 import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../service/Api';
+const API_URL = import.meta.env.VITE_API_URL;
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isOpen, setIsOpen] = useState(false);
@@ -246,8 +246,8 @@ const SearchBar = () => {
                                          }}
                                      >
                                             <img 
-                                                // src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-                                                src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+                                                src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+                                                // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
                                                 alt={product.producT_NAME}
                                                 className="w-20 h-20 object-cover rounded"
                                                 onError={(e) => {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from './Api';
+const API_URL = import.meta.env.VITE_API_URL;
 import { Trophy } from 'lucide-react';
 
 export const ProductNew = async (input) => {
@@ -74,20 +74,18 @@ export const GetProductDetail = async (input) => {
 
     try {
         console.log("Fetching product detail with ID:", input);
-        const response = await axios.get(`${API_URL}/api/Product/Detail`, {
+        const response = await axios.get(`${API_URL}/api/Product/Detail?input=${input}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            params: {
-                input: input
-            }
+          
         });
 
-        if (!response.data || !response.data.data) {
+        if (!response.data || !response.data) {
             throw new Error("Không tìm thấy thông tin sản phẩm");
         }
 
-        const product = response.data.data;
+        const product = response.data;
         
         if (!product.producT_ID || product.producT_ID === 0) {
             throw new Error("ID sản phẩm không hợp lệ");

@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { Heart } from "lucide-react";
 import { IoHeartDislike } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
-import { API_URL } from "../../service/Api";
+
 import { DeleteWishList } from "../../service/WishListService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../../context/WishListContext";
+const API_URL = import.meta.env.VITE_API_URL;
 const WishlistItem = ({ item, OnDelete}) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate()

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { wishlistData } from "../../service/WishlistData";
 import WishlistItem from "./WishlistItem"; 
 import Breadcrumb from "../../components/BreadCrumb";
 import FashionPagination from "../../components/panigation/Panigation";

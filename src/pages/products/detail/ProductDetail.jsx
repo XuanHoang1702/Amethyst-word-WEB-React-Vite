@@ -1,11 +1,12 @@
 import { Minus, Plus, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/ProductService';
-import { API_URL } from '../../../service/Api';
 import { ShoppingBag } from 'lucide-react';
 import { formatPrice } from '../../../utils/formatUtils';
 import { toast } from 'react-toastify';
+
 import { addToCart } from '../../../service/CartService';
+const API_URL = import.meta.env.VITE_API_URL;
 const ProductDetail = ({ id }) => {
   const [product, setProduct] = useState(null);
   const [colors, setColors] = useState([]);
@@ -28,14 +29,12 @@ const ProductDetail = ({ id }) => {
         throw new Error("ID sản phẩm không hợp lệ");
       }
       const response = await GetProductDetail(id);
-      if (!response || !response.data) {
-        throw new Error("Không tìm thấy thông tin sản phẩm");
-    }
-    if (response.data.producT_ID !== parseInt(id)) {
+
+    if (response.producT_ID !== parseInt(id)) {
       throw new Error("Thông tin sản phẩm không chính xác");
   }
-      setProduct(response.data);
-      console.log("Product: ", response.data);
+      setProduct(response);
+
     } catch (error) {
       console.error('Error fetching product details:', error);
       setError(error.message || "Có lỗi xảy ra khi tải thông tin sản phẩm");

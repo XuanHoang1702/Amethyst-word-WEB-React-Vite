@@ -6,6 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { getCart } from '../../service/CartService';
 import { CreateOrder, GetStatus } from '../../service/OrderService';
 import { GetAddress, GetInformation } from '../../service/UserService';
+import WebSocketService from '../../service/WebSocket.Service';
 import {CreateOrderDetail} from '../../service/OrderDetailService';
 export default function FashionCheckout() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -22,12 +23,27 @@ export default function FashionCheckout() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [shippingMethod, setShippingMethod] = useState('');
   const [shipPrice, setShipPrice] = useState(0);
-  const [orderId, setOrderId] = useState("1");
+  const [orderId, setOrderId] = useState("");
+  const [message, setMessage] = useState('');
   const [orderStatus, setOrderStatus] = useState(null);
+  
   let intervalId = null;
   const handleHome = () => {
     navigate('/');
   };
+  useEffect(() => {
+    if (orderId) {
+      WebSocketService.connectWebSocket(orderId, (msg) => {
+        setMessage(msg);
+        toast.success(msg);
+        setCurrentStep(4);
+      });
+    }
+
+    return () => {
+      WebSocketService.closeWebSocket();
+    };
+  }, [orderId]);
 
   const fetchUserData = async () => {
     try {
@@ -77,22 +93,22 @@ export default function FashionCheckout() {
     }
   },[cartItems, selectedItems])
 
-  const fetchOrderStatus = async () => {
-    try {
-      if(orderId){
-        const response = await GetStatus(token, orderId);
+  // const fetchOrderStatus = async () => {
+  //   try {
+  //     if(orderId){
+  //       const response = await GetStatus(token, orderId);
 
-        setOrderStatus(response.result);
-        if (orderStatus === "2") {
-          toast.success("Đặt hàng thành công");
-          setCurrentStep(4);
-        }
-      }
+  //       setOrderStatus(response.result);
+  //       if (orderStatus === "2") {
+  //         toast.success("Đặt hàng thành công");
+  //         setCurrentStep(4);
+  //       }
+  //     }
 
-    } catch (error) {
-      console.error("Error fetching order status:", error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error("Error fetching order status:", error);
+  //   }
+  // };
 
   const handleOrder = async () => {
     try {
@@ -127,14 +143,6 @@ export default function FashionCheckout() {
   useEffect(() => {
     fetchUserData();
     fetchAddress();
-    
-    if(orderStatus !== "2"){
-      setInterval(() => {
-        fetchOrderStatus();
-      }, 5000);
-    } else {
-      clearInterval(intervalId);
-    }
   }, []);
   
   const bankInfo = {
@@ -569,7 +577,7 @@ export default function FashionCheckout() {
             
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Tổng cộng:</span>
-              <span className="font-bold">{bankInfo.amount}</span>
+              <span className="font-bold">{(totalPrice + shipPrice).toLocaleString('vi-VN')} VND</span>
             </div>
           </div>
           
