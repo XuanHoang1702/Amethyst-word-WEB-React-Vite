@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from './Api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getCart = async (token) => {
     try {
@@ -16,11 +16,13 @@ export const getCart = async (token) => {
     }
 }
 
-export const addToCart = async (token, productId, quantity) => {
+export const addToCart = async (token, productId, quantity,colorId, sizeId) => {
     try {
         const response = await axios.post(`${API_URL}/api/Cart/Create`, {
             producT_ID: productId,
-            quantity: quantity
+            quantity: quantity,
+            coloR_ID: colorId,
+            sizE_ID: sizeId
         }, {
             headers: {
                 'Content-Type': 'application/json',

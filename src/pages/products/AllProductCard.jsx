@@ -1,10 +1,11 @@
+import React from 'react'
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addToCart } from '../../../service/CartService';
-import { AddWishList } from '../../../service/WishListService';
-import { formatPrice } from '../../../utils/formatUtils';
-import { useWishlist } from '../../../context/WishListContext';
+import { AddWishList } from '../../service/WishListService';
+import { addToCart } from '../../service/CartService';
+import { formatPrice } from '../../utils/formatUtils';
+import { useWishlist } from '../../context/WishListContext';
 const API_URL = import.meta.env.VITE_API_URL;
 const renderStars = (rating) => {
   return (
@@ -18,37 +19,42 @@ const renderStars = (rating) => {
     </div>
   );
 };
-
-const ProductCard = ({ product }) => {
+const AllProductCard=({product})=>{
+  console.log('Product:', product.producT_NAME, 'Discount Percent:', product.discounT_PERCENT);
   const {incrementCount} = useWishlist();
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const token = localStorage.getItem("token")
-
-  const handleAddToCart = async () => {
-    try {
-      if (!token) {
-        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+  
+  const handleAddToCart = async()=>{
+    try{
+      if(!token)
+      {
+        toast.info('Vui lòng đăng nhập đêr thêm sản phẩm');
         return;
       }
-      const res = await addToCart(token, product.producT_ID, 1);
-      if (res.code == 201) {
-        toast.success('Thêm vào giỏ hàng thành công');
-        setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-      }else {
+      const response = await addToCart(token, product.producT_ID, 1);
+      if(response.code === 201)
+      {
+        toast.success('Thêm giỏ hàng thành công ');
+        setTimeout(()=>{
+          window.location.reload();
+        },2000)
+      }
+      else{
         toast.error(res.message);
       }
-    } catch (error) {
+    }
+    catch(error)
+    {
       console.error('Error adding to cart:', error);
       toast.error('Thêm vào giỏ hàng thất bại');
-    }
-  };
 
-  const AddToWishList = async () => {
+    }
+  }
+  const handleAddToWishList = async () => {
     if (token) {
       const response = await AddWishList(token, product.producT_ID);
-      if(response.code === 201) {
+      if (response.code === 201) {
         toast.success('Thêm vào danh sách yêu thích thành công!');
         incrementCount();
       } else {
@@ -57,42 +63,37 @@ const ProductCard = ({ product }) => {
     } else {
       toast.error('Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.');
     }
-  }
-
+  };
+  const isNew = product.producT_PRICE;
+  const isOnSale = product.discounT_PERCENT;
+  const isBestSeller = product.isBestSeller;
+  const displayPrice = product.discounT_PERCENT ? product.producT_PRICE * (1-product.discounT_PERCENT/100) : product.producT_PRICE;
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden group">
-      <div className="relative">
+    <div className='bg-white rounded-lg shadow-md overflow-hidden group'>
+        <div className="relative">
         <img
-          //           src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
           // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
-            src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-          alt={product.alt}
+          src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+          alt={product.producT_NAME || product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}
         />
-
-        {/* Badge mới */}
-        {product.producT_PRICE && (
-          <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
-            MỚI
-          </div>
-        )}
-
-        {/* Badge giảm giá */}
-        {/* {product.discounT_PERCENT && (
+       
+          {isOnSale && (
           <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            GIẢM GIÁ
+            GIẢM GIÁ {product.discounT_PERCENT}%
           </div>
-        )} */}
-
-        {/* Hover buttons */}
-        <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-          <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
+          )}
+          <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          <button
+            className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
+            onClick={handleAddToCart}
+          >
             <FaShoppingCart size={18} />
           </button>
           <button
             className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
-            onClick={AddToWishList}
+            onClick={handleAddToWishList}
           >
             <FaHeart size={18} />
           </button>
@@ -104,7 +105,6 @@ const ProductCard = ({ product }) => {
           </button>
         </div>
       </div>
-
       <div className="p-4">
         <h3
           className="font-medium text-gray-800 hover:text-blue-500 transition-colors mb-1 cursor-pointer text-center"
@@ -112,21 +112,19 @@ const ProductCard = ({ product }) => {
         >
           {product.producT_NAME}
         </h3>
-
         <div className="flex items-center justify-center mb-2">
           {renderStars(product.rate)}
           <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
         </div>
-
         <div className="flex items-center justify-between">
           <div>
-            {product.salePrice ? (
+            {isOnSale ? (
               <>
-                <span className="font-medium text-red-500">{formatPrice(product.salePrice)}</span>
+                <span className="font-medium text-red-500">{formatPrice(displayPrice)}</span>
                 <span className="text-gray-400 text-sm line-through ml-1">{formatPrice(product.producT_PRICE)}</span>
               </>
             ) : (
-              <span className="font-medium text-gray-800">{formatPrice(product.producT_PRICE)}</span>
+              <span className="font-medium text-gray-800">{formatPrice(displayPrice)}</span>
             )}
           </div>
           <button
@@ -136,10 +134,9 @@ const ProductCard = ({ product }) => {
             Mua ngay
           </button>
         </div>
-      </div>
     </div>
-  );
-};
+    </div>
+  )
+}
 
-export default ProductCard;
-
+export default AllProductCard

@@ -1,6 +1,6 @@
 import { Heart } from 'lucide-react';
 import { useState } from 'react';
-import { wishlistData } from '../../../service/WishlistData';
+// import { wishlistData } from '../../../service/WishlistData';
 import FashionPagination from '../../../components/panigation/Panigation';
 export default function WishlistTab() {
   const [currentPage, setCurrentPage] = useState(1);

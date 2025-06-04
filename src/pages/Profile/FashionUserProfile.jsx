@@ -6,7 +6,7 @@ import ProfileSidebar from './ProfileSidebar';
 import { HistoryTab, PaymentTab } from './tabs/EmtyStateTabs';
 import ProfileTab from './tabs/ProfileTab';
 import SettingsTab from './tabs/SettingsTab';
-import WishlistTab from './tabs/WishlistTab';
+// import WishlistTab from './tabs/WishlistTab';
 
 export default function FashionUserProfile() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -29,16 +29,12 @@ export default function FashionUserProfile() {
     fetchUserData();
   }
   , []);
-  
-  // Render tab content theo activeTab
   const renderTabContent = () => {
     switch (activeTab) {
       case 'profile':
         return <ProfileTab user={user} />;
       case 'orders':
         return <OrdersTab />;
-      case 'wishlist':
-        return <WishlistTab />;
       case 'history':
         return <HistoryTab />;
       case 'payment':
@@ -52,14 +48,12 @@ export default function FashionUserProfile() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-slate-50 mt-20">
-      {/* Sidebar */}
       <ProfileSidebar 
         user={user} 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
       />
 
-      {/* Main content */}
       <div className="flex-1 p-6 md:p-8 overflow-y-auto">
         {renderTabContent()}
       </div>

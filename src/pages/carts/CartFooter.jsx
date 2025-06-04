@@ -46,7 +46,7 @@ const CartFooter= ({ toggleCartDrawer }) =>{
       onClick={handleContinueShopping}
       className="w-full border border-gray-300 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
     >
-      Tiếp tục mua sắm
+      Vào trang giỏ hàng 
     </button>
 </div>
   )

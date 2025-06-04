@@ -6,11 +6,14 @@ import BlogPostCard from './BlogPostCard';
 import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogNewsletterSignup from './BlogNewsletterSignup';
 import ProductRelateCard from '../products/related/ProductRelateCard';
+import BestSellerCard from '../products/best_seller/BestSellerCard';
 import FashionPagination from '../../components/panigation/Panigation';
+// import { bestsellerProducts } from '../../service/ProductData';
 import samplePosts from '../../service/BlogData';
-import { relatedProducts } from '../../service/ProductData';
+// import { relatedProducts } from '../../service/ProductData';
 import bg2 from '../../assets/image/360_F_597940292_dmaVD664ccNHMDJqi0Wv0SCSexklLyhO.jpg'
 import ScrollToTop from '../../utils/ScrollToTop';
+import { ProductBestSeller } from '../../service/ProductService';
 const FashionBlog = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +31,19 @@ const FashionBlog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const blogRef = useRef(null);
+      const fecthProducts = async () => {
+          try {
+              const response = await ProductBestSeller(12);
+              console.log('Best seller: ', response);
+              setProducts(response);
+          } catch (error) {
+              console.error('Error fetching products:', error);
+          }
+      }
+      useEffect(() => {
+          fecthProducts();
+      }, []);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     if (blogRef.current) {
@@ -153,9 +169,9 @@ const FashionBlog = () => {
                 Xem tất cả <ChevronRight size={16} />
               </a>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map(product => (
-                <ProductRelateCard key={product.id} product={product} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5">
+              {products.map(product => (
+                <BestSellerCard key={product.producT_ID} product={product} />
               ))}
             </div>
           </div>

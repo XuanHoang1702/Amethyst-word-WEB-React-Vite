@@ -41,7 +41,6 @@ const App  = () => {
           <Route path="/" element={<UserLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* <Route path="/otp/:email" element={<OTPForm />} /> */}
             <Route index element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/contact" element={<ContactPage/>} />
@@ -53,7 +52,6 @@ const App  = () => {
             <Route path="/profile" element={<PrivateRoute element={<FashionUserProfile />}/>} />
             <Route path="/profile/orders" element={<PrivateRoute element={<OrdersTab />} />} />
             <Route path="/profile/orders/:orderId" element={<PrivateRoute element={<OrderDetail />}/>} />
-            {/* <Route path="/cart" element={<PrivateRoute element={<CartPage />} />} /> */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

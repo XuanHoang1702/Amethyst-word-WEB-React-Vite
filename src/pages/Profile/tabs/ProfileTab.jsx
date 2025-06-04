@@ -1,10 +1,19 @@
-  import { Edit2, Mail, MapPin, Phone, User } from 'lucide-react';
+   import { Edit2, Mail, MapPin, Phone, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { GetAddress, UpdateInformation } from '../../../service/UserService';
+import { GetAddress, UpdateInformation, createAddress } from '../../../service/UserService';
 
 export default function ProfileTab({ user }) {
   const token = localStorage.getItem("token");
   const [address, setAddress] = useState([]);
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [newAddress, setNewAddress]= useState({
+    housE_NUMBER: '',
+    street: '',
+    city: '',
+    postaL_CODE: '',
+    country: '',
+    typE_ADDRESS: ''
+  })
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     fullName: `${user.USER_FIRST_NAME || ''} ${user.USER_LAST_NAME || ''}`.trim(),
@@ -13,6 +22,8 @@ export default function ProfileTab({ user }) {
   });
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  
 
   const fetchAddress = async () => {
     try {
@@ -61,12 +72,20 @@ export default function ProfileTab({ user }) {
     return null;
   }
 
+  
 
   const handleEditClick = () => {
     setIsEditing(true);
     setSuccessMessage('');
     setError('');
   };
+
+  const handleNewAddress = (e)=>{
+    setNewAddress(prev=>({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
 
   const handleInputChange = (e) => {
     setFormData(prev => ({
@@ -105,7 +124,7 @@ export default function ProfileTab({ user }) {
       const firstName = names[0];
       const lastName = names.slice(1).join(' ');
 
-      const response = await UpdateInformation(token, 
+      const response = await UpdateInformation(
         {
           id: user.USER_ID,
           firstName: firstName,
@@ -129,6 +148,26 @@ export default function ProfileTab({ user }) {
       setError(errorMessage);
     }
   };
+
+  const handleSaveAddressClick = async()=> {
+    try{
+      const response = await createAddress(newAddress);
+      setSuccessMessage('Tạo địa điểm thành công');
+      setIsAddingAddress(false);
+      setNewAddress({
+        housE_NUMBER: '',
+        street: '',
+        city: '',
+        postaL_CODE: '',
+        country: '',
+        typE_ADDRESS: ''
+      })
+      fetchAddress();
+    }
+    catch(error){
+      setError('Lỗi lưu thông tin');
+    }
+  }
 
   return (
     <div>
@@ -239,7 +278,7 @@ export default function ProfileTab({ user }) {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="p-6 flex justify-between items-center border-b border-slate-100">
           <h2 className="text-lg font-semibold text-slate-800">Địa chỉ giao hàng</h2>
-          <button className="flex items-center text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+          <button onClick={()=>setIsAddingAddress(true)} className="flex items-center text-indigo-600 hover:text-indigo-700 text-sm font-medium">
             <span className="text-lg mr-1">+</span>
             <span>Thêm địa chỉ</span>
           </button>
@@ -266,6 +305,60 @@ export default function ProfileTab({ user }) {
             </div>
           </div>
         </div>
+        {isAddingAddress && (
+          <div className='p-6 mt-4 bg-slate-100 rounded-lg border border-slate-300'>
+            <h3 className='text-slate-800 font-semibold mb-4'>Nhập địa chỉ</h3>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+              <input
+                name='typE_ADDRESS'
+                placeholder='Loại địa chỉ (nhà, văn phòng ...)'
+                onChange={handleNewAddress}
+                value={newAddress.typE_ADDRESS}
+                 className="border px-3 py-2 rounded"
+                />
+              <input
+                name='housE_NUMBER'
+                placeholder='Số nha'
+                onChange={handleNewAddress}
+                value={newAddress.housE_NUMBER}
+                 className="border px-3 py-2 rounded"
+                />
+              <input
+                name='street'
+                placeholder='Đường'
+                onChange={handleNewAddress}
+                value={newAddress.street}
+                 className="border px-3 py-2 rounded"
+                />
+              <input
+                name='city'
+                placeholder='Thành phố'
+                onChange={handleNewAddress}
+                value={newAddress.city}
+                 className="border px-3 py-2 rounded"
+                />
+                <input
+                name='country'
+                placeholder='Quốc gia'
+                onChange={handleNewAddress}
+                value={newAddress.country}
+                 className="border px-3 py-2 rounded"
+                />
+                <input
+                name='postaL_CODE'
+                placeholder='Mã bưu điện'
+                onChange={handleNewAddress}
+                value={newAddress.postaL_CODE}
+                 className="border px-3 py-2 rounded"
+                />
+            </div>
+            <div className="flex gap-4">
+            <button onClick={handleSaveAddressClick} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Lưu địa chỉ</button>
+            <button onClick={() => setIsAddingAddress(false)} className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Hủy</button>
+    </div>
+          </div>
+
+        )}
       </div>
     </div>
   );

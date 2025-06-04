@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { ProductBestSeller } from '../../../service/ProductService';
+
 import BestSellerCard from './BestSellerCard';
+import { ProductBestSeller } from '../../../service/ProductService';
 
 const BestSellerList = () => {
     const [products, setProducts] = useState([]);
@@ -31,7 +32,7 @@ const BestSellerList = () => {
             </div>
             
             {/* Products grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5">
                 {products.map(product => (
                     <BestSellerCard key={product.producT_ID} product={product} />
                 ))}

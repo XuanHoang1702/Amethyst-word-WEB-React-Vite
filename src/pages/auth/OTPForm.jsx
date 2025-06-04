@@ -1,152 +1,13 @@
-// import React, { useState, useEffect, useRef } from 'react';
-// import { VerifyOTP, SendOtpEmail, login } from '../../service/UserService';
-// import { useNavigate } from 'react-router-dom';
 
-// const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
-//   const OTP_LENGTH = 4;
-//   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
-//   const inputRefs = useRef([])
-//   const [timer, setTimer] = useState(59);
-//   const [error, setError] = useState('');
-//   const [loading, setLoading] = useState(false);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const sendInitialOTP = async () => {
-      
-//       try{
-//         const fullname = `${userData.firstName} ${userData.lastName}`.trim();
-//         await SendOtpEmail(email, fullname);
-//       }
-//       catch(error){
-//         setError(error.message || 'Lỗi gửi OTP');
-//       }
-//     };
-//       sendInitialOTP();
-//     },[email, userData])
-
-//   useEffect(() => {
-//     if (timer > 0) {
-//       const countdown = setTimeout(() => setTimer(timer - 1), 1000);
-//       return () => clearTimeout(countdown);
-//     }
-//   }, [timer]);
-
-//   const handleChange = (e, index) => {
-//     const value = e.target.value.replace(/[^0-9]/g, "");
-//     if (value.length > 1) return;
-//     const newOtp = [...otp];
-//     newOtp[index] = value;
-//     setOtp(newOtp);
-//     if (value && index < OTP_LENGTH - 1) {
-//       inputRefs.current[index + 1].focus();
-//     }
-//   };
-
-//   const handleKeyDown = (e, index) => {
-//     if (e.key === "Backspace" && !otp[index] && index > 0) {
-//       inputRefs.current[index - 1].focus();
-//     }
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const otpCode = otp.join("");
-//     if (otpCode.length !== OTP_LENGTH) {
-//       setError("Vui lòng nhập đủ 4 chữ số OTP");
-//       return;
-//     }
-
-//     setLoading(true);
-//     try {
-//       const response = await VerifyOTP({ email, otp: otpCode });
-//       if (response.token) {
-//         localStorage.setItem("token", response.token);
-//         onLoginSuccess(userData.lastName);
-//         onClose();
-//         navigate("/");
-//       } else {
-//         throw new Error("Không nhận được token từ server");
-//       }
-//     } catch (error) {
-//       setError(error.response?.data?.message || "Xác thực OTP thất bại");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleResendOTP = async () => {
-//     setLoading(true);
-//     try {
-//       const fullName = `${userData.firstName} ${userData.lastName}`.trim();
-//       await SendOtpEmail(email, fullName);
-//       setTimer(59);
-//       setError("");
-//       setOtp(Array(OTP_LENGTH).fill(""));
-//       alert(`Đã gửi lại mã OTP đến ${email}`);
-//     } catch (error) {
-//       setError(error.response?.data?.message || "Lỗi gửi OTP");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//     <div className="bg-white rounded-lg p-8 max-w-md w-full">
-//       <h2 className="text-2xl font-semibold mb-4">Nhập mã OTP</h2>
-//       <p className="mb-4">Mã gồm 4 chữ số đã được gửi đến {email}</p>
-//       <form onSubmit={handleSubmit}>
-//         <div className="flex justify-between mb-4">
-//           {otp.map((digit, index) => (
-//             <input
-//               key={index}
-//               type="text"
-//               value={digit}
-//               onChange={(e) => handleChange(e, index)}
-//               onKeyDown={(e) => handleKeyDown(e, index)}
-//               maxLength={1}
-//               ref={(el) => (inputRefs.current[index] = el)}
-//               className="w-12 h-12 border rounded text-center text-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-//             />
-//           ))}
-//         </div>
-//         {error && <p className="text-red-500 mb-4">{error}</p>}
-//         <button
-//           type="submit"
-//           disabled={loading}
-//           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
-//         >
-//           {loading ? "Đang xử lý..." : "Xác nhận"}
-//         </button>
-//       </form>
-//       <div className="mt-4 text-center">
-//         {timer > 0 ? (
-//           <p>Gửi lại sau {timer}s</p>
-//         ) : (
-//           <button
-//             onClick={handleResendOTP}
-//             disabled={loading}
-//             className="text-blue-500 hover:underline disabled:text-gray-400"
-//           >
-//             Gửi lại mã OTP
-//           </button>
-//         )}
-//       </div>
-//     </div>
-//   </div>
-//   );
-// };
-
-// export default OTPForm;
 
 import React, { useState, useEffect, useRef } from 'react';
 import { VerifyOTP, SendOtpEmail, register } from '../../service/UserService';
 import { useNavigate } from 'react-router-dom';
 
-const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
+const OTPForm = ({ email, userData, onClose}) => {
   const OTP_LENGTH = 4;
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
+  const [isOtpSent, setIsOtpSent] = useState(false)
   const inputRefs = useRef([]);
   const [timer, setTimer] = useState(59);
   const [error, setError] = useState('');
@@ -162,6 +23,7 @@ const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
         const fullname = `${userData?.firstName} ${userData?.lastName}`.trim();
         await SendOtpEmail(email, fullname);
         setSuccess(`Mã OTP đã được gửi đến ${email}`);
+        setIsOtpSent(true);
       } catch (error) {
         console.error('Initial OTP Error:', error);
         setError('Không thể gửi mã OTP. Vui lòng thử lại');
@@ -170,7 +32,7 @@ const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
       }
     };
 
-    if (email && userData) {
+    if (email && userData && !isOtpSent) {
       sendInitialOTP();
     }
   }, [email, userData]);
@@ -258,11 +120,13 @@ const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
             if (registerResponse.token) {
               localStorage.setItem("token", registerResponse.token);
             }
+            localStorage.setItem("registeredEmail", userData.email);
+            localStorage.setItem("registeredPassword", userData.password);
           
             setTimeout(() => {
-              onLoginSuccess(userData?.lastName);
+
               onClose();
-              navigate("/");
+              navigate("/login");
             }, 1000);
           } else {
             throw new Error(registerResponse.message || "Đăng ký thất bại");
@@ -286,10 +150,11 @@ const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
 };
   const handleResendOTP = async () => {
     if (loading || timer > 0) return;
-    
+    setIsOtpSent(false);
     setLoading(true);
     setError('');
     setSuccess('');
+ 
     
     try {
       const fullName = `${userData?.firstName} ${userData?.lastName}`.trim();
@@ -297,7 +162,7 @@ const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
       setTimer(59);
       setOtp(Array(OTP_LENGTH).fill(""));
       setSuccess(`Đã gửi lại mã OTP đến ${email}`);
-
+      setIsOtpSent(true);
       inputRefs.current[0]?.focus();
     } catch (error) {
       console.error('Resend OTP Error:', error);
@@ -380,63 +245,4 @@ const OTPForm = ({ email, userData, onClose, onLoginSuccess }) => {
 
 export default OTPForm;
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError('');
-  //   setSuccess('');
-    
-  //   const otpCode = otp.join("");
-  //   if (!validateOTP(otpCode)) return;
-
-  //   setLoading(true);
-  //   try {
-  //     const response = await VerifyOTP({ 
-  //       email, 
-  //       otp: otpCode,
-  //     });
-
-  //     if (response && response.data) {
-  //       const { token, message } = response.data;
-        
-  //       if (token) {
-  //         localStorage.setItem("token", token);
-  //         setSuccess(message || "Xác thực thành công!");
-          
-  //         setTimeout(() => {
-  //           onLoginSuccess(userData?.lastName);
-  //           onClose();
-  //           navigate("/");
-  //         }, 1000);
-  //       } else {
-  //         throw new Error(message || "Token không hợp lệ");
-  //       }
-  //     } else {
-  //       throw new Error("Phản hồi không hợp lệ từ server");
-  //     }
-
-  //   } catch (error) {
-  //     console.error('OTP Verification Error:', error);
-  //       if (error.response) {
-  //         const status = error.response.status;
-  //         const message = error.response.data?.message;
-  //         switch (status) {
-  //           case 401:
-  //             setError(message || "Mã OTP không chính xác");
-  //             break;
-  //           case 400:
-  //             setError(message || "Mã OTP đã hết hạn");
-  //             break;
-  //           default:
-  //             setError(message || "Xác thực thất bại. Vui lòng thử lại");
-  //         }
-  //       } else if (error.request) {
-    
-  //         setError("Không thể kết nối đến server");
-  //       } else {
-       
-  //         setError(error.message || "Xác thực thất bại. Vui lòng thử lại");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  // };
+ 

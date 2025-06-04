@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const SaleBanner = () => {
   return (
     <Link to="/shop">
-    <button  className="w-full h-full pl-14 p-5">
+    <button  className="w-full h-full pl-18 p-7">
       <div className="relative w-full h-full bg-pink-600 rounded-md overflow-hidden flex flex-col items-center justify-between py-4">
         {/* Logo */}
         <div className="text-white text-4xl font-bold mb-2">AmethystWorld</div>

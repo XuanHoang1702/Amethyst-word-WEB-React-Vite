@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from './Api';
+const API_URL = import.meta.env.VITE_API_URL;
 import { isArray } from 'lodash';
 
 export const GetWishList = async (token) => {
@@ -13,7 +13,7 @@ export const GetWishList = async (token) => {
         console.log('Raw API response:', response);
         if(Array.isArray(response.data)){
             return {
-                code: 200,
+                code: 200, 
                 data: response.data,
                 message:'Success'
             }
