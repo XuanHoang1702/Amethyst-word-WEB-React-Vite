@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { deleteCart } from '../../service/CartService';
 import { formatPrice } from '../../utils/formatUtils';
 import { useCart } from '../../context/CartContext';
+const API_URL = import.meta.env.VITE_API_URL;
 /**
  * 
  * @param {Object} props
@@ -73,7 +74,7 @@ const CartItem = ({ product }) => {
           className="mr-4 mt-8 w-5 h-5 accent-[#6666e5]"
         />
         <img
-          src={`https://imgur.com/${product.imagE_NAME}`}
+           src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={product.name}
           className="w-24 h-28 object-cover mr-4 rounded border-2 border-[#6666e5]"
         />

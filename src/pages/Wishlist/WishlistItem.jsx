@@ -47,7 +47,7 @@ const WishlistItem = ({ item, OnDelete}) => {
       <div className="aspect-h-4 aspect-w-3 relative overflow-hidden">
       <img
           // src={`${API_URL}/images/${item.imagE_NAME}`}
-          src={item.imagE_NAME ? `https://i.imgur.com/${item.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+          src={item.imagE_NAME ? `${API_URL}/images/${item.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={item.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${item.producT_ID}`)}
