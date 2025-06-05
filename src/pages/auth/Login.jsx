@@ -1,5 +1,5 @@
 import { GoogleLogin } from "@react-oauth/google";
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,14 +20,22 @@ const Login = ()=>{
     setLoading(true);
   
     try {
-      await login(email, password);
-      toast.success("Đăng nhập thành công!", {
-        autoClose: 1000,
-      });
-      setTimeout(() => {
-        navigate('/home');
-        window.location.reload();
-      }, 2000);
+      const response = await login(email, password);
+      if(response.code === 200)
+      {
+        toast.success("Đăng nhập thành công!", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          navigate('/home');
+          window.location.reload();
+        }, 2000);
+      }
+      else{
+        toast.error("Đăng nhập thất bại!", {
+          autoClose: 1000,
+        });
+      }
     } catch (error) {
       toast.error("Sai tài khoản hoặc mật khẩu", {
         autoClose: 3000,

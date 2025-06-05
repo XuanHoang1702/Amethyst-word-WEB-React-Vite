@@ -1,17 +1,21 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { getCart } from '../../service/CartService';
 import { useCart } from '../../context/CartContext';
+import { getCart } from '../../service/CartService';
 const CartItem = lazy(() => import('./CartItem'));
 const CartContent = () => {
   const [cartProducts, setCartProducts] = useState([]);
   const token = localStorage.getItem('token');
   const {updateCartCount} = useCart();
   const {selectedItems, selectAllItems, clearSelectedItems} = useCart();
+
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        if (token === null) {
-          setCartProducts([]);
+        if (token === null || !token) {
+          const cartItem = JSON.parse(localStorage.getItem("cartItem"));
+          if(cartItem === null || cartItem.length === 0)
+            setCartProducts([]);
+          else setCartProducts(cartItem)
           await updateCartCount();
           return;
         }
@@ -39,6 +43,7 @@ const CartContent = () => {
       clearSelectedItems()
     }
   }
+  
   return (
     <div>
       {cartProducts.length > 0 ? (
