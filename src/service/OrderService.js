@@ -45,3 +45,18 @@ export const getOrder = async (token , id) =>{
 
     }
 }
+
+export const createOrderDetail = async( OrderId, orderDetails)=>{
+    try{
+        const response = await axios.post(`${API_URL}/api/Order/CreateOrderDetail?OrderId=${OrderId}`,orderDetails,{
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    return response.data
+}
+        
+    catch(error){
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}

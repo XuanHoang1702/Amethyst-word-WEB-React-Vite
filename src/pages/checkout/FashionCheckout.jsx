@@ -7,7 +7,8 @@ import { getCart } from '../../service/CartService';
 import { CreateOrder, GetStatus } from '../../service/OrderService';
 import { GetAddress, GetInformation } from '../../service/UserService';
 import WebSocketService from '../../service/WebSocket.Service';
-import {CreateOrderDetail} from '../../service/OrderDetailService';
+import { CreateOrderDetail } from '../../service/OrderDetailService';
+const API_URL = import.meta.env.VITE_API_URL;
 export default function FashionCheckout() {
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('qr');
@@ -93,24 +94,7 @@ export default function FashionCheckout() {
     }
   },[cartItems, selectedItems])
 
-  // const fetchOrderStatus = async () => {
-  //   try {
-  //     if(orderId){
-  //       const response = await GetStatus(token, orderId);
-
-  //       setOrderStatus(response.result);
-  //       if (orderStatus === "2") {
-  //         toast.success("Đặt hàng thành công");
-  //         setCurrentStep(4);
-  //       }
-  //     }
-
-  //   } catch (error) {
-  //     console.error("Error fetching order status:", error);
-  //   }
-  // };
-
-  const handleOrder = async () => {
+  const handleOrderAndDetail = async () => {
     try {
       const token = localStorage.getItem("token");
       const data = {
@@ -119,25 +103,29 @@ export default function FashionCheckout() {
         totaL_PRICE: totalPrice + shipPrice,
         note: shippingMethod,
         ordeR_STATUS: 1,
-      }
-
+      };
+  
       const response = await CreateOrder(token, data);
-      setOrderId(response.result);
-    }catch (error) {
+      const createdOrderId = response.result;
+      setOrderId(createdOrderId);
+  
+      const transformedCartItems = cartItems.map(item => ({
+        producT_ID: item.producT_ID,
+        quantity: item.quantity,
+        producT_PRICE: item.producT_PRICE,
+        coloR_ID: item.coloR_ID,
+        sizE_ID: item.sizE_ID,
+        subtotal: item.producT_PRICE * item.quantity
+      }));
+  
+      await CreateOrderDetail(createdOrderId, transformedCartItems);
+      setCurrentStep(3);
+    } catch (error) {
       console.error("Error placing order:", error);
     }
-  }
-
-  const handleOrderDetail = async () => {
-    try {
-      const response = await CreateOrderDetail(orderId, orderDetail);
-      
-    }
-      catch(error)
-      {
-        console.error("Error placing order:", error);
-      }
-  }
+  };
+  
+  
       
 
   useEffect(() => {
@@ -180,13 +168,14 @@ export default function FashionCheckout() {
   };
 
   const renderOrderSummary = () => {
+    console.log(cartItems)
     return (
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="font-bold text-lg mb-4 text-gray-800">Tóm tắt đơn hàng</h3>
         <div className="space-y-4 mb-6 max-h-[320px] overflow-y-auto pr-2">
           {cartItems.filter(item=> selectedItems.includes(item.producT_ID)).map(item => (
             <div key={item.id} className="flex space-x-4">
-              <img src={`https://imgur.com/${item.imagE_NAME}`} alt={item.producT_NAME} className="w-16 h-20 object-cover rounded" />
+              <img src={item.imagE_NAME ? `${API_URL}/images/${item.imagE_NAME}` : '/placeholder-image.jpg'} className="w-16 h-20 object-cover rounded" />
               <div className="flex-1">
                 <h4 className="font-medium text-gray-800">{item.producT_NAME}</h4>
                 <div className="text-sm text-gray-500">
@@ -314,8 +303,7 @@ export default function FashionCheckout() {
           <button 
             onClick={() => {
               setCurrentStep(3);
-              handleOrder();
-              handleOrderDetail();
+              handleOrderAndDetail();
             }}
             className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >

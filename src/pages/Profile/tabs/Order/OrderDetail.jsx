@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { ArrowLeft, Truck, Package, Check, AlertCircle } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { CreateOrderDetail } from '../../../../service/OrderDetailService';
+const API_URL = import.meta.env.VITE_API_URL;
 const getOrderDetail = (orderId) => {
   return {
     id: orderId,
@@ -72,7 +74,8 @@ const fetchOrderDetail = async (orderId)=>{
     console.error('Error fetching order detail:', error);
   }}
 
-export default function OrderDetail() {
+ const OrderDetail=()=>{
+
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [orderDetail] = useState(() => fetchOrderDetail(orderId));
@@ -270,3 +273,4 @@ export default function OrderDetail() {
     </div>
   );
 } 
+export default OrderDetail
