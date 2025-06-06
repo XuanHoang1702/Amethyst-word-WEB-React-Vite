@@ -53,4 +53,31 @@ export const deleteCart = async (token, productId) => {
         throw error;
     }
 }
-                
+
+export const addToCartNoAuth = (producT_ID, producT_NAME, producT_PRICE, imagE_NAME, coloR_NAME, sizE_NAME, quantity) => {
+    const cart = JSON.parse(localStorage.getItem("cartItem")) || [];
+
+    const existingIndex = cart.findIndex(item =>
+        item.producT_ID === producT_ID &&
+        item.producT_NAME === producT_NAME &&
+        item.producT_PRICE == producT_PRICE &&
+        item.coloR_NAME === coloR_NAME &&
+        item.sizE_NAME === sizE_NAME
+    );
+
+    if (existingIndex !== -1) {
+        cart[existingIndex].quantity += quantity;
+    } else {
+        cart.push({
+        producT_ID,
+        producT_NAME,
+        producT_PRICE,
+        imagE_NAME,
+        coloR_NAME,
+        sizE_NAME,
+        quantity
+        });
+    }
+
+    localStorage.setItem("cartItem", JSON.stringify(cart));
+};

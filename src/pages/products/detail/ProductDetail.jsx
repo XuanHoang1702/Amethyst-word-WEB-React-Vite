@@ -1,11 +1,14 @@
-import { Minus, Plus, Star } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { Minus, Plus, ShoppingBag, Star } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { addToCart, addToCartNoAuth } from '../../../service/CartService';
 import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/ProductService';
+
 import { ShoppingBag } from 'lucide-react';
 import { formatPrice } from '../../../utils/formatUtils';
 import { toast } from 'react-toastify';
-
 import { addToCart } from '../../../service/CartService';
+
 const API_URL = import.meta.env.VITE_API_URL;
 const ProductDetail = ({ id }) => {
   const [product, setProduct] = useState(null);
@@ -16,10 +19,8 @@ const ProductDetail = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-
   const token = localStorage.getItem('token');
 
-  //const [mainImage, setMainImage] = useState(productThumbnails[0].image);
   const fetchProductDetail = async () => {
     try {
       setLoading(true);
@@ -30,9 +31,11 @@ const ProductDetail = ({ id }) => {
       }
       const response = await GetProductDetail(id);
 
+
     if (response.producT_ID !== parseInt(id)) {
       throw new Error("Thông tin sản phẩm không chính xác");
   }
+
       setProduct(response);
 
     } catch (error) {
@@ -56,24 +59,20 @@ const ProductDetail = ({ id }) => {
   }
 
   const fetchProductSizes = async ()=>{
-  try{
-    const response = await ProductSizes(id);
-  
-      setSizes(response)
-  
-  }
-  catch(error)
-  {
-    setError(error.message || "Không thể tải danh sách size");
-  }
+    try{
+      const response = await ProductSizes(id);
+        setSizes(response)
+    }
+    catch(error)
+    {
+      setError(error.message || "Không thể tải danh sách size");
+    }
   }
 
   useEffect(() => {
-
     fetchProductDetail();
     fetchProductColors();
     fetchProductSizes();
-    
   }, []);
 
   if (loading) {
@@ -93,11 +92,11 @@ const ProductDetail = ({ id }) => {
       <div className="text-gray-500">Không tìm thấy sản phẩm</div>
     </div>;
   }
- const calculateDiscountedPrice = (originalPrice, discountPercent)=>{
-  if(!discountPercent) return originalPrice;
-  const discount = (originalPrice * discountPercent) /100;
-  return originalPrice - discount
- }
+  const calculateDiscountedPrice = (originalPrice, discountPercent)=>{
+    if(!discountPercent) return originalPrice;
+    const discount = (originalPrice * discountPercent) /100;
+    return originalPrice - discount
+  }
 
   const renderStars = (rating) => {
     const stars = [];
@@ -116,8 +115,12 @@ const ProductDetail = ({ id }) => {
 
   const handleAddToCart = async ()=>{
     try{
-      if(!token) {
-        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+      if(!token || token === null) {
+        addToCartNoAuth(product.producT_ID, product.producT_NAME,product.producT_PRICE, product.imagE_NAME, selectedColor.coloR_NAME, selectedSize.sizE_NAME, quantity)
+        toast.success('Thêm sản phẩm vào giỏ hàng thành công');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
         return 
       }
       if(!selectedColor){
@@ -142,6 +145,7 @@ const ProductDetail = ({ id }) => {
     catch(error)
     {
       toast.error('Thêm sản phẩm vào giỏ hàng thất bai');
+      throw(error);
     }
   }
   return (
@@ -150,8 +154,7 @@ const ProductDetail = ({ id }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col md:flex-row">
             <div className="bg-gray-100 rounded-lg p-4 flex-1 flex items-center justify-center mb-4 md:mb-0 ">
-              {/* <img src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}` : '/placeholder-image.jpg'} alt="Sản phẩm" className="w-full h-full object-cover" /> */}
-              <img src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}/>
+              <img src={product.imagE_NAME ? `https://localhost:5000/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}/>
             </div>
             <div className="flex items-center flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 ml-3 p-1">
 

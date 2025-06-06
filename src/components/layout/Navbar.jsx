@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState, useContext, useRef } from "react";
-import { FaHeart, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { FaHeart, FaShoppingBag, FaUser } from "react-icons/fa";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishListContext";
 import CartDrawer from "../../pages/carts/CartDrawer";
 import { MenuNavBarService } from "../../service/MenuNavBarService";
-import { GetInformation } from "../../service/UserService";
 import { ProductSearch } from "../../service/ProductService";
-import { AuthContext } from "../../context/AuthContext";
+import { GetInformation } from "../../service/UserService";
 import SearchBar from "../SearchBar";
-import { useWishlist } from "../../context/WishListContext";
-import { useCart } from "../../context/CartContext";
-import { getVisitorId } from "../../service/Device.Service";
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
@@ -31,11 +31,7 @@ const Navbar = () => {
   const {cartCount} = useCart();
 
   const toggleCartDrawer = () => {
-    if (token) {
-      setDrawerOpen(!drawerOpen);
-    } else {
-      navigate('/login');
-    }
+    setDrawerOpen(!drawerOpen);
   };
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
   

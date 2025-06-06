@@ -2,10 +2,12 @@
 import { useState } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { useCart } from '../../context/CartContext';
 import { deleteCart } from '../../service/CartService';
 import { formatPrice } from '../../utils/formatUtils';
 import { useCart } from '../../context/CartContext';
 const API_URL = import.meta.env.VITE_API_URL;
+
 /**
  * 
  * @param {Object} props
@@ -19,14 +21,12 @@ const API_URL = import.meta.env.VITE_API_URL;
  * @param {string} props.product.image
  */
 const CartItem = ({ product }) => {
+  console.log("Cart item: ", product)
   const [quantity, setQuantity] = useState(product.quantity);
   const {selectedItems=[], toggleSelectedItem} = useCart();
   const { updateCartCount, updateQuantity } = useCart();
-  console.log('Product details:', {
-    size: product.sizE_NAME,
-    color: product.coloR_NAME,
-    fullProduct: product // 
-  });
+  const token = localStorage.getItem('token');
+  
   const increaseQuantity = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
@@ -39,7 +39,7 @@ const CartItem = ({ product }) => {
     updateQuantity(product.producT_ID, newQuantity);
   };
 
-  const token = localStorage.getItem('token');
+  
 
   const handleDelete = async () => {
     try {
@@ -105,13 +105,11 @@ const CartItem = ({ product }) => {
       <div className="text-xl text-right font-semibold">
         <p>{formatPrice(product.producT_PRICE * quantity)} </p>
         <div className="ml-2">
-      <button onClick={handleDelete}>
-          <MdDelete className="text-red-500 text-3xl mt-7" />
-        </button>
+          <button onClick={handleDelete}>
+            <MdDelete className="text-red-500 text-3xl mt-7" />
+          </button>
+        </div>
       </div>
-      </div>
-     
-      
     </div>
   );
 };
