@@ -51,12 +51,13 @@ const CartContent = () => {
           <div className='flex items-center p-4 border-b'>
             <input
               type="checkbox"
-              checked={selectAllItems.length === cartProducts.length && cartProducts.length >0}
+              checked={selectedItems.length === cartProducts.length && cartProducts.length > 0}
+
               onChange={handleSelectAll}
-               className="w-5 h-5 accent-[#6666e5] mr-2"
+              className="w-5 h-5 accent-[#6666e5] mr-2"
 
             />
-               <span className="text-sm font-medium">
+              <span className="text-sm font-medium">
               Chọn tất cả ({cartProducts.length} sản phẩm)
             </span>
 
