@@ -71,7 +71,7 @@ const CartItem = ({ product }) => {
           className="mr-4 mt-8 w-5 h-5 accent-[#6666e5]"
         />
         <img
-          src={`https://imgur.com/${product.imagE_NAME}`}
+          src={`https://localhost:5000/images/${product.imagE_NAME}`}
           alt={product.name}
           className="w-24 h-28 object-cover mr-4 rounded border-2 border-[#6666e5]"
         />
