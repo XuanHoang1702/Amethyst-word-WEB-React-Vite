@@ -6,7 +6,6 @@ import ProductDetail from "./ProductDetail";
 
 const Details = () => {
   const { id } = useParams();
-  console.log("Product ID from params:", id); 
   const productId = parseInt(id);
   if (!productId || isNaN(productId)) {
     return (

@@ -1,67 +1,69 @@
 import { useState } from 'react';
 import { ArrowLeft, Truck, Package, Check, AlertCircle } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { CreateOrderDetail } from '../../../../service/OrderDetailService';
-// const getOrderDetail = (orderId) => {
-//   return {
-//     id: orderId,
-//     date: '2023-06-15',
-//     status: 'Đang giao',
-//     statusColor: 'bg-blue-100 text-blue-800',
-//     total: '1.290.000₫',
-//     customerName: 'Nguyễn Văn A',
-//     phone: '0987654321',
-//     email: 'nguyenvana@example.com',
-//     address: '123 Đường Lê Lợi, Quận 1, TP.HCM',
-//     paymentMethod: 'Thanh toán khi nhận hàng (COD)',
-//     shippingMethod: 'Giao hàng nhanh',
-//     shippingFee: '30.000₫',
-//     items: [ 
-//       {
-//         id: 'PRD001',
-//         name: 'Áo thun nam cổ tròn',
-//         image: '/images/product1.jpg',
-//         price: '290.000₫',
-//         quantity: 2,
-//         total: '580.000₫'
-//       },
-//       {
-//         id: 'PRD002',
-//         name: 'Quần jean nam slim fit',
-//         image: '/images/product2.jpg',
-//         price: '680.000₫',
-//         quantity: 1,
-//         total: '680.000₫'
-//       }
-//     ],
-//     trackingHistory: [
-//       {
-//         status: 'Đơn hàng đã đặt',
-//         date: '2023-06-15',
-//         time: '10:30',
-//         description: 'Đơn hàng của bạn đã được tạo thành công.'
-//       },
-//       {
-//         status: 'Đã xác nhận',
-//         date: '2023-06-15',
-//         time: '11:45',
-//         description: 'Đơn hàng của bạn đã được xác nhận và đang được chuẩn bị.'
-//       },
-//       {
-//         status: 'Đang vận chuyển',
-//         date: '2023-06-16',
-//         time: '09:15',
-//         description: 'Đơn hàng đã được giao cho đơn vị vận chuyển.'
-//       },
-//       {
-//         status: 'Đang giao hàng',
-//         date: '2023-06-17',
-//         time: '08:30',
-//         description: 'Đơn hàng đang được giao đến địa chỉ của bạn.'
-//       }
-//     ]
-//   };
-// };
+const API_URL = import.meta.env.VITE_API_URL;
+const getOrderDetail = (orderId) => {
+  return {
+    id: orderId,
+    date: '2023-06-15',
+    status: 'Đang giao',
+    statusColor: 'bg-blue-100 text-blue-800',
+    total: '1.290.000₫',
+    customerName: 'Nguyễn Văn A',
+    phone: '0987654321',
+    email: 'nguyenvana@example.com',
+    address: '123 Đường Lê Lợi, Quận 1, TP.HCM',
+    paymentMethod: 'Thanh toán khi nhận hàng (COD)',
+    shippingMethod: 'Giao hàng nhanh',
+    shippingFee: '30.000₫',
+    items: [ 
+      {
+        id: 'PRD001',
+        name: 'Áo thun nam cổ tròn',
+        image: '/images/product1.jpg',
+        price: '290.000₫',
+        quantity: 2,
+        total: '580.000₫'
+      },
+      {
+        id: 'PRD002',
+        name: 'Quần jean nam slim fit',
+        image: '/images/product2.jpg',
+        price: '680.000₫',
+        quantity: 1,
+        total: '680.000₫'
+      }
+    ],
+    trackingHistory: [
+      {
+        status: 'Đơn hàng đã đặt',
+        date: '2023-06-15',
+        time: '10:30',
+        description: 'Đơn hàng của bạn đã được tạo thành công.'
+      },
+      {
+        status: 'Đã xác nhận',
+        date: '2023-06-15',
+        time: '11:45',
+        description: 'Đơn hàng của bạn đã được xác nhận và đang được chuẩn bị.'
+      },
+      {
+        status: 'Đang vận chuyển',
+        date: '2023-06-16',
+        time: '09:15',
+        description: 'Đơn hàng đã được giao cho đơn vị vận chuyển.'
+      },
+      {
+        status: 'Đang giao hàng',
+        date: '2023-06-17',
+        time: '08:30',
+        description: 'Đơn hàng đang được giao đến địa chỉ của bạn.'
+      }
+    ]
+  };
+};
 const fetchOrderDetail = async (orderId)=>{
   try{
     const token = localStorage.getItem('token');
@@ -72,7 +74,8 @@ const fetchOrderDetail = async (orderId)=>{
     console.error('Error fetching order detail:', error);
   }}
 
-export default function OrderDetail() {
+ const OrderDetail=()=>{
+
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [orderDetail] = useState(() => fetchOrderDetail(orderId));
@@ -270,3 +273,4 @@ export default function OrderDetail() {
     </div>
   );
 } 
+export default OrderDetail

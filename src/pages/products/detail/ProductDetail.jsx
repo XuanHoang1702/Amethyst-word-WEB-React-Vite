@@ -3,7 +3,12 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { addToCart, addToCartNoAuth } from '../../../service/CartService';
 import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/ProductService';
+
+import { ShoppingBag } from 'lucide-react';
 import { formatPrice } from '../../../utils/formatUtils';
+import { toast } from 'react-toastify';
+import { addToCart } from '../../../service/CartService';
+
 const API_URL = import.meta.env.VITE_API_URL;
 const ProductDetail = ({ id }) => {
   const [product, setProduct] = useState(null);
@@ -25,6 +30,12 @@ const ProductDetail = ({ id }) => {
         throw new Error("ID sản phẩm không hợp lệ");
       }
       const response = await GetProductDetail(id);
+
+
+    if (response.producT_ID !== parseInt(id)) {
+      throw new Error("Thông tin sản phẩm không chính xác");
+  }
+
       setProduct(response);
 
     } catch (error) {

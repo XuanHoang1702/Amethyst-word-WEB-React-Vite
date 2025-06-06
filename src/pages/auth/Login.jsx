@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import bg1 from '../../assets/image/phoi-do-voi-mau-tim-pastel_672db6744d5545cfb058f353237dd4d4.webp';
 import { login } from "../../service/UserService";
-
 const Login = ()=>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,6 +44,18 @@ const Login = ()=>{
       setLoading(false);
     }
   };
+
+  useEffect(()=>{
+    const savedEmail = localStorage.getItem('registeredEmail');
+    const savedPassword = localStorage.getItem('registeredPassword')
+
+    if(savedEmail) setEmail(savedEmail);
+    if (savedPassword) setPassword(savedPassword);
+    
+    localStorage.removeItem('registeredEmail');
+    localStorage.removeItem('registeredPassword');
+  },[])
+
   
 
   const handleGoogleLoginSuccess = (credentialResponse) => {

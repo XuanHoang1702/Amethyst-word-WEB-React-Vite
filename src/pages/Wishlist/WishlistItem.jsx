@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { Heart } from "lucide-react";
 import { IoHeartDislike } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
-import { API_URL } from "../../service/Api";
+
 import { DeleteWishList } from "../../service/WishListService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../../context/WishListContext";
+const API_URL = import.meta.env.VITE_API_URL;
 const WishlistItem = ({ item, OnDelete}) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate()
@@ -46,7 +47,7 @@ const WishlistItem = ({ item, OnDelete}) => {
       <div className="aspect-h-4 aspect-w-3 relative overflow-hidden">
       <img
           // src={`${API_URL}/images/${item.imagE_NAME}`}
-          src={item.imagE_NAME ? `https://i.imgur.com/${item.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+          src={item.imagE_NAME ? `${API_URL}/images/${item.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={item.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${item.producT_ID}`)}

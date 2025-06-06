@@ -9,8 +9,9 @@ import Breadcrumb from '../../components/BreadCrumb';
 import FashionPagination from "../../components/panigation/Panigation";
 import ProductFilters from '../../pages/products/ProductFilter';
 import ProductSort from '../../pages/products/ProductSort';
-import ProductCard from '../products/new/ProductCard';
-import ProductListCard from '../products/new/ProductListCard';
+// import ProductCard from '../products/new/ProductCard';
+import AllProductListCard from '../products/AllProductListCard'
+import AllProductCard from '../products/AllProductCard';
 import { ProductFilter } from '../../service/ProductService';
 import bg1 from '../../assets/image/pngtree-sustainable-fashion-featuring-clothes-made-from-organic-and-recycled-fabrics-on-picture-image_15873419.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -36,24 +37,39 @@ const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
   );
 };
 
+import queryString from 'query-string';
+
 const Shop = () => {
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { brandId, categoryId } = queryString.parse(location.search);
+
   const [filters, setFilters] = useState({
-    categoryId: [],
-    brandId: [],
+    categoryId: categoryId ? Number(categoryId) : null,
+    brandId: brandId ? Number(brandId) : null,
     pageNumber: 1,
     pageSize: 8,
     priceMin: 0,
     pricaMax: 9999,
   });
+
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      brandId: brandId ? Number(brandId) : null,
+      categoryId: categoryId ? Number(categoryId) : null,
+      pageNumber: 1,
+    }));
+  }, [brandId, categoryId]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
   const [cache, setCache] = useState({});
 
   const fetchProducts = useCallback(async () => {
@@ -67,9 +83,10 @@ const Shop = () => {
 
     try {
       setLoading(true);
+      console.log("fetchProducts called with filters:", filters);
       const response = await ProductFilter(
-        filters.brandId,
-        filters.categoryId,
+        filters.brandId !== null ? filters.brandId : undefined,
+        filters.categoryId !== null ? filters.categoryId : undefined,
         filters.priceMin,
         filters.pricaMax,
         filters.pageNumber,
@@ -97,7 +114,8 @@ const Shop = () => {
     setFilters(prev => {
       const updatedFilters = {
         ...prev,
-        ...newFilters,
+        categoryId: newFilters.categoryId !== undefined ? newFilters.categoryId : prev.categoryId,
+        brandId: newFilters.brandId !== undefined ? newFilters.brandId : prev.brandId,
         priceMin: newFilters.priceMin !== undefined ? newFilters.priceMin : prev.priceMin,
         pricaMax: newFilters.pricaMax !== undefined ? newFilters.pricaMax : prev.pricaMax,
         pageNumber: newFilters.pageNumber || 1,
@@ -171,10 +189,6 @@ const Shop = () => {
                 <Filter size={16} />
                 <span>Filters</span>
               </button>
-              <div className="flex items-center gap-2">
-                <ViewModeToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
-                <ProductSort sortBy={sortBy} onSortChange={setSortBy} />
-              </div>
             </div>
             <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
               <ProductFilters onFilterChange={handleFilterChange} />
@@ -200,7 +214,7 @@ const Shop = () => {
                   {viewMode === 'grid' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                       {products.map(product => (
-                        <ProductCard 
+                        <AllProductCard 
                           key={product.producT_ID} 
                           product={product} 
                         />
@@ -210,7 +224,7 @@ const Shop = () => {
                   {viewMode === 'list' && (
                     <div className="flex flex-col gap-4">
                       {products.map(product => (
-                        <ProductListCard 
+                        <AllProductListCard 
                           key={product.producT_ID} 
                           product={product} 
                         />
@@ -238,4 +252,3 @@ const Shop = () => {
 
 export default Shop;
 
-//new, best , sale, 

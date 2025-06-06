@@ -3,7 +3,7 @@ import { FaHeart, FaShoppingCart, FaEye, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {formatPrice} from '../../../utils/formatUtils';
-import { API_URL } from '../../../service/Api';
+const API_URL = import.meta.env.VITE_API_URL;
 /**
  * Render stars based on rating
  * @param {Object} props
@@ -33,7 +33,8 @@ const ProductRelateCard = ({ product }) => {
     <div class="bg-white rounded-lg shadow-md overflow-hidden group">
       <div class="relative">
       <img
-                      src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+              src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+                      // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

@@ -1,10 +1,12 @@
 import { ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 export default function OrdersTable({ orders, total }) {
   const navigate = useNavigate();
   const handleViewDetail = (orderId) => {
     navigate(`/profile/orders/${orderId}`);
   };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div className="overflow-x-auto">
@@ -22,11 +24,11 @@ export default function OrdersTable({ orders, total }) {
             {orders.map((order, index) => (
               <tr key={index} className="hover:bg-slate-50 transition">
                 <td className="px-6 py-5 text-sm font-medium text-indigo-600">{order.id}</td>
-                <td className="px-6 py-5 text-sm text-slate-500">{order.date}</td>
-                <td className="px-6 py-5 text-sm font-medium text-slate-800">{order.total}</td>
+                <td className="px-6 py-5 text-sm text-slate-500">{order.createD_AT}</td>
+                <td className="px-6 py-5 text-sm font-medium text-slate-800">{order.totaL_PRICE}</td>
                 <td className="px-6 py-5">
                   <span className={`px-2.5 py-1 inline-flex text-xs font-medium rounded-full ${order.statusColor}`}>
-                    {order.status}
+                    {order.ordeR_STATUS}
                   </span>
                 </td>
                 <td className="px-6 py-5 text-right">

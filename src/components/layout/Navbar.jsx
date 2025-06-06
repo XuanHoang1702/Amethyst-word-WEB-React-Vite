@@ -35,6 +35,14 @@ const Navbar = () => {
   };
   const toggleNavDrawer = () => setNavDrawerOpen(!navDrawerOpen);
   
+  useEffect(() => {
+    const fecthVisitorId = async () => {
+      const visitorId = await getVisitorId();
+      console.log("visitorId", visitorId);
+    };
+    fecthVisitorId();
+  }, []);
+  
 
 
   const fetchUserData = async () => {
@@ -69,7 +77,6 @@ const Navbar = () => {
     
     try {
       const response = await ProductSearch(searchProduct);
-      // Đóng thanh tìm kiếm sau khi tìm kiếm thành công
       setSearchOpen(false);
       navigate(`/search?query=${encodeURIComponent(searchProduct)}`, { state: { results: response.data } });
     } catch (error) {

@@ -27,7 +27,7 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-60 md:h-96 lg:h-[600px] overflow-hidden rounded-lg shadow-lg m-5">
+    <div className="relative w-full h-50px object-fill lg:h-[800px] overflow-hidden rounded-lg shadow-lg m-9 ">
       <Swiper
         effect={'fade'}
         grabCursor={true}

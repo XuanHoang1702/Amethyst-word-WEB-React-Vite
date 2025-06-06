@@ -6,17 +6,21 @@ import { toast } from 'react-toastify';
 import { addToCart } from '../../../service/CartService';
 import { AddWishList } from '../../../service/WishListService';
 import { formatPrice } from '../../../utils/formatUtils';
-import { API_URL } from '../../../service/Api';
-/**
- * BestSellerCard component for displaying a best-selling product
- * @param {Object} props
- * @param {Object} props.product -
- * @param {number} props.product.producT_ID 
- * @param {string} props.product.name
- * @param {number} props.product.price 
- * @param {string} props.product.src 
- * @param {string} props.product.alt 
- */
+import { useWishlist } from '../../../context/WishListContext';
+import { SquareArrowOutUpRight } from 'lucide-react';
+const API_URL = import.meta.env.VITE_API_URL;
+// /**
+//  @param {Object} props
+//  * @param {Object} props.product
+//  * @param {number} props.product.producT_ID 
+//  * @param {string} props.product.producT_NAME
+//  * @param {number} props.product.producT_PRICE
+//  * @param {number} props.product.discounT_PERCENT
+//  * @param {string} props.product.imagE_NAME
+//  * @param {number} props.product.rate
+//  * @param {number} props.product.reviewCount
+//  * @param {boolean} props.product.isNew
+//  */
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -31,8 +35,13 @@ const renderStars = (rating) => {
 };
 
 const BestSellerCard = ({ product }) => {
+  const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+
+  const calculateDiscountedPrice = (originalPrice, discountPercent)=>{
+    return originalPrice * (1 - discountPercent/ 100);
+  }
 
   const handleAddToCart = async () => {
     try {
@@ -60,6 +69,7 @@ const BestSellerCard = ({ product }) => {
         const response = await AddWishList(token, product.producT_ID);
         if(response.code === 201) {
           toast.success('Thêm vào danh sách yêu thích thành công!');
+          incrementCount()
         } else {
           toast.error(response.message || 'Thêm vào danh sách yêu thích thất bại!');
         }
@@ -72,27 +82,22 @@ const BestSellerCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-                      src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
-            alt={product.alt}
+            src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+            // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+            // alt={product.producT_NAME}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}
           />
-  
-          {/* Badge mới */}
-          {product.isNew && (
+          {/* {product.producT_PRICE && (
             <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
               MỚI
             </div>
-          )}
-  
-          {/* Badge giảm giá */}
-          {product.salePrice && (
-            <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-              GIẢM GIÁ
-            </div>
-          )}
-  
-          {/* Hover buttons */}
+          )} */}
+          {product.discounT_PERCENT && product.discounT_PERCENT > 0 && (
+          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+            GIẢM GIÁ
+          </div>
+        )}
           <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
             <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
               <FaShoppingCart size={18} />
@@ -116,25 +121,29 @@ const BestSellerCard = ({ product }) => {
           >
             {product.producT_NAME}
           </h3>
-  
-          {/* Đánh giá sao */}
+
           <div className="flex items-center justify-center mb-2">
             {renderStars(product.rate)}
             <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
           </div>
   
-          {/* Giá sản phẩm */}
           <div className="flex items-center justify-between">
-            <div>
-              {product.salePrice ? (
-                <>
-                  <span className="font-medium text-red-500">{formatPrice(product.salePrice)}</span>
-                  <span className="text-gray-400 text-sm line-through ml-1">{formatPrice(product.price)}</span>
-                </>
-              ) : (
-                <span className="font-medium text-gray-800">{formatPrice(product.producT_PRICE)}</span>
-              )}
-            </div>
+          <div>
+            {product.discounT_PERCENT && product.discounT_PERCENT > 0 ? (
+              <>
+                <span className="font-medium text-red-500">
+                  {formatPrice(calculateDiscountedPrice(product.producT_PRICE, product.discounT_PERCENT))}
+                </span>
+                <span className="text-gray-400 text-sm line-through ml-1">
+                  {formatPrice(product.producT_PRICE)}
+                </span>
+              </>
+            ) : (
+              <span className="font-medium text-gray-800">
+                {formatPrice(product.producT_PRICE)}
+              </span>
+            )}
+          </div>
             <button
               className="text-blue-500 text-sm hover:underline"
               onClick={() => navigate(`/details/${product.producT_ID}`)}

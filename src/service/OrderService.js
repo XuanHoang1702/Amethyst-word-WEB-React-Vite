@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from './Api';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const CreateOrder = async (token, input) => {
     try {
@@ -30,3 +30,33 @@ export const GetStatus = async (token, id) => {
     }
 }
 
+export const getOrder = async (token , id) =>{
+    try{
+        const response = await axios.get(`${API_URL}/api/Order/GetOrder?id=${id}`,{
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    }
+    catch(error){
+        throw error.response || { message: 'Lỗi kết nối server' };
+
+    }
+}
+
+export const createOrderDetail = async( OrderId, orderDetails)=>{
+    try{
+        const response = await axios.post(`${API_URL}/api/Order/CreateOrderDetail?OrderId=${OrderId}`,orderDetails,{
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    return response.data
+}
+        
+    catch(error){
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}

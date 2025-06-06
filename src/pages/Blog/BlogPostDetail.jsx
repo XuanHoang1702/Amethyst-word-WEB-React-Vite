@@ -5,7 +5,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import BlogHeader from '../../components/layout/BlogHeader';
 import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogFooter from '../../components/layout/BlogFooters';
-import { relatedProducts } from '../../service/ProductData';
+// import { relatedProducts } from '../../service/ProductData';
 import ProductRelateCard from '../products/related/ProductRelateCard';
 import img1 from '../../assets/image/sale04.jpg'
 const BlogPostDetail = () => {

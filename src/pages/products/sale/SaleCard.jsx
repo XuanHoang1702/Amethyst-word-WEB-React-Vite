@@ -6,17 +6,8 @@ import { toast } from 'react-toastify';
 import { addToCart } from '../../../service/CartService';
 import { formatPrice } from '../../../utils/formatUtils';
 import { AddWishList } from '../../../service/WishListService';
-import { API_URL } from '../../../service/Api';
-/**
- * BestSellerCard component for displaying a best-selling product
- * @param {Object} props
- * @param {Object} props.product -
- * @param {number} props.product.producT_ID 
- * @param {string} props.product.name
- * @param {number} props.product.price 
- * @param {string} props.product.src 
- * @param {string} props.product.alt 
- */
+import { useWishlist } from '../../../context/WishListContext';
+const API_URL = import.meta.env.VITE_API_URL;
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -33,6 +24,8 @@ const renderStars = (rating) => {
 // Format price function
 
 const SaleCard = ({ product }) => {
+  // console.log('Product:', product.producT_NAME, 'Discount Percent:', product.discounT_PERCENT);
+  const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -62,6 +55,7 @@ const SaleCard = ({ product }) => {
         const response = await AddWishList(token, product.producT_ID);
         if(response.code === 201) {
           toast.success('Thêm vào danh sách yêu thích thành công!');
+          incrementCount()
         } else {
           toast.error(response.message || 'Thêm vào danh sách yêu thích thất bại!');
         }
@@ -74,7 +68,8 @@ const SaleCard = ({ product }) => {
   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-                      src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+           src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+            // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}
@@ -83,7 +78,7 @@ const SaleCard = ({ product }) => {
           {/* Badge giảm giá */}
           {product.discounT_PERCENT && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-              GIẢM GIÁ
+              GIẢM GIÁ {product.discounT_PERCENT}%
             </div>
           )}
   
