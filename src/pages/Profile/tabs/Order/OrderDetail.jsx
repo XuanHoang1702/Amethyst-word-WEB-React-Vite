@@ -1,85 +1,28 @@
-import { useState } from 'react';
-import { ArrowLeft, Truck, Package, Check, AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Check, Package, Truck } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import { CreateOrderDetail } from '../../../../service/OrderDetailService';
+import { GetOrderDetail } from '../../../../service/OrderDetailService';
 const API_URL = import.meta.env.VITE_API_URL;
-const getOrderDetail = (orderId) => {
-  return {
-    id: orderId,
-    date: '2023-06-15',
-    status: 'Đang giao',
-    statusColor: 'bg-blue-100 text-blue-800',
-    total: '1.290.000₫',
-    customerName: 'Nguyễn Văn A',
-    phone: '0987654321',
-    email: 'nguyenvana@example.com',
-    address: '123 Đường Lê Lợi, Quận 1, TP.HCM',
-    paymentMethod: 'Thanh toán khi nhận hàng (COD)',
-    shippingMethod: 'Giao hàng nhanh',
-    shippingFee: '30.000₫',
-    items: [ 
-      {
-        id: 'PRD001',
-        name: 'Áo thun nam cổ tròn',
-        image: '/images/product1.jpg',
-        price: '290.000₫',
-        quantity: 2,
-        total: '580.000₫'
-      },
-      {
-        id: 'PRD002',
-        name: 'Quần jean nam slim fit',
-        image: '/images/product2.jpg',
-        price: '680.000₫',
-        quantity: 1,
-        total: '680.000₫'
-      }
-    ],
-    trackingHistory: [
-      {
-        status: 'Đơn hàng đã đặt',
-        date: '2023-06-15',
-        time: '10:30',
-        description: 'Đơn hàng của bạn đã được tạo thành công.'
-      },
-      {
-        status: 'Đã xác nhận',
-        date: '2023-06-15',
-        time: '11:45',
-        description: 'Đơn hàng của bạn đã được xác nhận và đang được chuẩn bị.'
-      },
-      {
-        status: 'Đang vận chuyển',
-        date: '2023-06-16',
-        time: '09:15',
-        description: 'Đơn hàng đã được giao cho đơn vị vận chuyển.'
-      },
-      {
-        status: 'Đang giao hàng',
-        date: '2023-06-17',
-        time: '08:30',
-        description: 'Đơn hàng đang được giao đến địa chỉ của bạn.'
-      }
-    ]
-  };
-};
-const fetchOrderDetail = async (orderId)=>{
-  try{
-    const token = localStorage.getItem('token');
-    const data = await CreateOrderDetail(orderId, token);
-    return data
-  }
-  catch(error){
-    console.error('Error fetching order detail:', error);
-  }}
 
- const OrderDetail=()=>{
-
+const OrderDetail = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const [orderDetail] = useState(() => fetchOrderDetail(orderId));
+  const [orderDetail, setOrderDetail] = useState([]);
   const [activeTab, setActiveTab] = useState('products');
+  const [total, setTotal] = useState(0);
+
+  const fetchOrderDetail = async () => {
+    const response = await GetOrderDetail(orderId);
+    setOrderDetail(response);
+    if (response && response.length > 0) {
+      setTotal(response.reduce((sum, item) => sum + item.subtotal, 0));
+    }
+
+  }
+
+  useEffect(() => {
+    fetchOrderDetail();
+  }, []);
 
   // Hiển thị icon tương ứng với trạng thái
   const getStatusIcon = (status) => {
@@ -107,7 +50,7 @@ const fetchOrderDetail = async (orderId)=>{
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-2xl font-bold text-slate-800">Chi tiết đơn hàng #{orderDetail.OrderId}</h1>
+        <h1 className="text-2xl font-bold text-slate-800">Chi tiết đơn hàng {orderId}</h1>
       </div>
 
       {/* Thông tin đơn hàng */}
@@ -171,12 +114,12 @@ const fetchOrderDetail = async (orderId)=>{
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-slate-200">
-                  {orderDetail.items.map((item) => (
+                  {orderDetail.map((item) => (
                     <tr key={item.id}>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="h-16 w-16 bg-slate-200 rounded overflow-hidden mr-4 flex-shrink-0">
-                            <img src={item.image} alt={item.name} className="h-full w-full object-cover" 
+                            <img src={`${API_URL}/images/${item.imagE_NAME}`} alt={item.name} className="h-full w-full object-cover" 
                               onError={({ currentTarget }) => {
                                 currentTarget.onerror = null;
                                 currentTarget.src = '/images/placeholder.png';
@@ -184,7 +127,7 @@ const fetchOrderDetail = async (orderId)=>{
                             />
                           </div>
                           <div>
-                            <p className="font-medium text-slate-800">{item.name}</p>
+                            <p className="font-medium text-slate-800">{item.producT_NAME}</p>
                             <p className="text-sm text-slate-500">Mã: {item.producT_ID}</p>
                           </div>
                         </div>
@@ -198,7 +141,7 @@ const fetchOrderDetail = async (orderId)=>{
                 <tfoot>
                   <tr className="bg-slate-50">
                     <td colSpan="3" className="px-6 py-4 text-right font-medium">Tổng tiền sản phẩm:</td>
-                    <td className="px-6 py-4 text-right font-medium">{orderDetail.subtotal}</td>
+                    <td className="px-6 py-4 text-right font-medium">{total}</td>
                   </tr>
                 </tfoot>
               </table>

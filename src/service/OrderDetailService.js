@@ -21,3 +21,14 @@ export const CreateOrderDetail = async ( orderId, input) => {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
+export const GetOrderDetail = async (orderId) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Order/GetOrderDetail`, {
+            params: { id: orderId }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+};
