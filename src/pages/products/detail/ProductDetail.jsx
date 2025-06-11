@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { addToCart, addToCartNoAuth } from '../../../service/CartService';
 import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/ProductService';
-
-import { ShoppingBag } from 'lucide-react';
 import { formatPrice } from '../../../utils/formatUtils';
-import { toast } from 'react-toastify';
-import { addToCart } from '../../../service/CartService';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const ProductDetail = ({ id }) => {
@@ -39,7 +35,6 @@ const ProductDetail = ({ id }) => {
       setProduct(response);
 
     } catch (error) {
-      console.error('Error fetching product details:', error);
       setError(error.message || "Có lỗi xảy ra khi tải thông tin sản phẩm");
     } finally {
       setLoading(false);
@@ -212,7 +207,6 @@ const ProductDetail = ({ id }) => {
                       style={{ backgroundColor: colorCode }}
                       onClick={() => {
                         setSelectedColor(colorObj);
-                        setSelectedSize(null);
                       }}
                       title={colorObj.coloR_NAME} 
                     >
@@ -230,7 +224,7 @@ const ProductDetail = ({ id }) => {
                 {sizes.map(sizeObj => (
                   <button
                     key={sizeObj.id}
-                    className={`px-3 py-1 border rounded ${selectedSize === sizeObj.id ? 'border-blue-500' : 'border-gray-300'}`}
+                    className={`px-3 py-1 border rounded ${selectedSize?.id === sizeObj.id ? 'border-blue-500' : 'border-gray-300'}`}
                     onClick={() => setSelectedSize(sizeObj)}
                   >
                     {sizeObj.sizE_NAME}
