@@ -1,45 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { CategoryService } from '../../service/CategoryService';
-import { FaTshirt, FaShoppingBag, FaShoePrints, FaHatCowboy, FaGlasses } from 'react-icons/fa';
-import { MdOutlineDiamond, MdOutlineRingVolume, MdOutlineWatch } from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import { FaGlasses, FaHatCowboy, FaShoePrints, FaShoppingBag, FaTshirt } from 'react-icons/fa';
 import { GiEarrings, GiNecklace } from 'react-icons/gi';
+import { MdOutlineDiamond, MdOutlineRingVolume, MdOutlineWatch } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-
+import { CategoryService } from '../../service/CategoryService';
 
 const iconMap = {
-  MdOutlineRingVolume: MdOutlineRingVolume,
-  GiEarrings: GiEarrings,
-  FaShoePrints: FaShoePrints,
-  GiNecklace: GiNecklace,
-  MdOutlineWatch: MdOutlineWatch,
-  FaGlasses: FaGlasses,
-  FaTshirt: FaTshirt,
-  FaShoppingBag: FaShoppingBag,
-  FaHatCowboy: FaHatCowboy,
-  MdOutlineDiamond: MdOutlineDiamond,
+  MdOutlineRingVolume,
+  GiEarrings,
+  FaShoePrints,
+  GiNecklace,
+  MdOutlineWatch,
+  FaGlasses,
+  FaTshirt,
+  FaShoppingBag,
+  FaHatCowboy,
+  MdOutlineDiamond,
 };
 
 const ProductCategory = ({ name, icon, color, onClick }) => {
   const IconComponent = iconMap[icon] || FaShoppingBag;
 
   return (
-    <div 
-      className="flex flex-col items-center justify-center p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200 rounded-lg"
+    <div
+      className="flex flex-col items-center p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-300 cursor-pointer"
       onClick={onClick}
     >
-      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3 hover:bg-gray-200 transition-colors">
-        <IconComponent className="text-2xl" style={{ color: color || "#6666e5" }} />
+      <div className="w-14 h-14 flex items-center justify-center bg-gray-100 rounded-full mb-3">
+        <IconComponent className="text-2xl text-gray-700" style={{ color: color || '#444' }} />
       </div>
-      <span className="text-sm text-gray-800 font-medium text-center">
+      <span className="text-sm text-gray-700 font-medium text-center leading-tight">
         {name}
       </span>
     </div>
   );
 };
 
-const ProductCategoryMobile = ({ categories, onCategoryClick }) => {
+const ProductCategoryGrid = ({ categories, onCategoryClick }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-5">
       {categories.map((category) => (
         <ProductCategory
           key={category.id}
@@ -78,21 +77,17 @@ const CategoryList = () => {
     navigate(`/shop?categoryId=${categoryId}`);
   };
 
-  if (loading) return <div className="text-center p-4">Đang tải...</div>;
-  if (error) return <div className="text-center text-red-500 p-4">Lỗi: {error}</div>;
+  if (loading) return <div className="text-center py-6 text-gray-600">Đang tải danh mục...</div>;
+  if (error) return <div className="text-center text-red-500 py-6">Lỗi: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-purple-100">
-      <div className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-4 sm:py-16">
-          <h1 className="text-xl sm:text-3xl font-bold text-purple-300 text-center">
-            Danh Mục Sản Phẩm
-          </h1>
-        </div>
-      </div>
+    <div className="bg-gray-50 py-10">
+      <div className="max-w-6xl mx-auto px-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-8">
+          Danh Mục Sản Phẩm
+        </h2>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-20">
-        <ProductCategoryMobile 
+        <ProductCategoryGrid
           categories={categories}
           onCategoryClick={handleCategoryClick}
         />
