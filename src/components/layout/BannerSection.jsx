@@ -1,9 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-import bannerHydrophobic from '../../assets/image/AMARO - Sale.jpeg';
 import bannerFashion from '../../assets/image/elle-viet-nam-trang-phuc-mau-tim-quoc-te-phu-nu-2019-3.jpg';
-import modelImage3 from '../../assets/image/tải xuống.jpeg';
 
 const BannerSection = () => {
   return (
@@ -30,26 +27,6 @@ const BannerSection = () => {
             </Link>
           </div>
         </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Link to="/shop" className="relative rounded-lg overflow-hidden shadow-lg">
-          <img 
-            className="w-full h-auto object-cover" 
-            src={bannerHydrophobic} 
-            alt="Hydrophobic Shorts Collection" 
-          />
-          <div className="absolute top-0 right-0 p-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-600">HYDROPHOBIC</h2>
-            <h3 className="text-2xl md:text-3xl font-bold text-blue-600">SHORTS</h3>
-          </div>
-        </Link>
-        <Link to="/shop" className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
-          <img 
-            className="w-full h-auto object-cover" 
-            src={modelImage3} 
-            alt="Model với quần áo thời trang" 
-          />
-        </Link>
       </div>
     </section>
   );
