@@ -17,68 +17,43 @@ import BrandLogos from '../brand/BrandLogo';
 import TopSale from '../../components/layout/BannerChildren';
 const Home = () => {
     return (
-<div className="justify-center items-center max-w-full p-20"> 
-  {/* <div className="grid grid-cols-2 md:grid-cols-12 gap-3 w-full">
-    <div className="md:col-span-3 bg-white">
-      <TopSale />
-    </div>
-
-    <div className="md:col-span-6 ">
-      <Banner />
-    </div>
-
-    
-    <div className="md:col-span-3 bg-white">
-      <SaleBanner />
-    </div>
-  </div> */}
+<div className="justify-center items-center max-w-full mx-auto"> 
     <div className="flex flex-col justify-center items-center ">
-
       <Banner />
     </div>
-{/* <div className="grid grid-cols-2 md:grid-cols-12 gap-3 w-full">
-    <div className="md:col-span-8 bg-white">
-      <Banner />
-    </div>
-
-    <div className="md:col-span-4 ">
-      <Banner />
-    </div>
-
-  </div>  */}
-
-  <div className="w-full my-7">
- 
+  <div className="w-full my-10">
   <CategoryList/>
-  <BannerSection/>
-  <BrandLogos/>
-          <section> 
-          <ProductList />
-        </section>
-            
-    <div className="justify-center items-center max-w-full">
-      <BestSellerList/>
+  <div className="justify-center items-center max-w-full">
+    <BrandLogos />
     </div>
+  <section>
+    <div className="justify-center items-center max-w-full">
+    <ProductList />
+    </div>
+  </section>
+  <section>
     <div className="justify-center items-center max-w-full">
       <SaleList/>
     </div>
-
+    </section>
+    <section>
+      <div className="justify-center items-center max-w-full">
+      <BestSellerList />
+      </div>
+  </section>
     <section> 
-    
-    <div className="my-10">
-    <div className="flex justify-between items-center mb-6">
+    <div className="justify-between items-center max-w-full p-5 ">
                       <h1 className="text-3xl font-semibold text-purple-400 ">Bài Viết Mới Nhất </h1>
                       <Link to='/blog' className="flex items-center gap-2 text-blue-600 hover:underline">
                 <span>Xem thêm</span>
                 <FaArrowRight />
               </Link>
                   </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {samplePosts.slice(0, 4).map(post => (
           <BlogPostCard key={post.id} post={post} />
         ))}
       </div>
-    </div>
   </section>
       
           </div>
