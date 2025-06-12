@@ -196,7 +196,7 @@ const Shop = () => {
                   <X size={24} />
                 </button>
               </div>
-              <ProductFilters onFilterChange={handleFilterChange} />
+              <ProductFilters onFilterChange={handleFilterChange} initialFilters={filters} />
             </div>
           </div>
         )}
@@ -212,7 +212,7 @@ const Shop = () => {
               </button>
             </div>
             <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
-              <ProductFilters onFilterChange={handleFilterChange} />
+              <ProductFilters onFilterChange={handleFilterChange} initialFilters={filters} />
             </div>
             <div className="w-full md:w-3/4 lg:w-4/5 p-2">
               <div className="flex justify-between items-center mb-6">

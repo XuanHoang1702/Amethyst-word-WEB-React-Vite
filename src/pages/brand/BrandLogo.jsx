@@ -1,70 +1,98 @@
+import React, { useEffect, useState } from 'react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { BrandService } from '../../service/Brand.Service';
 
-import React, {useEffect, useState} from "react"
-import { useNavigate } from "react-router-dom";
-import {BrandService} from "../../service/BrandService";
+import { useNavigate } from 'react-router-dom';
 const API_URL = import.meta.env.VITE_API_URL;
-const BrandLogos =()=>{
-    const [brands, setBrands] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    useEffect(()=>{
-        const fetchBrands = async ()=>{
-            try{
-                    const data = await BrandService.getBrands();
-                    setBrands(data);
-                    setLoading(false);
-            }
-            catch(error){
-                setError(error.message);
-                setLoading(false);
-            }
-        }
-            fetchBrands();
-    },[]);
+const BrandLogos = () => {
+  const [brands, setBrands] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const handleBrandClick = (brandId) => {
-      navigate(`/shop?brandId=${brandId}`);
+  const logosPerPage = 7;
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const data = await BrandService.getBrands();
+        setBrands(data); 
+        setLoading(false);
+      } catch (error) {
+        setError(error.message || 'Lỗi khi tải thương hiệu');
+        setLoading(false);
+      }
     };
-    if (loading) {
-        return <div className="text-center py-8">Đang tải...</div>;
-      }
-    
-      if (error) {
-        return <div className="text-center py-8 text-red-500">{error}</div>;
-      }
-return(      
-<div className="grid grid-cols-2 md:grid-cols-6 gap-4 max-w-9xl mx-auto px-4 py-8">
-    {brands.length > 0 ? (
-        brands.map((brand)=>(
-            <div key={brand.branD_ID} className="flex justify-center items-center">
-                <img
-                    // className="h-auto max-w-full rounded-lg object-contain"
-                         className="w-full h-60 object-cover transition-transform group-hover:scale-105 cursor-pointer"
-                    // src={brand.branD_IMAGE}
-                    src={`${API_URL}/images/${brand.branD_IMAGE}`}
-                    alt={brand.branD_NAME || 'Logo thương hiệu'}
-                    style={{ maxHeight: '500px' }}
-                    onClick={()=>handleBrandClick(brand.branD_ID)}
-                    />
+
+    fetchBrands();
+  }, []);
+
+  const totalPages = Math.ceil(brands.length / logosPerPage);
+
+  const nextPage = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const handleBrandClick = (brandId) => {
+    navigate(`/shop?brandId=${brandId}`);
+  };
+
+  if (loading) return <div className="text-center py-8">Đang tải...</div>;
+  if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
+
+  const brandsToShow = brands.slice(
+    currentPage * logosPerPage,
+    currentPage * logosPerPage + logosPerPage
+  );
+
+  return (
+    <div className="bg-white p-3 max-w-8xl mx-auto relative">
+      <div className="text-center">
+        <h2 className="text-2xl sm:text-3xl font-bold text-purple-400 p-3">Thương hiệu</h2>
+      </div>
+      <div className="relative">
+        <button
+          onClick={prevPage}
+          disabled={currentPage === 0}
+          className={`absolute left-3 top-1/2 -translate-y-1/2 -translate-x-6 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center transition-shadow duration-200 border
+          ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}`}
+        >
+          <ChevronLeft size={20} className="text-gray-600" />
+        </button>
+
+        <button
+          onClick={nextPage}
+          disabled={currentPage === totalPages - 1}
+          className={`absolute right-3 top-1/2 -translate-y-1/2 translate-x-6 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center transition-shadow duration-200 border
+          ${currentPage === totalPages - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}`}
+        >
+          <ChevronRight size={20} className="text-gray-600" />
+        </button>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-7 gap-2 w-full mx-auto px-4 py-6">
+          {brandsToShow.map((brand) => (
+            <div
+              key={brand.branD_ID}
+              onClick={() => handleBrandClick(brand.branD_ID)}
+              className=" text-black h-52 rounded-lg  flex flex-col justify-center items-center cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out"
+            >
+              <img
+                src={brand.branD_IMAGE ? `${API_URL}/images/${brand.branD_IMAGE}` : '/placeholder-image.jpg'}
+                alt={brand.branD_NAME}
+                className="h-52 object-contain mb-3"
+              />
+              <span className="text-center font-semibold text-sm">{brand.branD_NAME}</span>
             </div>
-        ))
-    ):(Array.from({ length: 6 }).map((_, index) => (
-        <div key={index} className="flex justify-center items-center">
-          <img
-            className="h-auto max-w-full rounded-lg object-contain"
-            src={`https://flowbite.s3.amazonaws.com/docs/gallery/square/image-${index}.jpg`}
-            alt={`Logo placeholder ${index + 1}`}
-            style={{ maxHeight: '100px' }}
-          />
+          ))}
         </div>
-      ))
-    )}
- 
-</div>
+      </div>
+    </div>
+  );
+};
 
-
-)
-}
-export default BrandLogos
-
+export default BrandLogos;
