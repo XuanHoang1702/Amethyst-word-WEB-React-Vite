@@ -78,8 +78,7 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
     setPriceRange([newFilters.priceMin, newFilters.pricaMax]);
     setSelectedCategories(newFilters.categoryId);
     setSelectedBrands(newFilters.brandId);
-    onFilterChange(newFilters);
-  }, [initialFilters, onFilterChange]);
+  }, [initialFilters]);
 
   const debouncedPriceChange = useCallback(
     debounce((newFilters) => {
@@ -113,11 +112,12 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
   };
 
   const handleBrandChange = (brandId) => {
+    const idNum = Number(brandId);
     let newBrands;
-    if (selectedBrands.includes(brandId)) {
-      newBrands = selectedBrands.filter(id => id !== brandId);
+    if (selectedBrands.includes(idNum)) {
+      newBrands = selectedBrands.filter(id => id !== idNum);
     } else {
-      newBrands = [...selectedBrands, brandId];
+      newBrands = [...selectedBrands, idNum];
     }
     setSelectedBrands(newBrands);
     const newFilters = {
@@ -219,7 +219,7 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
             ) : (
               <ul className="space-y-2">
                 {brands.map((brand) => {
-                  const id = brand.id || brand.branD_ID;
+                  const id = Number(brand.id || brand.branD_ID);
                   const name = brand.name || brand.branD_NAME;
                   return (
                     <li key={id} className="flex items-center gap-2">
