@@ -9,12 +9,12 @@ import Breadcrumb from '../../components/BreadCrumb';
 import FashionPagination from "../../components/panigation/Panigation";
 import ProductFilters from '../../pages/products/ProductFilter';
 import ProductSort from '../../pages/products/ProductSort';
-// import ProductCard from '../products/new/ProductCard';
 import AllProductListCard from '../products/AllProductListCard'
 import AllProductCard from '../products/AllProductCard';
-import { ProductFilter } from '../../service/ProductService';
+import { ProductFilter } from '../../service/Product.Service';
 import bg1 from '../../assets/image/pngtree-sustainable-fashion-featuring-clothes-made-from-organic-and-recycled-fabrics-on-picture-image_15873419.jpg';
 import { useLocation, useNavigate } from 'react-router-dom';
+import queryString from 'query-string';
 
 const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
   return (
@@ -37,8 +37,6 @@ const ViewModeToggle = ({ viewMode, onViewModeChange }) => {
   );
 };
 
-import queryString from 'query-string';
-
 const Shop = () => {
   const [sortBy, setSortBy] = useState("Most Popular");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -47,25 +45,27 @@ const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { brandId, categoryId } = queryString.parse(location.search);
-
+  const parsed = queryString.parse(location.search, { arrayFormat: 'comma' });
   const [filters, setFilters] = useState({
-    categoryId: categoryId ? Number(categoryId) : null,
-    brandId: brandId ? Number(brandId) : null,
-    pageNumber: 1,
-    pageSize: 8,
-    priceMin: 0,
-    pricaMax: 9999,
+    categoryId: parsed.categoryId ? (Array.isArray(parsed.categoryId) ? parsed.categoryId.map(Number) : [Number(parsed.categoryId)]) : [],
+    brandId: parsed.brandId ? (Array.isArray(parsed.brandId) ? parsed.brandId.map(Number) : [Number(parsed.brandId)]) : [],
+    pageNumber: parsed.pageNumber ? Number(parsed.pageNumber) : 1,
+    pageSize: parsed.pageSize ? Number(parsed.pageSize) : 8,
+    priceMin: parsed.priceMin ? Number(parsed.priceMin) : 0,
+    pricaMax: parsed.pricaMax ? Number(parsed.pricaMax) : 9999,
   });
 
   useEffect(() => {
-    setFilters(prev => ({
-      ...prev,
-      brandId: brandId ? Number(brandId) : null,
-      categoryId: categoryId ? Number(categoryId) : null,
-      pageNumber: 1,
-    }));
-  }, [brandId, categoryId]);
+    setFilters({
+      categoryId: parsed.categoryId ? (Array.isArray(parsed.categoryId) ? parsed.categoryId.map(Number) : [Number(parsed.categoryId)]) : [],
+      brandId: parsed.brandId ? (Array.isArray(parsed.brandId) ? parsed.brandId.map(Number) : [Number(parsed.brandId)]) : [],
+      pageNumber: parsed.pageNumber ? Number(parsed.pageNumber) : 1,
+      pageSize: parsed.pageSize ? Number(parsed.pageSize) : 8,
+      priceMin: parsed.priceMin ? Number(parsed.priceMin) : 0,
+      pricaMax: parsed.pricaMax ? Number(parsed.pricaMax) : 9999,
+    });
+  }, [location.search]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [products, setProducts] = useState([]);
@@ -83,10 +83,9 @@ const Shop = () => {
 
     try {
       setLoading(true);
-      console.log("fetchProducts called with filters:", filters);
       const response = await ProductFilter(
-        filters.brandId !== null ? filters.brandId : undefined,
-        filters.categoryId !== null ? filters.categoryId : undefined,
+        filters.brandId,
+        filters.categoryId,
         filters.priceMin,
         filters.pricaMax,
         filters.pageNumber,
@@ -114,37 +113,59 @@ const Shop = () => {
     setFilters(prev => {
       const updatedFilters = {
         ...prev,
+        ...newFilters,
         categoryId: newFilters.categoryId !== undefined ? newFilters.categoryId : prev.categoryId,
         brandId: newFilters.brandId !== undefined ? newFilters.brandId : prev.brandId,
         priceMin: newFilters.priceMin !== undefined ? newFilters.priceMin : prev.priceMin,
         pricaMax: newFilters.pricaMax !== undefined ? newFilters.pricaMax : prev.pricaMax,
         pageNumber: newFilters.pageNumber || 1,
       };
+      const query = queryString.stringify({
+        ...updatedFilters,
+        categoryId: updatedFilters.categoryId.length > 0 ? updatedFilters.categoryId : undefined,
+        brandId: updatedFilters.brandId.length > 0 ? updatedFilters.brandId : undefined,
+      }, { arrayFormat: 'comma' });
+      navigate(`?${query}`);
       return updatedFilters;
     });
     setCurrentPage(1);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+  }, [navigate]);
 
   const handlePageChange = useCallback(async (pageNumber) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setLoading(true);
     setCurrentPage(pageNumber);
-    setFilters(prev => ({
-      ...prev,
-      pageNumber
-    }));
-  }, []);
+    setFilters(prev => {
+      const updated = { ...prev, pageNumber };
+      const query = queryString.stringify({
+        ...updated,
+        categoryId: updated.categoryId.length > 0 ? updated.categoryId : undefined,
+        brandId: updated.brandId.length > 0 ? updated.brandId : undefined,
+      }, { arrayFormat: 'comma' });
+      navigate(`?${query}`);
+      return updated;
+    });
+  }, [navigate]);
 
   const handleViewModeChange = useCallback((mode) => {
     setViewMode(mode);
-    setFilters(prev => ({
-      ...prev,
-      pageSize: mode === 'grid' ? 8 : 5,
-      pageNumber: 1
-    }));
+    setFilters(prev => {
+      const updated = {
+        ...prev,
+        pageSize: mode === 'grid' ? 8 : 5,
+        pageNumber: 1
+      };
+      const query = queryString.stringify({
+        ...updated,
+        categoryId: updated.categoryId.length > 0 ? updated.categoryId : undefined,
+        brandId: updated.brandId.length > 0 ? updated.brandId : undefined,
+      }, { arrayFormat: 'comma' });
+      navigate(`?${query}`);
+      return updated;
+    });
     setCurrentPage(1);
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="pt-[60px]">
