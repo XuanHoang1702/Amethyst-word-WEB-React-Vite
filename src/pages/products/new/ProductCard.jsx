@@ -1,11 +1,14 @@
+import { useEffect, useState } from 'react';
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useWishlist } from '../../../context/WishListContext';
 import { addToCart } from '../../../service/CartService';
+import { ImageProduct } from '../../../service/Product.Service';
 import { AddWishList } from '../../../service/WishListService';
 import { formatPrice } from '../../../utils/formatUtils';
-import { useWishlist } from '../../../context/WishListContext';
 const API_URL = import.meta.env.VITE_API_URL;
+
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -23,6 +26,11 @@ const ProductCard = ({ product }) => {
   const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
+  const [imgUrl, setImgUrl] = useState('');
+
+  useEffect(() => {
+    ImageProduct(product.imagE_NAME).then(setImgUrl).catch(console.error);
+  }, [product.imagE_NAME]);
 
   const handleAddToCart = async () => {
     try {
@@ -63,28 +71,18 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
       <div className="relative">
         <img
-          //           src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
-          // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
-            src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+            src={product.imagE_NAME ? `${imgUrl}` : '/placeholder-image.jpg'}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}
         />
 
-        {/* Badge mới */}
         {product.producT_PRICE && (
           <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
             MỚI
           </div>
         )}
-
-        {/* Badge giảm giá */}
-        {/* {product.discounT_PERCENT && (
-          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            GIẢM GIÁ
-          </div>
-        )} */}
-
+        
         {/* Hover buttons */}
         <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
           <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
