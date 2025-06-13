@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { addToCart } from '../../../service/Cart.Service';
+import { AddWishList } from '../../../service/WishList.Service';
+import { formatPrice } from '../../../utils/formatUtils';
+import { useWishlist } from '../../../context/WishListContext';
+import { ImageProduct } from '../../../service/Product.Service';
+import { useState, useEffect } from 'react';
+=======
 import { useWishlist } from '../../../context/WishListContext';
 import { addToCart } from '../../../service/CartService';
 import { ImageProduct } from '../../../service/Product.Service';
@@ -27,11 +34,13 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
   const [imgUrl, setImgUrl] = useState('');
-
   useEffect(() => {
     ImageProduct(product.imagE_NAME).then(setImgUrl).catch(console.error);
   }, [product.imagE_NAME]);
 
+  useEffect(() => {
+    ImageProduct(product.imagE_NAME).then(setImgUrl).catch(console.error);
+  }, [product.imagE_NAME]);
   const handleAddToCart = async () => {
     try {
       if (!token) {
@@ -71,6 +80,8 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
       <div className="relative">
         <img
+
+           src={product.imagE_NAME ? "https://raw.githubusercontent.com/XuanHoang1702/image_storage/main/PRODUCT/1e570420-65c1-46e3-bc75-3e6d056f1e66.jpg" : '/placeholder-image.jpg'}
             src={product.imagE_NAME ? `${imgUrl}` : '/placeholder-image.jpg'}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
@@ -82,7 +93,6 @@ const ProductCard = ({ product }) => {
             MỚI
           </div>
         )}
-        
         {/* Hover buttons */}
         <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
           <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>

@@ -76,7 +76,8 @@ export const GetInformation = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/api/User/Information`, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
+                'ngrok-skip-browser-warning': 'true',
             }
         });
         return response.data;

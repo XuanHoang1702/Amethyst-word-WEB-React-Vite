@@ -3,9 +3,9 @@
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addToCart } from '../../../service/CartService';
+import { addToCart } from '../../../service/Cart.Service';
 import { formatPrice } from '../../../utils/formatUtils';
-import { AddWishList } from '../../../service/WishListService';
+import { AddWishList } from '../../../service/WishList.Service';
 import { useWishlist } from '../../../context/WishListContext';
 const API_URL = import.meta.env.VITE_API_URL;
 const renderStars = (rating) => {
@@ -69,7 +69,6 @@ const SaleCard = ({ product }) => {
         <div className="relative">
           <img
            src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-            // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

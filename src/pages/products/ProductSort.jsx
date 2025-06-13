@@ -11,9 +11,9 @@ const ProductSort = ({ sortBy, onSortChange }) => {
         value={sortBy}
         onChange={(e) => onSortChange(e.target.value)}
       >
-        <option>Phổ biến nhất </option>
-        <option>Giá tiền: Từ Thấp đến cao </option>
-        <option>Giá tiền: thứ cao đến thấp </option>
+        <option value="default">Mặc định</option>
+        <option value="price-asc">Giá tiền: Từ thấp đến cao</option>
+        <option value="price-desc">Giá tiền: Từ cao đến thấp</option>
       </select>
     </div>
   );

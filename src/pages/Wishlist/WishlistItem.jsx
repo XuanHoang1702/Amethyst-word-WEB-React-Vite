@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import { IoHeartDislike } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
 
-import { DeleteWishList } from "../../service/WishListService";
+import { DeleteWishList } from "../../service/WishList.Service";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../../context/WishListContext";

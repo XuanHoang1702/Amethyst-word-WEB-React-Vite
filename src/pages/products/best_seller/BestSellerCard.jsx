@@ -3,8 +3,8 @@
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addToCart } from '../../../service/CartService';
-import { AddWishList } from '../../../service/WishListService';
+import { addToCart } from '../../../service/Cart.Service';
+import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
 import { useWishlist } from '../../../context/WishListContext';
 import { SquareArrowOutUpRight } from 'lucide-react';

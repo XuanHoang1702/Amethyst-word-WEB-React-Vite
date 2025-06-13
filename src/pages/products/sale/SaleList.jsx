@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { ProductSaleNoPaging } from '../../../service/ProductService'
+import { ProductSaleNoPaging } from '../../../service/Product.Service'
 import SaleCard from './SaleCard'
 
 const SaleList=()=> {

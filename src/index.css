@@ -16,3 +16,18 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.scroll-x-visible {
+  scrollbar-color: #ccc transparent; 
+  scrollbar-width: thin;            
+}
+.scroll-x-visible::-webkit-scrollbar {
+  height: 8px;
+}
+.scroll-x-visible::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-x-visible::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 8px;
+}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL
 
 export const CreateOrder = async (token, input) => {
     try {
@@ -22,6 +22,7 @@ export const GetStatus = async (token, id) => {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
+                'ngrok-skip-browser-warning': 'true',
             },
         });
         return response.data;
@@ -51,6 +52,8 @@ export const createOrderDetail = async( OrderId, orderDetails)=>{
         const response = await axios.post(`${API_URL}/api/Order/CreateOrderDetail?OrderId=${OrderId}`,orderDetails,{
         headers: {
             'Content-Type': 'application/json',
+            
+            
         },
     })
     return response.data

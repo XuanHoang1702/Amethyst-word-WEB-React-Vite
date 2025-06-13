@@ -1,12 +1,11 @@
 import { Camera, ChevronRight, Clock, CreditCard, Heart, LogOut, Settings, ShoppingBag, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { profileTabs } from '../../../src/service/profileData';
+import { profileTabs } from '../../../src/service/profileService';
 
 
 const iconComponents = {
   User: User,
   ShoppingBag: ShoppingBag,
-  Heart: Heart,
   Clock: Clock,
   CreditCard: CreditCard,
   Settings: Settings

@@ -1,9 +1,10 @@
 import { Minus, Plus, ShoppingBag, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { addToCart, addToCartNoAuth } from '../../../service/CartService';
-import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/ProductService';
+import { addToCart, addToCartNoAuth } from '../../../service/Cart.Service';
+import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/Product.Service';
 import { formatPrice } from '../../../utils/formatUtils';
+import { useCart } from '../../../context/CartContext';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const ProductDetail = ({ id }) => {
@@ -16,6 +17,7 @@ const ProductDetail = ({ id }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const token = localStorage.getItem('token');
+  const { updateCartCount } = useCart();
 
   const fetchProductDetail = async () => {
     try {
@@ -113,9 +115,7 @@ const ProductDetail = ({ id }) => {
       if(!token || token === null) {
         addToCartNoAuth(product.producT_ID, product.producT_NAME,product.producT_PRICE, product.imagE_NAME, selectedColor.coloR_NAME, selectedSize.sizE_NAME, quantity)
         toast.success('Thêm sản phẩm vào giỏ hàng thành công');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        updateCartCount();
         return 
       }
       if(!selectedColor){
@@ -130,9 +130,7 @@ const ProductDetail = ({ id }) => {
       if(response.code === 201)
       {
         toast.success('Thêm sản phẩm vào giỏ hàng thành công');
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        updateCartCount();
       } else {
         toast.error(response.message || 'Thêm sản phẩm vào giỏ hàng thất bai');
       }

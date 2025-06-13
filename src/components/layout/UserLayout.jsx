@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/AuthContext';
 const UserLayout = () => {
   const [isOtpOpen, setIsOtpOpen] = useState(false);
   const [otpData, setOtpData] = useState(null);
-  const { setUsername } = useContext(AuthContext);
+  // const { setUsername } = useContext(AuthContext);
 
   const openOtpModal = (data) => {
     setOtpData(data);
@@ -20,10 +20,10 @@ const UserLayout = () => {
     setOtpData(null);
   };
 
-  const handleLoginSuccess = (username) => {
-    setUsername(username);
-    closeOtpModal();
-  };
+  // const handleLoginSuccess = (username) => {
+  //   setUsername(username);
+  //   closeOtpModal();
+  // };
 
   return (
     <div>
@@ -37,7 +37,7 @@ const UserLayout = () => {
           email={otpData?.email}  
           userData={otpData?.userData}
           onClose={closeOtpModal}
-          onLoginSuccess={handleLoginSuccess}
+          // onLoginSuccess={handleLoginSuccess}
         />
       )}
     </div>

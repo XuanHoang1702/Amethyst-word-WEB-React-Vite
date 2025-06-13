@@ -24,10 +24,8 @@ const Register = () => {
     gender: "",
     confirmPassword: "",
     birthDate: "",
-
   });
   const [errors, setErrors] = useState({});
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -74,8 +72,6 @@ const Register = () => {
       });
     }
   };
-
-
   return (
     <div className="flex justify-center items-center pt-16">
       <div className="w-1/2 hidden lg:block">
@@ -238,5 +234,4 @@ const Register = () => {
     </div>
 );
 };
-
 export default Register;

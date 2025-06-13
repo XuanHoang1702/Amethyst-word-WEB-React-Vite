@@ -7,11 +7,13 @@ import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogFooter from '../../components/layout/BlogFooters';
 // import { relatedProducts } from '../../service/ProductData';
 import ProductRelateCard from '../products/related/ProductRelateCard';
+import {ProductRelated} from '../../service/Product.Service'
 import img1 from '../../assets/image/sale04.jpg'
 const BlogPostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+    const [relatedProducts, setRelatedProducts] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState({ name: '', email: '', content: '' });
   const [rating, setRating] = useState(0);
@@ -294,9 +296,9 @@ const BlogPostDetail = () => {
               </a>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map(product => (
-                <ProductRelateCard key={product.id} product={product} />
-              ))}
+            {relatedProducts.map(product => (
+            <ProductRelateCard key={product.producT_ID} product={product} />
+        ))}
             </div>
           </div>
         </div>

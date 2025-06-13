@@ -3,7 +3,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 import BestSellerCard from './BestSellerCard';
-import { ProductBestSeller } from '../../../service/ProductService';
+import { ProductBestSeller } from '../../../service/Product.Service';
 
 const BestSellerList = () => {
     const [products, setProducts] = useState([]);
@@ -22,7 +22,7 @@ const BestSellerList = () => {
     }, []);
 
     return (
-        <div className="max-w-full mx-auto px-4 py-10">
+        <div className="max-w-full mx-auto px-4 ">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-3xl font-semibold text-purple-400 ">Sản phẩm bán chạy </h1>
                 <Link to='/shop' className="flex items-center gap-2 text-blue-600 hover:underline">

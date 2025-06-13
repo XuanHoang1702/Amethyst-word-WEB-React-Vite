@@ -1,12 +1,14 @@
 import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
-
+axios.defaults.headers.common['ngrok-skip-browser-warning'] = 'true';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 export const getCart = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/api/Cart/GetList`,{
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'ngrok-skip-browser-warning': 'true',
             },
         });
         return response.data;
@@ -40,6 +42,7 @@ export const deleteCart = async (token, productId) => {
     try {
         const response = await axios.delete(`${API_URL}/api/Cart/Delete`, {
             headers: {
+                'ngrok-skip-browser-warning': 'true',
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },

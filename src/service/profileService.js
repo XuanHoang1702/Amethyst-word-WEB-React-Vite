@@ -13,8 +13,8 @@ export const userData = {
   export const profileTabs = [
     { id: 'profile', label: 'Thông tin cá nhân', icon: 'User' },
     { id: 'orders', label: 'Đơn hàng của tôi', icon: 'ShoppingBag' },
-    { id: 'wishlist', label: 'Sản phẩm yêu thích', icon: 'Heart' },
-    { id: 'history', label: 'Lịch sử xem', icon: 'Clock' },
+    // { id: 'wishlist', label: 'Sản phẩm yêu thích', icon: 'Heart' },
+    // { id: 'history', label: 'Lịch sử xem', icon: 'Clock' },
     { id: 'payment', label: 'Phương thức thanh toán', icon: 'CreditCard' },
     { id: 'settings', label: 'Cài đặt tài khoản', icon: 'Settings' }
   ];
