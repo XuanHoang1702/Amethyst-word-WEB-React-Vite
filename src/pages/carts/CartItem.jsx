@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { useCart } from '../../context/CartContext';
 import { deleteCart } from '../../service/CartService';
 import { formatPrice } from '../../utils/formatUtils';
-import { useCart } from '../../context/CartContext';
 const API_URL = import.meta.env.VITE_API_URL;
 
 /**
