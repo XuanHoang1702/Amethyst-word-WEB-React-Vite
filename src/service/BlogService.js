@@ -1,4 +1,7 @@
-import img1 from '../assets/image/Trendy Clothing & Fashion.jpeg'
+import img1 from '../assets/image/blogfashion.jpeg'
+import img2 from '../assets/image/blogfashion.jpeg'
+import img3 from '../assets/image/blogfashion.jpeg'
+import  img4 from '../assets/image/blogfashion.jpeg'
 const samplePosts = [
   {
     id: 1,
@@ -7,7 +10,7 @@ const samplePosts = [
     category: 'Xu hướng thời trang',
     author: 'Nguyễn Thị Minh',
     date: '2025-04-20',
-    image: img1,
+    image: img2,
     rating: 4.8,
     commentCount: 24,
     relatedProductIds: [101, 102, 103]
@@ -31,7 +34,7 @@ const samplePosts = [
     category: 'Chia sẻ từ người nổi tiếng',
     author: 'Lê Quỳnh Anh',
     date: '2025-04-10',
-    image: img1,
+    image: img3,
     rating: 4.7,
     commentCount: 42,
     relatedProductIds: [107, 108, 109]
@@ -43,7 +46,7 @@ const samplePosts = [
     category: 'Lịch sử thời trang',
     author: 'Phạm Minh Tuấn',
     date: '2025-04-05',
-    image: img1,
+    image: img4,
     rating: 4.9,
     commentCount: 31,
     relatedProductIds: [110, 111, 112]

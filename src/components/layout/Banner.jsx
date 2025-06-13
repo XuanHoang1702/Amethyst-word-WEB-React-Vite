@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Star, ShoppingBag, Heart, Sparkles, Play } f
 const FashionBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [banner, setBanner] = useState([]);
 
   const slides = [
     {
@@ -57,7 +58,8 @@ const FashionBanner = () => {
   const currentSlideData = slides[currentSlide];
 
   return (
-    <div className="relative w-full h-5/6 overflow-hidden p-28">
+    // <div className="relative w-full h-5/6 overflow-hidden p-28">
+    <div className="relative w-full h-4/6 overflow-hidden px-4 py-12 sm:px-8 md:px-12 lg:p-28">
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -151,7 +153,6 @@ const FashionBanner = () => {
             </div>
           </div>
 
-          {/* Right side - Featured product showcase (on larger screens) */}
           <div className="hidden lg:flex items-center justify-center p-8">
             <div className={`transform transition-all duration-1000 delay-1200 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
               <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20">
@@ -159,9 +160,6 @@ const FashionBanner = () => {
                   <div className="text-6xl mb-4">✨</div>
                   <h3 className="text-2xl font-bold mb-2">Sản phẩm nổi bật</h3>
                   <p className="text-white/80 mb-4">Giảm giá đến 50%</p>
-                    {/* <div className="bg-white/20 rounded-full px-6 py-2 inline-block">
-                      <span className="text-sm font-semibold">Có hạn trong tuần</span>
-                    </div> */}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect, useContext} from "react";
 import { toast } from "react-toastify";
-import { getCart } from "../service/CartService";
+import { getCart } from "../service/Cart.Service";
 
 const CartContext = createContext();
 

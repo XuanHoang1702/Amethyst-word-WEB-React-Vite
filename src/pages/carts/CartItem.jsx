@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useCart } from '../../context/CartContext';
-import { deleteCart } from '../../service/CartService';
+import { deleteCart } from '../../service/Cart.Service';
 import { formatPrice } from '../../utils/formatUtils';
-import { useCart } from '../../context/CartContext';
 const API_URL = import.meta.env.VITE_API_URL;
 
 /**

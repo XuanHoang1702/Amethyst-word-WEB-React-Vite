@@ -52,9 +52,9 @@ const BrandLogos = () => {
 
   return (
     <div className="bg-white p-3 max-w-8xl mx-auto relative">
-      <div className="text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-purple-400 p-3">Thương hiệu</h2>
-      </div>
+      {/* <div className="text-center"> */}
+        <h2 className=" py-3 text-3xl font-semibold text-purple-400">Thương hiệu</h2>
+      {/* </div> */}
       <div className="relative">
         <button
           onClick={prevPage}
@@ -79,7 +79,7 @@ const BrandLogos = () => {
             <div
               key={brand.branD_ID}
               onClick={() => handleBrandClick(brand.branD_ID)}
-              className=" text-black h-52 rounded-lg  flex flex-col justify-center items-center cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out"
+              className=" text-black h-52 rounded-lg  flex flex-col justify-center items-center cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 ease-in-out"
             >
               <img
                 src={brand.branD_IMAGE ? `${API_URL}/images/${brand.branD_IMAGE}` : '/placeholder-image.jpg'}

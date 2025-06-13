@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import OrdersTab from '../../pages/Profile/tabs/Order/OrdersTab';
-import { userData } from '../../service/profileData';
-import { GetInformation } from '../../service/UserService';
+import { userData } from '../../service/profileService';
+import { GetInformation } from '../../service/User.Service';
 import ProfileSidebar from './ProfileSidebar';
 import { HistoryTab, PaymentTab } from './tabs/EmtyStateTabs';
 import ProfileTab from './tabs/ProfileTab';
 import SettingsTab from './tabs/SettingsTab';
-// import WishlistTab from './tabs/WishlistTab';
 
 export default function FashionUserProfile() {
   const [activeTab, setActiveTab] = useState('profile');

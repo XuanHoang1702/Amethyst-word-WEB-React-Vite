@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { VerifyOTP, SendOtpEmail, register } from '../../service/UserService';
+import { VerifyOTP, SendOtpEmail, register } from '../../service/User.Service';
 import { useNavigate } from 'react-router-dom';
 
 const OTPForm = ({ email, userData, onClose}) => {
@@ -207,7 +207,7 @@ const OTPForm = ({ email, userData, onClose}) => {
             ))}
           </div>
 
-          {error && (
+          {error && ( 
             <p className="text-red-500 mb-4 text-center">{error}</p>
           )}
           {success && (

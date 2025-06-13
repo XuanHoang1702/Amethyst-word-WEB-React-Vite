@@ -7,11 +7,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishListContext";
 import CartDrawer from "../../pages/carts/CartDrawer";
-import { MenuNavBarService } from "../../service/MenuNavBarService";
-import { ProductSearch } from "../../service/ProductService";
-import { GetInformation } from "../../service/UserService";
+import { MenuNavBarService } from "../../service/MenuNavBar.Service";
+import { ProductSearch } from "../../service/Product.Service";
+import { GetInformation } from "../../service/User.Service";
 import SearchBar from "../SearchBar";
-
+import {getVisitorId} from "../../service/Device.Service";
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
@@ -134,7 +134,8 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-[#6666e5] p-3 md:p-4 fixed top-0 left-0 right-0 z-50 shadow-md">
+      <nav className="bg-gradient-to-r from-[#4b0082] to-[#9966cc] text-white p-3 md:p-4 fixed top-0 left-0 right-0 z-50 shadow-md">
+
         <div className="container mx-auto flex items-center justify-between px-2">
           <div className="flex items-center flex-grow-0 flex-shrink-0">
             <Link to="/" className="flex items-center space-x-1 group">

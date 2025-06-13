@@ -1,9 +1,7 @@
-
-
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom';
 import { HiMagnifyingGlass, HiMiniXMark } from 'react-icons/hi2'
-import { ProductSearch } from '../service/ProductService';
+import { ProductSearch } from '../service/Product.Service';
 import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
 const API_URL = import.meta.env.VITE_API_URL;
@@ -16,11 +14,11 @@ const SearchBar = () => {
     const [error, setError] = useState(null);
     const [showResults, setShowResults] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [filteredResults, setFilteredResults] = useState([]);
     const searchRef = useRef(null);
     const inputRef = useRef(null);
     const navigate = useNavigate();
 
-    // Validate search term
     const validateSearch = (term) => {
         if (!term || term.length < 1) {
             setError({ message: 'Vui lòng nhập ít nhất 1 ký tự' });
@@ -29,26 +27,7 @@ const SearchBar = () => {
         return term.trim();
     };
 
-    // Debounced search function
-    // const debouncedSearch = useCallback(
-    //     debounce(async (term, page) => {
-    //         if (!term) return;
-            
-    //         setLoading(true);
-    //         try {
-    //             const results = await ProductSearch(term, page, 10);
-    //             setSearchResults(prev => page === 1 ? results : [...prev, ...results]);
-    //             setShowResults(true);
-    //             setError(null);
-    //         } catch (error) {
-    //             console.error('Search error:', error);
-    //             setError(error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }, 500),
-    //     []
-    // );
+  
     const debouncedSearch = useCallback(
         debounce(async (term, page) => {
             if (!term) return;
@@ -153,6 +132,26 @@ const SearchBar = () => {
         }
     };
 
+
+    useEffect(() => {
+        if (!showResults) {
+            setFilteredResults([]);
+            return;
+        }
+        const isNumber = !isNaN(Number(searchTerm)) && searchTerm.trim() !== '';
+        if (isNumber) {
+            const searchPrice = Number(searchTerm);
+            setFilteredResults(
+                searchResults.filter(product => {
+                    const price = product.producT_PRICE || 0;
+                    return Math.abs(price - searchPrice) <= searchPrice * 0.1;
+                })
+            );
+        } else {
+            setFilteredResults(searchResults);
+        }
+    }, [searchResults, searchTerm, showResults]);
+
     return (
         <div ref={searchRef} className={`flex items-center justify-center w-full transition-all duration-300 
             ${isOpen ? "absolute top-0 left-0 w-full bg-white h-24 z-50" : "w-auto"}`}>
@@ -168,7 +167,7 @@ const SearchBar = () => {
                             onKeyDown={handleKeyDown}
                             autoFocus
                             className="bg-gray-100 px-4 py-2 pl-2 pr-12 rounded-lg focus:outline-none w-full
-                                placeholder:text-gray-700 focus:ring-2 focus:ring-blue-300"
+                                 text-gray-500 focus:ring-2 focus:ring-blue-300"
                         />
                         <button 
                             type='button'
@@ -227,7 +226,7 @@ const SearchBar = () => {
                                         Đã tìm thấy {searchResults.length} sản phẩm
                                     </div>
                                 )}
-                                {searchResults.map((product, index) => (
+                                {filteredResults.map((product, index) => (
                                     console.log("Product ID from search results:", product),
                                          <Link
                                          key={product.producT_ID}
@@ -255,7 +254,7 @@ const SearchBar = () => {
                                                 }}
                                             />
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-medium truncate">
+                                            <div className="font-medium  truncate text-gray-500">
                                                 {product.producT_NAME}
                                             </div>
                                             <div className="text-sm text-gray-500">

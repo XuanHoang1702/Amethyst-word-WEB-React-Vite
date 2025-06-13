@@ -1,14 +1,284 @@
+
 import { ArrowRight, Check, CheckCircle, ChevronLeft, ChevronRight, Clock, Copy, CreditCard, Home, ShoppingBag, Truck, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCart } from '../../context/CartContext';
-import { getCart } from '../../service/CartService';
-import { CreateOrder, GetStatus } from '../../service/OrderService';
-import { GetAddress, GetInformation } from '../../service/UserService';
+import { MapPin } from "lucide-react";
+import { getCart } from '../../service/Cart.Service';
+import { CreateOrder, GetStatus } from '../../service/Order.Service';
+import { GetAddress, GetInformation } from '../../service/User.Service';
 import WebSocketService from '../../service/WebSocket.Service';
-import { CreateOrderDetail } from '../../service/OrderDetailService';
+import { CreateOrderDetail } from '../../service/OrderDetail.Service';
 const API_URL = import.meta.env.VITE_API_URL;
+
+const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+  const [homeAddress, setHomeAddress] = useState("");
+  const [showMap, setShowMap] = useState(false);
+
+  const fullAddress = `${homeAddress}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`;
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
+
+  useEffect(() => {
+    fetch("https://provinces.open-api.vn/api/p/")
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch provinces");
+        return res.json();
+      })
+      .then(data => setProvinces(data))
+      .catch(err => console.error("Error fetching provinces:", err));
+  }, []);
+
+  useEffect(() => {
+    if (selectedProvince) {
+      const province = provinces.find(p => p.name === selectedProvince);
+      if (province) {
+        fetch(`https://provinces.open-api.vn/api/p/${province.code}?depth=2`)
+          .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch districts");
+            return res.json();
+          })
+          .then(data => setDistricts(data.districts || []))
+          .catch(err => console.error("Error fetching districts:", err));
+      }
+    } else {
+      setDistricts([]);
+    }
+    setSelectedDistrict("");
+    setSelectedWard("");
+    setWards([]);
+  }, [selectedProvince, provinces]);
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      const district = districts.find(d => d.name === selectedDistrict);
+      if (district) {
+        fetch(`https://provinces.open-api.vn/api/d/${district.code}?depth=2`)
+          .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch wards");
+            return res.json();
+          })
+          .then(data => setWards(data.wards || []))
+          .catch(err => console.error("Error fetching wards:", err));
+      }
+    } else {
+      setWards([]);
+    }
+    setSelectedWard("");
+  }, [selectedDistrict, districts]);
+
+  const toggleMap = () => {
+    if (selectedProvince) {
+      setShowMap(!showMap);
+    } else {
+      alert("Vui lòng chọn ít nhất tỉnh/thành phố để hiển thị bản đồ.");
+    }
+  };
+
+  return (
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-6">Thông tin giao hàng</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-gray-700 mb-2">Họ và tên</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={user?.USER_LAST_NAME || "Chưa có thông tin"}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Số điện thoại</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={user?.USER_PHONE || "Chưa có thông tin"}
+            readOnly
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={user?.USER_EMAIL || "Chưa có thông tin"}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Tỉnh / Thành phố</label>
+          <select
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={selectedProvince}
+            onChange={e => setSelectedProvince(e.target.value)}
+          >
+            <option value="">-- Chọn tỉnh/thành --</option>
+            {provinces.map(p => (
+              <option key={p.code} value={p.name}>{p.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Quận / Huyện</label>
+          <select
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={selectedDistrict}
+            onChange={e => setSelectedDistrict(e.target.value)}
+            disabled={!districts.length}
+          >
+            <option value="">-- Chọn quận/huyện --</option>
+            {districts.map(d => (
+              <option key={d.code} value={d.name}>{d.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Phường / Xã</label>
+          <select
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={selectedWard}
+            onChange={e => setSelectedWard(e.target.value)}
+            disabled={!wards.length}
+          >
+            <option value="">-- Chọn phường/xã --</option>
+            {wards.map(w => (
+              <option key={w.code} value={w.name}>{w.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Số nhà / Địa chỉ chi tiết</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            value={homeAddress}
+            onChange={e => setHomeAddress(e.target.value)}
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 mb-2">Địa chỉ đầy đủ</label>
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+              value={fullAddress}
+              readOnly
+            />
+            <button
+              onClick={toggleMap}
+              className="bg-[#6666e5] text-white px-7 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              <MapPin size={16} className="inline ml-1" />{showMap ? "Ẩn bản đồ " : "Xem bản đồ"}
+            </button>
+          </div>
+        </div>
+        {showMap && selectedProvince && (
+          <div className="md:col-span-2 mt-4">
+            <div className="w-full h-[400px] border rounded-lg overflow-hidden">
+              <iframe
+                src={mapSrc}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                title="Google Maps"
+              ></iframe>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="flex justify-end mt-6">
+        <button
+          onClick={() => setCurrentStep(2)}
+          className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          Tiếp tục <ChevronRight size={16} className="inline ml-1" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ShippingStep = ({ setCurrentStep, setShippingMethod, setShipPrice, handleOrderAndDetail }) => {
+  return (
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-6">Phương thức vận chuyển</h2>
+      <div className="space-y-4">
+        <div className="border border-gray-300 rounded-lg p-4 hover:border-black cursor-pointer relative">
+          <input
+            type="radio"
+            name="shipping"
+            id="standard"
+            className="absolute left-4 top-4"
+            defaultChecked
+            onChange={() => {
+              setShippingMethod("Miễn phí");
+              setShipPrice(0);
+            }}
+          />
+          <label htmlFor="standard" className="flex items-start ml-6 cursor-pointer">
+            <div className="flex-1">
+              <div className="flex items-center">
+                <Truck size={18} className="mr-2" />
+                <span className="font-medium">Giao hàng tiêu chuẩn</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-1">Nhận hàng trong 3-5 ngày làm việc</p>
+            </div>
+            <span className="font-medium">Miễn phí</span>
+          </label>
+        </div>
+        <div className="border border-gray-300 rounded-lg p-4 hover:border-black cursor-pointer relative">
+          <input
+            type="radio"
+            name="shipping"
+            id="express"
+            className="absolute left-4 top-4"
+            onChange={() => {
+              setShippingMethod("Nhanh");
+              setShipPrice(30000);
+            }}
+          />
+          <label htmlFor="express" className="flex items-start ml-6 cursor-pointer">
+            <div className="flex-1">
+              <div className="flex items-center">
+                <Clock size={18} className="mr-2" />
+                <span className="font-medium">Giao hàng nhanh</span>
+              </div>
+              <p className="text-gray-600 text-sm mt-1">Nhận hàng trong 1-2 ngày làm việc</p>
+            </div>
+            <span className="font-medium">30,000 VND</span>
+          </label>
+        </div>
+      </div>
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={() => setCurrentStep(1)}
+          className="border border-black text-gray-600 rounded-lg px-6 py-3 hover:text-black transition-colors"
+        >
+          <ChevronLeft size={16} className="inline ml-1" /> Quay lại
+        </button>
+        <button
+          onClick={() => {
+            setCurrentStep(3);
+            handleOrderAndDetail();
+          }}
+          className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          Tiếp tục <ChevronRight size={16} className="inline ml-1" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export default function FashionCheckout() {
   const [currentStep, setCurrentStep] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('qr');
@@ -18,7 +288,7 @@ export default function FashionCheckout() {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState({});
   const [address, setAddress] = useState([]);
-  const {cartItems, selectedItems} = useCart();
+  const { cartItems, selectedItems } = useCart();
   const [orderDetail, setOrderDetails] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -27,11 +297,11 @@ export default function FashionCheckout() {
   const [orderId, setOrderId] = useState("");
   const [message, setMessage] = useState('');
   const [orderStatus, setOrderStatus] = useState(null);
-  
-  let intervalId = null;
+
   const handleHome = () => {
     navigate('/');
   };
+
   useEffect(() => {
     if (orderId) {
       WebSocketService.connectWebSocket(orderId, (msg) => {
@@ -40,7 +310,6 @@ export default function FashionCheckout() {
         setCurrentStep(4);
       });
     }
-
     return () => {
       WebSocketService.closeWebSocket();
     };
@@ -52,6 +321,7 @@ export default function FashionCheckout() {
       setUser(userInfo.user_Inf);
     } catch (error) {
       console.error("Error fetching user data:", error);
+      toast.error("Không thể lấy thông tin người dùng. Vui lòng thử lại.");
     }
   };
 
@@ -59,44 +329,42 @@ export default function FashionCheckout() {
     try {
       const response = await GetAddress(token);
       setAddress(response);
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error fetching address:", error);
+      toast.error("Không thể lấy địa chỉ. Vui lòng thử lại.");
     }
   };
 
-  useEffect(()=>{
-    if(cartItems && cartItems.length > 0)
-    {
-      const selectedProducts = cartItems.filter(item=>selectedItems.includes(item.producT_ID)
-    )
-      const formattedItems = selectedProducts.map(item=>({
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) {
+      const selectedProducts = cartItems.filter(item => selectedItems.includes(item.producT_ID));
+      const formattedItems = selectedProducts.map(item => ({
         producT_ID: item.producT_ID,
         quantity: item.quantity,
         producT_PRICE: Number(item.producT_PRICE),
         subtotal: Number(item.producT_PRICE * item.quantity)
-      }
-      ))
+      }));
       setOrderDetails(formattedItems);
-
-      const totalQty = formattedItems.reduce((sum ,item)=>
-      sum + Number(item.quantity),0);
-      setTotalQuantity(totalQty);
-
-      const total = formattedItems.reduce((sum, item)=>
-      sum + Number(item.subtotal),0);
-      setTotalPrice(total);
-    }
-    else{
+      setTotalQuantity(formattedItems.reduce((sum, item) => sum + Number(item.quantity), 0));
+      setTotalPrice(formattedItems.reduce((sum, item) => sum + Number(item.subtotal), 0));
+    } else {
       setOrderDetails([]);
       setTotalQuantity(0);
       setTotalPrice(0);
     }
-  },[cartItems, selectedItems])
+  }, [cartItems, selectedItems]);
 
   const handleOrderAndDetail = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Vui lòng đăng nhập để đặt hàng.");
+        return;
+      }
+      if (!address.length) {
+        toast.error("Vui lòng thêm địa chỉ giao hàng.");
+        return;
+      }
       const data = {
         addresS_ID: address[0].id,
         totaL_QUANTITY: totalQuantity,
@@ -104,11 +372,9 @@ export default function FashionCheckout() {
         note: shippingMethod,
         ordeR_STATUS: 1,
       };
-  
       const response = await CreateOrder(token, data);
       const createdOrderId = response.result;
       setOrderId(createdOrderId);
-  
       const transformedCartItems = cartItems.map(item => ({
         producT_ID: item.producT_ID,
         quantity: item.quantity,
@@ -117,29 +383,27 @@ export default function FashionCheckout() {
         sizE_ID: item.sizE_ID,
         subtotal: item.producT_PRICE * item.quantity
       }));
-  
       await CreateOrderDetail(createdOrderId, transformedCartItems);
       setCurrentStep(3);
+      toast.success("Đơn hàng đã được tạo thành công!");
     } catch (error) {
       console.error("Error placing order:", error);
+      toast.error("Đã có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
     }
   };
-  
-  
-      
 
   useEffect(() => {
     fetchUserData();
     fetchAddress();
   }, []);
-  
+
   const bankInfo = {
     bankName: "BIDV",
     accountNumber: "6150889954",
     accountName: "Trần Xuân Hoàng",
     amount: "1,100,000 VND"
   };
-  
+
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -152,7 +416,7 @@ export default function FashionCheckout() {
 
   const renderStepIndicator = () => {
     return (
-      <div className="flex items-center justify-center mb-8 ">
+      <div className="flex items-center justify-center mb-8">
         {[1, 2, 3, 4].map((step) => (
           <div key={step} className="flex items-center">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${currentStep === step ? 'bg-[#6666e5] text-white' : currentStep > step ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}>
@@ -168,12 +432,11 @@ export default function FashionCheckout() {
   };
 
   const renderOrderSummary = () => {
-    console.log(cartItems)
     return (
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="font-bold text-lg mb-4 text-gray-800">Tóm tắt đơn hàng</h3>
         <div className="space-y-4 mb-6 max-h-[320px] overflow-y-auto pr-2">
-          {cartItems.filter(item=> selectedItems.includes(item.producT_ID)).map(item => (
+          {cartItems.filter(item => selectedItems.includes(item.producT_ID)).map(item => (
             <div key={item.id} className="flex space-x-4">
               <img src={item.imagE_NAME ? `${API_URL}/images/${item.imagE_NAME}` : '/placeholder-image.jpg'} className="w-16 h-20 object-cover rounded" />
               <div className="flex-1">
@@ -189,7 +452,6 @@ export default function FashionCheckout() {
             </div>
           ))}
         </div>
-  
         <div className="border-t border-gray-200 pt-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-gray-600">Tạm tính</span>
@@ -211,108 +473,6 @@ export default function FashionCheckout() {
       </div>
     );
   };
-  
-  const renderAddressStep = () => {
-    return (
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">Thông tin giao hàng</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 mb-2">Họ và tên</label>
-            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" value = { user.USER_LAST_NAME } />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-2">Số điện thoại</label>
-            <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" value={ user.USER_PHONE} />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-gray-700 mb-2">Email</label>
-            <input type="email" className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" value={ user.USER_EMAIL } />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-gray-700 mb-2">Địa chỉ</label>
-            <input
-              type="text"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              value={address.map(item =>
-                `${item.typE_ADDRESS}: ${item.housE_NUMBER}, ${item.street}, ${item.city}, ${item.country} (${item.postaL_CODE})`
-              ).join(' | ')}
-              readOnly
-            />
-          </div>
-        </div>
-        <div className="flex justify-end mt-6">
-          <button 
-            onClick={() => {
-              setCurrentStep(2);
-            }}
-            className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Tiếp tục <ChevronRight size={16} className="inline ml-1" />
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  const renderShippingStep = () => {
-    return (
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">Phương thức vận chuyển</h2>
-        <div className="space-y-4">
-          <div className="border border-gray-300 rounded-lg p-4 hover:border-black cursor-pointer relative">
-            <input type="radio" name="shipping" id="standard" className="absolute left-4 top-4" defaultChecked onChange={() =>{ 
-              setShippingMethod("Miễn phí");
-              setShipPrice(0);
-              }}/>
-            <label htmlFor="standard" className="flex items-start ml-6 cursor-pointer">
-              <div className="flex-1">
-                <div className="flex items-center">
-                  <Truck size={18} className="mr-2" />
-                  <span className="font-medium">Giao hàng tiêu chuẩn</span>
-                </div>
-                <p className="text-gray-600 text-sm mt-1">Nhận hàng trong 3-5 ngày làm việc</p>
-              </div>
-              <span className="font-medium">Miễn phí</span>
-            </label>
-          </div>
-          <div className="border border-gray-300 rounded-lg p-4 hover:border-black cursor-pointer relative">
-            <input type="radio" name="shipping" id="express" className="absolute left-4 top-4" onChange={() => {
-              setShippingMethod("Nhanh");
-              setShipPrice(30000);
-              }}/>
-            <label htmlFor="express" className="flex items-start ml-6 cursor-pointer">
-              <div className="flex-1">
-                <div className="flex items-center">
-                  <Clock size={18} className="mr-2" />
-                  <span className="font-medium">Giao hàng nhanh</span>
-                </div>
-                <p className="text-gray-600 text-sm mt-1">Nhận hàng trong 1-2 ngày làm việc</p>
-              </div>
-              <span className="font-medium">30,000 VND</span>
-            </label>
-          </div>
-        </div>
-        <div className="flex justify-between mt-6">
-          <button 
-            onClick={() => setCurrentStep(1)} 
-            className=" border border-black text-gray-600  rounded-lg px-6 py-3 hover:text-black transition-colors"
-          >
-          <ChevronLeft size={16} className="inline ml-1" /> Quay lại
-          </button>
-          <button 
-            onClick={() => {
-              setCurrentStep(3);
-              handleOrderAndDetail();
-            }}
-            className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Tiếp tục <ChevronRight size={16} className="inline ml-1" />
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   const renderQRPayment = () => {
     const total = cartItems.reduce((sum, item) => {
@@ -321,28 +481,26 @@ export default function FashionCheckout() {
     }, 0);
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        {/* Tab Navigation */}
         <div className="flex border-b">
-          <button 
+          <button
             className={`flex-1 py-3 font-medium text-sm ${activeTab === 'qr' ? 'text-black border-b-2 border-black' : 'text-gray-500'}`}
             onClick={() => setActiveTab('qr')}
           >
             Mã QR
           </button>
-          <button 
+          <button
             className={`flex-1 py-3 font-medium text-sm ${activeTab === 'bank' ? 'text-black border-b-2 border-black' : 'text-gray-500'}`}
             onClick={() => setActiveTab('bank')}
           >
             Thông tin chuyển khoản
           </button>
         </div>
-        
         {activeTab === 'qr' && (
           <div className="p-6 flex flex-col items-center">
             <div className="border-2 border-gray-200 rounded-lg p-2 mb-4">
-              <img 
+              <img
                 src={`https://qr.sepay.vn/img?bank=MBBank&acc=0335404974&template=compact&amount=${totalPrice + shipPrice}&des=${orderId}`}
-                alt="QR Code Payment" 
+                alt="QR Code Payment"
                 className="w-64 h-64"
               />
             </div>
@@ -357,7 +515,6 @@ export default function FashionCheckout() {
             </div>
           </div>
         )}
-        
         {activeTab === 'bank' && (
           <div className="p-6">
             <div className="space-y-4">
@@ -368,7 +525,6 @@ export default function FashionCheckout() {
                 </div>
                 <span className="font-medium">{bankInfo.bankName}</span>
               </div>
-              
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
                   <ArrowRight size={20} className="text-gray-600" />
@@ -376,7 +532,6 @@ export default function FashionCheckout() {
                 </div>
                 <span className="font-medium">{bankInfo.accountName}</span>
               </div>
-              
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
                   <ArrowRight size={20} className="text-gray-600" />
@@ -384,7 +539,7 @@ export default function FashionCheckout() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="font-medium">{bankInfo.accountNumber}</span>
-                  <button 
+                  <button
                     onClick={() => copyToClipboard(bankInfo.accountNumber)}
                     className="text-black hover:text-gray-600"
                   >
@@ -392,7 +547,6 @@ export default function FashionCheckout() {
                   </button>
                 </div>
               </div>
-              
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
                   <ArrowRight size={20} className="text-gray-600" />
@@ -401,8 +555,7 @@ export default function FashionCheckout() {
                 <span className="font-medium">{bankInfo.amount}</span>
               </div>
             </div>
-            
-            <button 
+            <button
               className="w-full mt-6 bg-[#6666e5] text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
               onClick={() => setActiveTab('qr')}
             >
@@ -410,7 +563,7 @@ export default function FashionCheckout() {
             </button>
           </div>
         )}
-      </div> 
+      </div>
     );
   };
 
@@ -418,18 +571,17 @@ export default function FashionCheckout() {
     return (
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-6">Phương thức thanh toán</h2>
-        
         <div className="space-y-4 mb-6">
-          <div 
+          <div
             className={`border ${paymentMethod === 'qr' ? 'border-black' : 'border-gray-300'} rounded-lg p-4 hover:border-black cursor-pointer`}
             onClick={() => setPaymentMethod('qr')}
           >
             <div className="flex items-center">
-              <input 
-                type="radio" 
-                name="payment" 
-                id="qr" 
-                checked={paymentMethod === 'qr'} 
+              <input
+                type="radio"
+                name="payment"
+                id="qr"
+                checked={paymentMethod === 'qr'}
                 onChange={() => setPaymentMethod('qr')}
                 className="mr-3"
               />
@@ -438,24 +590,22 @@ export default function FashionCheckout() {
                 <span className="font-medium">Thanh toán QR/Chuyển khoản</span>
               </label>
             </div>
-            
             {paymentMethod === 'qr' && (
               <div className="mt-4 pl-6">
                 {renderQRPayment()}
               </div>
             )}
           </div>
-          
-          <div 
+          <div
             className={`border ${paymentMethod === 'cod' ? 'border-black' : 'border-gray-300'} rounded-lg p-4 hover:border-black cursor-pointer`}
             onClick={() => setPaymentMethod('cod')}
           >
             <div className="flex items-center">
-              <input 
-                type="radio" 
-                name="payment" 
-                id="cod" 
-                checked={paymentMethod === 'cod'} 
+              <input
+                type="radio"
+                name="payment"
+                id="cod"
+                checked={paymentMethod === 'cod'}
                 onChange={() => setPaymentMethod('cod')}
                 className="mr-3"
               />
@@ -465,17 +615,16 @@ export default function FashionCheckout() {
               </label>
             </div>
           </div>
-          
-          <div 
+          <div
             className={`border ${paymentMethod === 'card' ? 'border-black' : 'border-gray-300'} rounded-lg p-4 hover:border-black cursor-pointer`}
             onClick={() => setPaymentMethod('card')}
           >
             <div className="flex items-center">
-              <input 
-                type="radio" 
-                name="payment" 
-                id="card" 
-                checked={paymentMethod === 'card'} 
+              <input
+                type="radio"
+                name="payment"
+                id="card"
+                checked={paymentMethod === 'card'}
                 onChange={() => setPaymentMethod('card')}
                 className="mr-3"
               />
@@ -485,17 +634,16 @@ export default function FashionCheckout() {
               </label>
             </div>
           </div>
-          
-          <div 
+          <div
             className={`border ${paymentMethod === 'wallet' ? 'border-black' : 'border-gray-300'} rounded-lg p-4 hover:border-black cursor-pointer`}
             onClick={() => setPaymentMethod('wallet')}
           >
             <div className="flex items-center">
-              <input 
-                type="radio" 
-                name="payment" 
-                id="wallet" 
-                checked={paymentMethod === 'wallet'} 
+              <input
+                type="radio"
+                name="payment"
+                id="wallet"
+                checked={paymentMethod === 'wallet'}
                 onChange={() => setPaymentMethod('wallet')}
                 className="mr-3"
               />
@@ -506,7 +654,6 @@ export default function FashionCheckout() {
             </div>
           </div>
         </div>
-        
         <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <div className="flex items-start">
             <input type="checkbox" id="terms" className="mt-1 mr-3" />
@@ -515,17 +662,14 @@ export default function FashionCheckout() {
             </label>
           </div>
         </div>
-        
         <div className="flex justify-between mt-6">
-          <button 
-            onClick={() => setCurrentStep(2)} 
-                className=" border border-black text-gray-600  rounded-lg px-6 py-3 hover:text-black transition-colors"
+          <button
+            onClick={() => setCurrentStep(2)}
+            className="border border-black text-gray-600 rounded-lg px-6 py-3 hover:text-black transition-colors"
           >
             <ChevronLeft size={16} className="inline ml-1" /> Quay lại
-            
           </button>
-        
-          <button 
+          <button
             onClick={handlePlaceOrder}
             className="bg-[#6666e5] text-white px-10 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
@@ -542,17 +686,14 @@ export default function FashionCheckout() {
         <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
           <CheckCircle size={40} className="text-green-500" />
         </div>
-        
         <h2 className="text-2xl font-bold mb-4">Đặt hàng thành công!</h2>
         <p className="text-gray-600 mb-8">Cảm ơn bạn đã mua sắm tại Fashion Store.</p>
-        
         <div className="bg-gray-50 p-6 rounded-lg mb-8 mx-auto max-w-md">
           <div className="text-left mb-6">
             <div className="flex justify-between items-center mb-4">
               <span className="text-gray-600">Mã đơn hàng:</span>
               <span className="font-bold">{orderId}</span>
             </div>
-            
             <div className="flex justify-between items-center mb-4">
               <span className="text-gray-600">Phương thức thanh toán:</span>
               <span className="font-medium">
@@ -562,13 +703,11 @@ export default function FashionCheckout() {
                 {paymentMethod === 'wallet' && 'Ví điện tử'}
               </span>
             </div>
-            
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Tổng cộng:</span>
               <span className="font-bold">{(totalPrice + shipPrice).toLocaleString('vi-VN')} VND</span>
             </div>
           </div>
-          
           {paymentMethod === 'qr' && (
             <div className="text-left p-4 bg-yellow-50 rounded-lg border border-yellow-200">
               <p className="text-sm text-yellow-800 font-medium mb-2">Thông tin thanh toán</p>
@@ -578,14 +717,12 @@ export default function FashionCheckout() {
             </div>
           )}
         </div>
-        
         <div className="space-y-4">
           <h3 className="font-medium text-lg">Thông tin đơn hàng đã được gửi qua email của bạn</h3>
           <p className="text-gray-600">
             Bạn có thể kiểm tra trạng thái đơn hàng bất kỳ lúc nào trong tài khoản của mình
           </p>
         </div>
-        
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
           <button className="bg-[#6666e5] text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors">
             Theo dõi đơn hàng
@@ -600,13 +737,13 @@ export default function FashionCheckout() {
 
   const QrCode = (props) => {
     return (
-      <svg 
+      <svg
         {...props}
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       >
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -625,17 +762,14 @@ export default function FashionCheckout() {
           <ShoppingBag className="h-8 w-8 mr-2" />
           <h1 className="text-3xl font-bold">AmethystWorld Store</h1>
         </div>
-        
         {renderStepIndicator()}
-        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className={`${currentStep === 4 ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
-            {currentStep === 1 && renderAddressStep()}
-            {currentStep === 2 && renderShippingStep()}
+            {currentStep === 1 && <AddressStep user={user} setCurrentStep={setCurrentStep} />}
+            {currentStep === 2 && <ShippingStep setCurrentStep={setCurrentStep} setShippingMethod={setShippingMethod} setShipPrice={setShipPrice} handleOrderAndDetail={handleOrderAndDetail} />}
             {currentStep === 3 && renderPaymentStep()}
             {currentStep === 4 && renderOrderConfirmation()}
           </div>
-          
           {currentStep !== 4 && (
             <div className="lg:col-span-1">
               {renderOrderSummary()}

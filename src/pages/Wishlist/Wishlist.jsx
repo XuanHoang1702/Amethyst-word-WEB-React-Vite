@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import WishlistItem from "./WishlistItem"; 
 import Breadcrumb from "../../components/BreadCrumb";
 import FashionPagination from "../../components/panigation/Panigation";
-import { GetWishList } from "../../service/WishListService";
+import { GetWishList } from "../../service/WishList.Service";
 import { toast } from "react-toastify";
 import bg1 from '../../assets/image/Taobao Banner Clothing Background, Color, Warm, Flat Background Image And Wallpaper for Free Download.jpeg'
 import { useWishlist } from "../../context/WishListContext";

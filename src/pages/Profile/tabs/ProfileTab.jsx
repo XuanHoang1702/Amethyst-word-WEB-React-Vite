@@ -1,6 +1,6 @@
    import { Edit2, Mail, MapPin, Phone, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { GetAddress, UpdateInformation, createAddress } from '../../../service/UserService';
+import { GetAddress, UpdateInformation, createAddress } from '../../../service/User.Service';
 
 export default function ProfileTab({ user }) {
   const token = localStorage.getItem("token");
@@ -16,9 +16,9 @@ export default function ProfileTab({ user }) {
   })
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: `${user.USER_FIRST_NAME || ''} ${user.USER_LAST_NAME || ''}`.trim(),
-    email: user.USER_EMAIL || '',
-    phone: user.USER_PHONE || '',
+    fullName: `${user?.USER_FIRST_NAME || ''} ${user?.USER_LAST_NAME || ''}`.trim(),
+    email: user?.USER_EMAIL || '',
+    phone: user?.USER_PHONE || '',
   });
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -295,7 +295,7 @@ export default function ProfileTab({ user }) {
               </div>
               <button className="text-indigo-600 hover:text-indigo-700 text-sm">Chỉnh sửa</button>
             </div>
-            <p className="text-slate-600 text-sm mb-1">{user.USER_PHONE}</p>
+            <p className="text-slate-600 text-sm mb-1">{user?.USER_PHONE || ''}</p>
             <div className="text-slate-600 text-sm">
               {address.map((item, index) => (
                 <p key={index}>

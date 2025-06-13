@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import OrdersFilter from './OrdersFilter';
 import OrdersTable from './OrderTable';
 import FashionPagination from '../../../../components/panigation/Panigation';
-import { getOrder } from '../../../../service/OrderService';
+import { getOrder } from '../../../../service/Order.Service';
 
 const ORDERS_PER_PAGE = 5;
 

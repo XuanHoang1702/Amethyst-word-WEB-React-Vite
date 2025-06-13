@@ -11,7 +11,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-[#6666e5] text-white py-10 ">
+        <footer className="bg-gradient-to-r from-[#4b0082] to-[#9966cc] text-white py-10 ">
             <div className="container mx-auto px-4">
    
                 <div className="flex justify-center mb-6">
@@ -35,7 +35,8 @@ const Footer = () => {
                     <div>
                         <h3 className="font-bold mb-4">VỀ CHÚNG TÔI</h3>
                         <p className="text-white">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Đây là đoạn văn mẫu thay thế cho phần giới thiệu về chúng tôi.
+                        Chào mừng đến với AmethystWorld – Thế giới của Thời trang, Phụ kiện và Trang sức!
+                        Tại đây, chúng tôi mang đến cho bạn những xu hướng thời trang mới nhất, phụ kiện tinh tế và trang sức độc đáo giúp bạn thể hiện phong cách riêng. AmethystWorld không chỉ là một cửa hàng trực tuyến, mà còn là nơi tôn vinh vẻ đẹp và cá tính của bạn.
                         </p>
                     </div>
 

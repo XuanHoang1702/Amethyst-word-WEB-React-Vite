@@ -1,7 +1,7 @@
 import { AlertCircle, ArrowLeft, Check, Package, Truck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { GetOrderDetail } from '../../../../service/OrderDetailService';
+import { GetOrderDetail } from '../../../../service/OrderDetail.Service';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const OrderDetail = () => {

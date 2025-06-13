@@ -1,7 +1,7 @@
 let socket = null;
 // import { API_URL } from "./Api";
 const connectWebSocket = (orderCode, onMessage) => {
-  socket = new WebSocket(`ws://192.168.1.5:5000/api/Pay/Get`);
+  socket = new WebSocket(`ws://359-2401-d800-a99-19eb-a570-1482-af3c-f4d3.ngrok-free.app/api/Pay/Get`);
 
   socket.onopen = () => {
     console.log('✅ WebSocket connected');

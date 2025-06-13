@@ -2,8 +2,8 @@ import React from 'react'
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { AddWishList } from '../../service/WishListService';
-import { addToCart } from '../../service/CartService';
+import { AddWishList } from '../../service/WishList.Service';
+import { addToCart } from '../../service/Cart.Service';
 import { formatPrice } from '../../utils/formatUtils';
 import { useWishlist } from '../../context/WishListContext';
 const API_URL = import.meta.env.VITE_API_URL;
@@ -72,7 +72,7 @@ const AllProductCard=({product})=>{
     <div className='bg-white rounded-lg shadow-md overflow-hidden group'>
         <div className="relative">
         <img
-          // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+   
           src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={product.producT_NAME || product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"

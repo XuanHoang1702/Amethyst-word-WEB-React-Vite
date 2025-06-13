@@ -17,7 +17,7 @@ export default function OrdersTable({ orders, total }) {
               <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">Ngày mua</th>
               <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">Tổng tiền</th>
               <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">Trạng thái</th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase"></th>
+              <th className="px-6 py-4 text-left text-xs font-medium text-slate-500 uppercase">Thao tác</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">

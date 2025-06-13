@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaArrowRight } from 'react-icons/fa'
 import ProductRelateCard from './ProductRelateCard'
-import { ProductRelated } from '../../../service/ProductService'
+import { ProductRelated } from '../../../service/Product.Service'
 
 const ProductRelateList=()=> {
   const [relatedProducts, setRelatedProducts] = useState([]);

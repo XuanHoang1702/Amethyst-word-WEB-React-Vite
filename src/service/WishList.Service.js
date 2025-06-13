@@ -6,8 +6,9 @@ export const GetWishList = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/api/Wish_list/GetAll`, {
             headers: {
+                'ngrok-skip-browser-warning': 'true',
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             }
         });
         console.log('Raw API response:', response);
@@ -31,6 +32,7 @@ export const AddWishList = async (token, productId) => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true',
                 }
             }
         );
@@ -47,6 +49,7 @@ export const DeleteWishList = async (token, productId) => {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true',
             }
         });
         return response.data;

@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify"; 
-import { GetWishList } from "../service/WishListService";
+import { GetWishList } from "../service/WishList.Service";
 
 const WishlistContext = createContext();
 

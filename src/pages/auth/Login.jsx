@@ -1,11 +1,11 @@
 import { GoogleLogin } from "@react-oauth/google";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import bg1 from '../../assets/image/phoi-do-voi-mau-tim-pastel_672db6744d5545cfb058f353237dd4d4.webp';
-import { login } from "../../service/UserService";
+import { login } from "../../service/User.Service";
 const Login = ()=>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

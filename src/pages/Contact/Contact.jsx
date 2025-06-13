@@ -3,6 +3,8 @@ import { MapPin, Phone, Mail, Clock, MessageSquare, Check } from "lucide-react";
 import Breadcrumb from "../../components/BreadCrumb";
 import bg3 from '../../assets/image/old-fashion-rotary-dial-phone-antique-technology-concept-white-rustic-wooden-background-152862950.webp'
 const ContactPage = () => {
+  const [address, setAddress] = useState('288 D. Bá Trạc, Phường Rạch Ông, Quận 8, Hồ Chí Minh, Việt Nam');
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,11 +13,13 @@ const ContactPage = () => {
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
-
   const handleChange = (e) => {
+    setAddress(e.target.value);
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -269,19 +273,26 @@ const ContactPage = () => {
         </div>
 
         {/* Map Section */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-800">Vị Trí Cửa Hàng</h2>
-          <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.0401670913264!2d106.62965731465974!3d10.823098992263424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f2a5f0a33ab%3A0x7d5f464b64fba616!2sHo%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2s!4v1633023149997!5m2!1sen!2s"
-                        width="100%"
-                        height="700"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        title="Google Map"
-                        className="rounded-lg"
-                    />
-        </div>
+        <div className="p-4 max-w-2xl mx-auto">
+      <h2 className="text-xl font-semibold mb-2">Nhập địa chỉ để xem bản đồ</h2>
+      <input
+        type="text"
+        value={address}
+        onChange={handleChange}
+        placeholder="Nhập địa chỉ..."
+        className="w-full border p-2 rounded mb-4"
+      />
+      <div className="w-full h-[400px]">
+        <iframe
+          src={mapSrc}
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen=""
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
 
         {/* FAQ Section */}
         <div className="mt-12">

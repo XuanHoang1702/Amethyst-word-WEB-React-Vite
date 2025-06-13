@@ -5,15 +5,16 @@ import BlogCategoryFilter from './BlogCategoryFilter';
 import BlogPostCard from './BlogPostCard';
 import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogNewsletterSignup from './BlogNewsletterSignup';
-import ProductRelateCard from '../products/related/ProductRelateCard';
 import BestSellerCard from '../products/best_seller/BestSellerCard';
 import FashionPagination from '../../components/panigation/Panigation';
+
 // import { bestsellerProducts } from '../../service/ProductData';
-import samplePosts from '../../service/BlogData';
+import samplePosts from '../../service/BlogService';
 // import { relatedProducts } from '../../service/ProductData';
 import bg2 from '../../assets/image/360_F_597940292_dmaVD664ccNHMDJqi0Wv0SCSexklLyhO.jpg'
+
 import ScrollToTop from '../../utils/ScrollToTop';
-import { ProductBestSeller } from '../../service/ProductService';
+import { ProductBestSeller } from '../../service/Product.Service';
 const FashionBlog = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
