@@ -1,6 +1,5 @@
 import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
-import { Trophy } from 'lucide-react';
 
 export const ProductNew = async (input) => {
     try {
@@ -18,6 +17,23 @@ export const ProductNew = async (input) => {
         throw error.response || { message: 'Lỗi kết nối server' };
     }
 }
+
+
+export const ImageProduct = async (imageName) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/images/${imageName}`, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true',
+            },
+            responseType: 'blob',
+        });
+
+        return URL.createObjectURL(response.data);
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+};
+
 
 export const ProductBestSeller = async (input) => {
     try {
