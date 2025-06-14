@@ -3,12 +3,12 @@
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useWishlist } from '../../../context/WishListContext';
 import { addToCart } from '../../../service/Cart.Service';
 import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
-import { useWishlist } from '../../../context/WishListContext';
-import { SquareArrowOutUpRight } from 'lucide-react';
 const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 // /**
 //  @param {Object} props
 //  * @param {Object} props.product
@@ -82,7 +82,7 @@ const BestSellerCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-            src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+            src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
             // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             // alt={product.producT_NAME}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
