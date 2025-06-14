@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Star, ShoppingBag, Heart, Sparkles, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, ShoppingBag, Sparkles, Star } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const FashionBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -30,7 +30,7 @@ const FashionBanner = () => {
     {
       title: "Phụ Kiện Thời Trang",
       subtitle: "Hoàn thiện phong cách",
-      description: "Từ túi xách đến phụ kiện tóc - tất cả để bạn tỏa sáng",
+      description: "Từ túi xách đến phụ kiện tóc - tất cả để bạn tỏa sáng, tôn lên cá tính riêng",
       buttonText: "Mua Sắm Ngay",
       bgGradient: "from-emerald-500/80 via-teal-600/80 to-blue-700/80",
       accentColor: "text-emerald-100",
@@ -58,8 +58,7 @@ const FashionBanner = () => {
   const currentSlideData = slides[currentSlide];
 
   return (
-    // <div className="relative w-full h-5/6 overflow-hidden p-28">
-    <div className="relative w-full h-4/6 overflow-hidden px-4 py-12 sm:px-8 md:px-12 lg:p-28">
+    <div className="relative w-full h-[70%] overflow-hidden px-4 py-12 sm:px-8 md:px-12 lg:p-28">
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -122,10 +121,6 @@ const FashionBanner = () => {
                     <span>{currentSlideData.buttonText}</span>
                     <ShoppingBag className="w-5 h-5" />
                   </button>
-                  {/* <button className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-gray-900 transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
-                    <Play className="w-5 h-5" />
-                    <span>Xem Video</span>
-                  </button> */}
                 </div>
               </div>
 
@@ -167,7 +162,6 @@ const FashionBanner = () => {
         </div>
       </div>
 
-      {/* Navigation arrows */}
       <button 
         onClick={prevSlide}
         className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm z-20 hover:scale-110"
@@ -182,7 +176,6 @@ const FashionBanner = () => {
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      {/* Slide indicators */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         {slides.map((_, index) => (
           <button
@@ -197,15 +190,6 @@ const FashionBanner = () => {
         ))}
       </div>
 
-      {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 z-20">
-        <div 
-          className="h-full bg-white transition-all duration-300"
-          style={{ 
-            width: `${((currentSlide + 1) / slides.length) * 100}%` 
-          }}
-        ></div>
-      </div>
     </div>
   );
 };
