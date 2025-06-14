@@ -7,11 +7,12 @@ import { AuthContext } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishListContext";
 import CartDrawer from "../../pages/carts/CartDrawer";
+import { getVisitorId } from "../../service/Device.Service";
 import { MenuNavBarService } from "../../service/MenuNavBar.Service";
 import { ProductSearch } from "../../service/Product.Service";
 import { GetInformation } from "../../service/User.Service";
 import SearchBar from "../SearchBar";
-import {getVisitorId} from "../../service/Device.Service";
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
@@ -135,7 +136,6 @@ const Navbar = () => {
   return (
     <>
       <nav className="bg-gradient-to-r from-[#4b0082] to-[#9966cc] text-white p-3 md:p-4 fixed top-0 left-0 right-0 z-50 shadow-md">
-
         <div className="container mx-auto flex items-center justify-between px-2">
           <div className="flex items-center flex-grow-0 flex-shrink-0">
             <Link to="/" className="flex items-center space-x-1 group">
@@ -166,26 +166,16 @@ const Navbar = () => {
           <SearchBar/>
         </div>
 
-            <div className="relative">
-              <Link
-                to={token ? "/profile" : "/login"}
-                className="text-white hover:text-black flex items-center"
-              >
-                <FaUser className="text-lg" />
-                <span className="hidden lg:inline ml-1 text-xs lg:text-sm">
-                  {username || "Đăng nhập"}
-                </span>
-              </Link>
-            </div>
+            
             <Link to="/wishlist" className="relative">
-            <FaHeart className="h-6 w-6 text-white"  />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                {wishlistCount}
-              </span>
-            )}
-          </Link>
-          <button onClick={toggleCartDrawer} className="relative">
+              <FaHeart className="h-6 w-6 text-white"  />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+            <button onClick={toggleCartDrawer} className="relative">
                 <FaShoppingBag className='h-6 w-6 text-white'/>
                 {cartCount > 0 && (
                     <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center'>
@@ -196,6 +186,17 @@ const Navbar = () => {
             <button onClick={toggleNavDrawer} className="md:hidden text-white">
               {navDrawerOpen ? <IoMdClose className="text-xl" /> : <HiBars3BottomRight className="text-xl" />}
             </button>
+<div className="relative">
+              <Link
+                to={token ? "/profile" : "/login"}
+                className="text-white hover:text-black flex items-center"
+              >
+                <FaUser className="text-lg" />
+                <span className="hidden lg:inline ml-1 text-xs lg:text-sm">
+                  {username || "Đăng nhập"}
+                </span>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

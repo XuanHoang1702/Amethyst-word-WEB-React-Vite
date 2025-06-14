@@ -1,14 +1,14 @@
 /** @file src/components/product/bestSeller/BestSellerCard.jsx */
 // import { FaHeart, FaShoppingCart } from 'react-icons/fa';
-import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { FaEye, FaHeart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addToCart } from '../../../service/Cart.Service';
+import { useWishlist } from '../../../context/WishListContext';
 import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
-import { useWishlist } from '../../../context/WishListContext';
-import { SquareArrowOutUpRight } from 'lucide-react';
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
+
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">

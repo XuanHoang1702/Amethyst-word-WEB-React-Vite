@@ -1,14 +1,14 @@
 // WishlistItem.jsx
-import React, { useState } from "react";
-import { Heart } from "lucide-react";
-import { IoHeartDislike } from "react-icons/io5";
+import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
+import { IoHeartDislike } from "react-icons/io5";
 
-import { DeleteWishList } from "../../service/WishList.Service";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useWishlist } from "../../context/WishListContext";
+import { DeleteWishList } from "../../service/WishList.Service";
 const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 const WishlistItem = ({ item, OnDelete}) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate()
@@ -47,7 +47,7 @@ const WishlistItem = ({ item, OnDelete}) => {
       <div className="aspect-h-4 aspect-w-3 relative overflow-hidden">
       <img
           // src={`${API_URL}/images/${item.imagE_NAME}`}
-          src={item.imagE_NAME ? `${API_URL}/images/${item.imagE_NAME}` : '/placeholder-image.jpg'}
+          src={item.imagE_NAME ? `${API_IMAGE}/${item.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={item.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${item.producT_ID}`)}
