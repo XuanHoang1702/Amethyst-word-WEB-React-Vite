@@ -5,7 +5,7 @@ import { addToCart } from '../../service/Cart.Service';
 import { AddWishList } from '../../service/WishList.Service';
 import { formatPrice } from '../../utils/formatUtils';
 import { useWishlist } from '../../context/WishListContext';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -24,26 +24,26 @@ const AllProductsListCard = ({ product }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  const handleAddToCart = async () => {
-    try {
-      if (!token) {
-        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
-        return;
-      }
-      const res = await addToCart(token, product.producT_ID, 1);
-      if (res.code === 201) {
-        toast.success('Thêm vào giỏ hàng thành công');
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Thêm vào giỏ hàng thất bại');
-    }
-  };
+  // const handleAddToCart = async () => {
+  //   try {
+  //     if (!token) {
+  //       toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+  //       return;
+  //     }
+  //     const res = await addToCart(token, product.producT_ID, 1);
+  //     if (res.code === 201) {
+  //       toast.success('Thêm vào giỏ hàng thành công');
+  //       setTimeout(() => {
+  //         window.location.reload();
+  //       }, 2000);
+  //     } else {
+  //       toast.error(res.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding to cart:', error);
+  //     toast.error('Thêm vào giỏ hàng thất bại');
+  //   }
+  // };
 
   const handleAddToWishList = async () => {
     if (token) {
@@ -70,7 +70,7 @@ const AllProductsListCard = ({ product }) => {
         <div className="relative w-full md:w-1/3 h-64">
           <img
             // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
-             src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+             src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
             alt={product.producT_NAME || product.alt}
             className="w-full h-full object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}
@@ -87,12 +87,12 @@ const AllProductsListCard = ({ product }) => {
             <div className="flex justify-between items-start mb-2">
               <div>
                 <h3
-                  className="text-lg font-medium text-gray-800 hover:text-blue-500 transition-colors cursor-pointer"
+                  className="text-2xl font-medium text-gray-800 hover:text-blue-500 transition-colors cursor-pointer"
                   onClick={() => navigate(`/details/${product.producT_ID}`)}
                 >
                   {product.producT_NAME}
                 </h3>
-                <div className="flex items-center mt-1">
+                <div className="flex items-center mt-5">
                   {renderStars(product.rate)}
                   <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0} đánh giá)</span>
                 </div>
@@ -140,7 +140,7 @@ const AllProductsListCard = ({ product }) => {
             </div>
             <button
               className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors"
-              onClick={handleAddToCart}
+              onClick={() => navigate(`/details/${product.producT_ID}`)}
             >
               <FaShoppingCart size={16} />
               <span>Mua ngay</span>
@@ -150,6 +150,6 @@ const AllProductsListCard = ({ product }) => {
       </div>
     </div>
   );
-};
+}
 
 export default AllProductsListCard;
