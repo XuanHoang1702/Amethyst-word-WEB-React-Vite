@@ -87,7 +87,6 @@ const BrandLogos = () => {
                 alt={brand.branD_NAME}
                 className="h-52 object-contain mb-3"
               />
-              <span className="text-center font-semibold text-sm">{brand.branD_NAME}</span>
             </div>
           ))}
         </div>
