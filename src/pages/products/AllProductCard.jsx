@@ -138,4 +138,4 @@ const AllProductCard=({product})=>{
   )
 }
 
-export default AllProductCard
+export default AllProductCard;

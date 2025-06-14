@@ -150,6 +150,6 @@ const AllProductsListCard = ({ product }) => {
       </div>
     </div>
   );
-};
+}
 
 export default AllProductsListCard;
