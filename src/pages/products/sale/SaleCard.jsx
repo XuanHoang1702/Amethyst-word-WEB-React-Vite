@@ -3,10 +3,15 @@
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { addToCart } from '../../../service/Cart.Service';
-import { formatPrice } from '../../../utils/formatUtils';
-import { AddWishList } from '../../../service/WishList.Service';
 import { useWishlist } from '../../../context/WishListContext';
+import { addToCart } from '../../../service/Cart.Service';
+import { AddWishList } from '../../../service/WishList.Service';
+
+import { useWishlist } from '../../../context/WishListContext';
+=======
+import { formatPrice } from '../../../utils/formatUtils';
+const API_URL = import.meta.env.VITE_API_URL;
+
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 const renderStars = (rating) => {
   return (
@@ -69,6 +74,9 @@ const SaleCard = ({ product }) => {
         <div className="relative">
           <img
            src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+
+            src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

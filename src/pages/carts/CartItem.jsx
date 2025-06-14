@@ -6,7 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { deleteCart } from '../../service/Cart.Service';
 import { formatPrice } from '../../utils/formatUtils';
 const API_URL = import.meta.env.VITE_API_URL;
-
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 /**
  * 
  * @param {Object} props
@@ -72,7 +72,7 @@ const CartItem = ({ product }) => {
           className="mr-4 mt-8 w-5 h-5 accent-[#6666e5]"
         />
         <img
-           src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+          src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={product.name}
           className="w-24 h-28 object-cover mr-4 rounded border-2 border-[#6666e5]"
         />
