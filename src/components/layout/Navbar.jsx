@@ -7,11 +7,12 @@ import { AuthContext } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishListContext";
 import CartDrawer from "../../pages/carts/CartDrawer";
+import { getVisitorId } from "../../service/Device.Service";
 import { MenuNavBarService } from "../../service/MenuNavBar.Service";
 import { ProductSearch } from "../../service/Product.Service";
 import { GetInformation } from "../../service/User.Service";
 import SearchBar from "../SearchBar";
-import {getVisitorId} from "../../service/Device.Service";
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
