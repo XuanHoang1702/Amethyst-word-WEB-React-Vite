@@ -1,14 +1,11 @@
 /** @file src/components/product/bestSeller/BestSellerCard.jsx */
 // import { FaHeart, FaShoppingCart } from 'react-icons/fa';
-import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { FaEye, FaHeart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useWishlist } from '../../../context/WishListContext';
-import { addToCart } from '../../../service/Cart.Service';
 import { AddWishList } from '../../../service/WishList.Service';
 
-import { useWishlist } from '../../../context/WishListContext';
-=======
 import { formatPrice } from '../../../utils/formatUtils';
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -73,10 +70,7 @@ const SaleCard = ({ product }) => {
   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-           src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-
             src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}
