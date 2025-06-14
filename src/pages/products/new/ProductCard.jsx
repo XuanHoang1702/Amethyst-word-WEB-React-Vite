@@ -1,20 +1,12 @@
-import { useEffect, useState } from 'react';
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useWishlist } from '../../../context/WishListContext';
 import { addToCart } from '../../../service/Cart.Service';
 import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
-import { useWishlist } from '../../../context/WishListContext';
-import { ImageProduct } from '../../../service/Product.Service';
-import { useState, useEffect } from 'react';
-=======
-import { useWishlist } from '../../../context/WishListContext';
-import { addToCart } from '../../../service/CartService';
-import { ImageProduct } from '../../../service/Product.Service';
-import { AddWishList } from '../../../service/WishListService';
-import { formatPrice } from '../../../utils/formatUtils';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 
 const renderStars = (rating) => {
   return (
@@ -33,14 +25,7 @@ const ProductCard = ({ product }) => {
   const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
-  const [imgUrl, setImgUrl] = useState('');
-  useEffect(() => {
-    ImageProduct(product.imagE_NAME).then(setImgUrl).catch(console.error);
-  }, [product.imagE_NAME]);
 
-  useEffect(() => {
-    ImageProduct(product.imagE_NAME).then(setImgUrl).catch(console.error);
-  }, [product.imagE_NAME]);
   const handleAddToCart = async () => {
     try {
       if (!token) {
@@ -81,8 +66,7 @@ const ProductCard = ({ product }) => {
       <div className="relative">
         <img
 
-           src={product.imagE_NAME ? "https://raw.githubusercontent.com/XuanHoang1702/image_storage/main/PRODUCT/1e570420-65c1-46e3-bc75-3e6d056f1e66.jpg" : '/placeholder-image.jpg'}
-            src={product.imagE_NAME ? `${imgUrl}` : '/placeholder-image.jpg'}
+          src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}

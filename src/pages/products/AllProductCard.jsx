@@ -1,12 +1,12 @@
-import React from 'react'
 import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { AddWishList } from '../../service/WishList.Service';
-import { addToCart } from '../../service/Cart.Service';
-import { formatPrice } from '../../utils/formatUtils';
 import { useWishlist } from '../../context/WishListContext';
-const API_URL = import.meta.env.VITE_API_URL;
+import { addToCart } from '../../service/Cart.Service';
+import { AddWishList } from '../../service/WishList.Service';
+import { formatPrice } from '../../utils/formatUtils';
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -68,17 +68,16 @@ const AllProductCard=({product})=>{
   const isOnSale = product.discounT_PERCENT;
   const isBestSeller = product.isBestSeller;
   const displayPrice = product.discounT_PERCENT ? product.producT_PRICE * (1-product.discounT_PERCENT/100) : product.producT_PRICE;
+  
   return (
     <div className='bg-white rounded-lg shadow-md overflow-hidden group'>
         <div className="relative">
         <img
-   
-          src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+          src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={product.producT_NAME || product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}
         />
-       
           {isOnSale && (
           <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
             GIẢM GIÁ {product.discounT_PERCENT}%

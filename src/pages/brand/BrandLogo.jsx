@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
-import { BrandService } from '../../service/Brand.Service';
-
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL;
+import { BrandService } from '../../service/Brand.Service';
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 const BrandLogos = () => {
+  console.log('api image', API_IMAGE);
   const [brands, setBrands] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -82,7 +83,7 @@ const BrandLogos = () => {
               className=" text-black h-52 rounded-lg  flex flex-col justify-center items-center cursor-pointer transform hover:scale-105 hover:shadow-2xl transition-all duration-300 ease-in-out"
             >
               <img
-                src={brand.branD_IMAGE ? `${API_URL}/images/${brand.branD_IMAGE}` : '/placeholder-image.jpg'}
+                src={brand.branD_IMAGE ? `${API_IMAGE}/${brand.branD_IMAGE}` : '/placeholder-image.jpg'}
                 alt={brand.branD_NAME}
                 className="h-52 object-contain mb-3"
               />
