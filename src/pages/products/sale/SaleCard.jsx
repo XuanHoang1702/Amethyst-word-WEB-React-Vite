@@ -7,7 +7,7 @@ import { addToCart } from '../../../service/Cart.Service';
 import { formatPrice } from '../../../utils/formatUtils';
 import { AddWishList } from '../../../service/WishList.Service';
 import { useWishlist } from '../../../context/WishListContext';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -29,26 +29,26 @@ const SaleCard = ({ product }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  const handleAddToCart = async () => {
-    try {
-      if (!token) {
-        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
-        return;
-      }
-      const res = await addToCart(token, product.producT_ID, 1);
-      if (res.code == 201) {
-        toast.success('Thêm vào giỏ hàng thành công');
-        setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-      }else {
-        toast.error(res.message);
-      }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Thêm vào giỏ hàng thất bại');
-    }
-  };
+  // const handleAddToCart = async () => {
+  //   try {
+  //     if (!token) {
+  //       toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+  //       return;
+  //     }
+  //     const res = await addToCart(token, product.producT_ID, 1);
+  //     if (res.code == 201) {
+  //       toast.success('Thêm vào giỏ hàng thành công');
+  //       setTimeout(() => {
+  //       window.location.reload();
+  //     }, 2000);
+  //     }else {
+  //       toast.error(res.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding to cart:', error);
+  //     toast.error('Thêm vào giỏ hàng thất bại');
+  //   }
+  // };
 
   const AddToWishList = async () => {
       if (token) {
@@ -68,7 +68,7 @@ const SaleCard = ({ product }) => {
   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-           src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+           src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}
@@ -83,9 +83,9 @@ const SaleCard = ({ product }) => {
   
           {/* Hover buttons */}
           <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
+            {/* <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
               <FaShoppingCart size={18} />
-            </button>
+            </button> */}
             <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={AddToWishList}>
               <FaHeart size={18} />
             </button>
