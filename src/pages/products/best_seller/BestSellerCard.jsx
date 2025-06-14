@@ -7,20 +7,14 @@ import { useWishlist } from '../../../context/WishListContext';
 import { addToCart } from '../../../service/Cart.Service';
 import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
+
+import { useWishlist } from '../../../context/WishListContext';
+import { SquareArrowOutUpRight } from 'lucide-react';
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 const API_URL = import.meta.env.VITE_API_URL;
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
-// /**
-//  @param {Object} props
-//  * @param {Object} props.product
-//  * @param {number} props.product.producT_ID 
-//  * @param {string} props.product.producT_NAME
-//  * @param {number} props.product.producT_PRICE
-//  * @param {number} props.product.discounT_PERCENT
-//  * @param {string} props.product.imagE_NAME
-//  * @param {number} props.product.rate
-//  * @param {number} props.product.reviewCount
-//  * @param {boolean} props.product.isNew
-//  */
+
 const renderStars = (rating) => {
   return (
     <div className="flex text-yellow-400">
@@ -43,26 +37,26 @@ const BestSellerCard = ({ product }) => {
     return originalPrice * (1 - discountPercent/ 100);
   }
 
-  const handleAddToCart = async () => {
-    try {
-      if (!token) {
-        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
-        return;
-      }
-      const res = await addToCart(token, product.producT_ID, 1);
-      if (res.code == 201) {
-        toast.success('Thêm vào giỏ hàng thành công');
-        setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-      }else {
-        toast.error(res.message);
-      }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      toast.error('Thêm vào giỏ hàng thất bại');
-    }
-  };
+  // const handleAddToCart = async () => {
+  //   try {
+  //     if (!token) {
+  //       toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+  //       return;
+  //     }
+  //     const res = await addToCart(token, product.producT_ID, 1);
+  //     if (res.code == 201) {
+  //       toast.success('Thêm vào giỏ hàng thành công');
+  //       setTimeout(() => {
+  //       window.location.reload();
+  //     }, 2000);
+  //     }else {
+  //       toast.error(res.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding to cart:', error);
+  //     toast.error('Thêm vào giỏ hàng thất bại');
+  //   }
+  // };
 
   const AddToWishList = async () => {
       if (token) {
@@ -99,9 +93,9 @@ const BestSellerCard = ({ product }) => {
           </div>
         )}
           <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
+            {/* <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
               <FaShoppingCart size={18} />
-            </button>
+            </button> */}
             <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={AddToWishList}>
               <FaHeart size={18} />
             </button>
