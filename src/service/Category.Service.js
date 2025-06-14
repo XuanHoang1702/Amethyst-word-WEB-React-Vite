@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const CategoryService = {
     getAllCategories: async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/Category/GetList`,
+            const response = await axios.get(`${API_URL}/api/Category/GetCategoryUser`,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': 'true',

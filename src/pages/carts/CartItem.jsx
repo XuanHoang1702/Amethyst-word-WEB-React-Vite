@@ -20,7 +20,6 @@ const API_URL = import.meta.env.VITE_API_URL;
  * @param {string} props.product.image
  */
 const CartItem = ({ product }) => {
-  console.log("Cart item: ", product)
   const [quantity, setQuantity] = useState(product.quantity);
   const {selectedItems=[], toggleSelectedItem} = useCart();
   const { updateCartCount, updateQuantity } = useCart();

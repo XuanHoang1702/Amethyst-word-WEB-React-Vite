@@ -1,12 +1,12 @@
 import { Minus, Plus, ShoppingBag, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useCart } from '../../../context/CartContext';
 import { addToCart, addToCartNoAuth } from '../../../service/Cart.Service';
 import { GetProductDetail, ProductColors, ProductSizes } from '../../../service/Product.Service';
 import { formatPrice } from '../../../utils/formatUtils';
-import { useCart } from '../../../context/CartContext';
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 
-const API_URL = import.meta.env.VITE_API_URL;
 const ProductDetail = ({ id }) => {
   const [product, setProduct] = useState(null);
   const [colors, setColors] = useState([]);
@@ -147,7 +147,7 @@ const ProductDetail = ({ id }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <div className="flex flex-col md:flex-row">
             <div className="bg-gray-100 rounded-lg p-4 flex-1 flex items-center justify-center mb-4 md:mb-0 ">
-              <img src={product.imagE_NAME ? `https://localhost:5000/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}/>
+              <img src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}/>
             </div>
             <div className="flex items-center flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 ml-3 p-1">
 
