@@ -12,9 +12,9 @@ const Home = () => {
       <div className="flex flex-col justify-center items-center">
         <Banner />
       </div>
-      <div className="w-full my-10">
+      <div className="w-full my-10 px-[90px]">
         <CategoryList />
-        <div className="justify-center items-center max-w-full">
+        <div className="justify-center items-center ">
           <BrandLogos />
         </div>
         <section>
