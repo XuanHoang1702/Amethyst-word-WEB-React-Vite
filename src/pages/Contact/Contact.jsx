@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import { MapPin, Phone, Mail, Clock, MessageSquare, Check } from "lucide-react";
+import { Check, Clock, Mail, MapPin, MessageSquare, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+import bg3 from '../../assets/image/old-fashion-rotary-dial-phone-antique-technology-concept-white-rustic-wooden-background-152862950.webp';
 import Breadcrumb from "../../components/BreadCrumb";
-import bg3 from '../../assets/image/old-fashion-rotary-dial-phone-antique-technology-concept-white-rustic-wooden-background-152862950.webp'
+import { GetInformation } from "../../service/User.Service";
+
 const ContactPage = () => {
   const [address, setAddress] = useState('288 D. Bá Trạc, Phường Rạch Ông, Quận 8, Hồ Chí Minh, Việt Nam');
-  
+  const [userInfor, setUserInfor] = useState(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,8 +21,21 @@ const ContactPage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+  const token = localStorage.getItem("token");
+  
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!token) return;
+      try {
+        const response = await GetInformation(token);
+        setUserInfor(response.user_Inf);
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+      }
+    };
+    fetchUserInfo();
+  }, [token]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,9 +65,8 @@ const ContactPage = () => {
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white ">
             <h1 className="text-3xl md:text-5xl font-bold text-center">Trang Liên Hệ </h1>
             <Breadcrumb   items={[{ label: 'Sản phẩm yêu thích ' }]} />
-            
+    
             {/* Search Bar */}
-         
           </div>
         </div>
       </div>
@@ -174,91 +189,79 @@ const ContactPage = () => {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Họ tên <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="Nhập họ tên của bạn"
-                    />
+                  {/* Left Column: Inputs */}
+                  <div className="space-y-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                        Họ tên <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name || userInfor?.USER_LAST_NAME || ""}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                        placeholder="Nhập họ tên của bạn"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email || userInfor?.USER_EMAIL || ""}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                        placeholder="example@email.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                        Số điện thoại
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone || userInfor?.USER_PHONE || ""}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                        placeholder="0xxxxxxxxx"
+                      />
+                    </div>
                   </div>
+
+                  {/* Right Column: Textarea */}
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      Email <span className="text-red-500">*</span>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                      Nội dung tin nhắn <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
                       onChange={handleChange}
+                      rows="9"
+                      maxLength={500}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="example@email.com"
-                    />
+                      className="w-full h-[77%] px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent resize-none"
+                      placeholder="Nhập nội dung tin nhắn của bạn (tối đa 500 ký tự)..."
+                    ></textarea>
+                    <div className="text-right text-sm text-gray-500 mt-1">
+                      {formData.message.length}/500 ký tự
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      Số điện thoại
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                      placeholder="0xxxxxxxxx"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                      Chủ đề <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    >
-                      <option value="">-- Chọn chủ đề --</option>
-                      <option value="order">Thông tin đơn hàng</option>
-                      <option value="product">Thông tin sản phẩm</option>
-                      <option value="return">Đổi/trả hàng</option>
-                      <option value="shipping">Vận chuyển</option>
-                      <option value="other">Khác</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                    Nội dung tin nhắn <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows="5"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-                    placeholder="Nhập nội dung tin nhắn của bạn..."
-                  ></textarea>
-                </div>
-
+                {/* Submit button */}
                 <div>
                   <button
                     type="submit"
@@ -268,6 +271,7 @@ const ContactPage = () => {
                   </button>
                 </div>
               </form>
+
             </div>
           </div>
         </div>
