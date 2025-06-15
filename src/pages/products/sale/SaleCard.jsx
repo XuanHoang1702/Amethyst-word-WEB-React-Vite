@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useWishlist } from '../../../context/WishListContext';
 import { AddWishList } from '../../../service/WishList.Service';
-
+import { useState, useEffect } from 'react';
 import { formatPrice } from '../../../utils/formatUtils';
+import { getProductImage } from '../../../service/Product.Service';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
@@ -26,7 +27,7 @@ const renderStars = (rating) => {
 // Format price function
 
 const SaleCard = ({ product }) => {
-  // console.log('Product:', product.producT_NAME, 'Discount Percent:', product.discounT_PERCENT);
+  const [imageUrl, setImageUrl] = useState('');
   const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -51,7 +52,18 @@ const SaleCard = ({ product }) => {
   //     toast.error('Thêm vào giỏ hàng thất bại');
   //   }
   // };
-
+  useEffect(()=>{
+    const fetchImage = async () => {
+      try{
+        const response = await getProductImage(product.producT_ID);
+        setImageUrl(response[0].imagE_NAME);  
+      }
+      catch(error){
+        console.error('Error fetching product image:', error);
+      }
+    }
+    fetchImage();
+  },[])
   const AddToWishList = async () => {
       if (token) {
         const response = await AddWishList(token, product.producT_ID);
@@ -70,7 +82,7 @@ const SaleCard = ({ product }) => {
   <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-            src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+            src={imageUrl ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

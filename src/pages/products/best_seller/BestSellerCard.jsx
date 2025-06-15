@@ -3,9 +3,12 @@
 import { FaEye, FaHeart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
 import { useWishlist } from '../../../context/WishListContext';
 import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
+import { getProductImage } from '../../../service/Product.Service';
+import { Profiler, useEffect } from 'react';
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 
 
@@ -26,6 +29,7 @@ const BestSellerCard = ({ product }) => {
   const {incrementCount} = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [imageUrl, setImageUrl] = useState('');
 
   const calculateDiscountedPrice = (originalPrice, discountPercent)=>{
     return originalPrice * (1 - discountPercent/ 100);
@@ -51,6 +55,18 @@ const BestSellerCard = ({ product }) => {
   //     toast.error('Thêm vào giỏ hàng thất bại');
   //   }
   // };
+  useEffect(()=>{
+    const fetchImage = async () => {
+      try{
+        const response = await getProductImage(product.producT_ID);
+        setImageUrl(response[0].imagE_NAME);
+      }
+      catch(error){
+        console.error('Error fetching product image:', error);
+      }
+    };
+    fetchImage();
+  },[product.producT_ID])
 
   const AddToWishList = async () => {
       if (token) {
@@ -70,7 +86,7 @@ const BestSellerCard = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="relative">
           <img
-            src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+            src={imageUrl ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
             // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
             // alt={product.producT_NAME}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
