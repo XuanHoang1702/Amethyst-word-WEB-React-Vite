@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { useCart } from '../../context/CartContext';
-import { deleteCart } from '../../service/Cart.Service';
+import { deleteCart, removeFromCart } from '../../service/Cart.Service';
 import { formatPrice } from '../../utils/formatUtils';
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 
@@ -42,7 +42,12 @@ const CartItem = ({ product }) => {
   const handleDelete = async () => {
     try {
       if (!token) {
-        toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
+        removeFromCart(product.producT_ID);
+        toast.success('Xóa sản phẩm thành công');
+        await updateCartCount();
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
         return;
       }
       const res = await deleteCart(token, product.producT_ID);

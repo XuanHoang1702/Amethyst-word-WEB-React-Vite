@@ -85,3 +85,18 @@ export const addToCartNoAuth = (producT_ID, producT_NAME, producT_PRICE, imagE_N
 
     localStorage.setItem("cartItem", JSON.stringify(cart));
 };
+
+export const removeFromCart = (productId) => {
+    const cart = JSON.parse(localStorage.getItem('cartItem')) || [];
+
+    const index = cart.findIndex(item => item.producT_ID === Number(productId));
+
+    if (index !== -1) {
+        cart.splice(index, 1);
+        localStorage.setItem('cartItem', JSON.stringify(cart));
+        console.log('Đã xóa sản phẩm:', productId);
+    } else {
+        console.warn('Không tìm thấy sản phẩm để xóa:', productId);
+    }
+};
+
