@@ -1,10 +1,12 @@
-import { FaEye, FaHeart, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { FaEye, FaHeart, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useWishlist } from '../../../context/WishListContext';
-import { addToCart } from '../../../service/Cart.Service';
+import { getProductImage } from '../../../service/Product.Service';
 import { AddWishList } from '../../../service/WishList.Service';
 import { formatPrice } from '../../../utils/formatUtils';
+
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 
 
@@ -24,28 +26,8 @@ const renderStars = (rating) => {
 const ProductCard = ({ product }) => {
   const {incrementCount} = useWishlist();
   const navigate = useNavigate();
+  const [ imageUrl, setImageUrl ] = useState('');
   const token = localStorage.getItem("token")
-
-  // const handleAddToCart = async () => {
-  //   try {
-  //     if (!token) {
-  //       toast.info('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
-  //       return;
-  //     }
-  //     const res = await addToCart(token, product.producT_ID, 1);
-  //     if (res.code == 201) {
-  //       toast.success('Thêm vào giỏ hàng thành công');
-  //       setTimeout(() => {
-  //       window.location.reload();
-  //     }, 2000);
-  //     }else {
-  //       toast.error(res.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error adding to cart:', error);
-  //     toast.error('Thêm vào giỏ hàng thất bại');
-  //   }
-  // };
 
   const AddToWishList = async () => {
     if (token) {
@@ -61,12 +43,26 @@ const ProductCard = ({ product }) => {
     }
   }
 
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await getProductImage(product.producT_ID);
+        setImageUrl(response[0].imagE_NAME);
+      } catch (error) {
+        console.error('Error fetching product image:', error);
+      }
+    };
+
+    fetchImage();
+  }, [product.producT_ID]);
+
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden group">
       <div className="relative">
         <img
 
-          src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+          src={product.imagE_NAME ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}
@@ -79,9 +75,6 @@ const ProductCard = ({ product }) => {
         )}
         {/* Hover buttons */}
         <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-          {/* <button className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors" onClick={handleAddToCart}>
-            <FaShoppingCart size={18} />
-          </button> */}
           <button
             className="bg-white text-gray-800 rounded-full p-2 hover:bg-blue-500 hover:text-white transition-colors"
             onClick={AddToWishList}
