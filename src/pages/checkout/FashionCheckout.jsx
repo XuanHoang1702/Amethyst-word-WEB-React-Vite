@@ -171,12 +171,7 @@ const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
               value={fullAddress}
               readOnly
             />
-            <button
-              onClick={toggleMap}
-              className="bg-[#6666e5] text-white px-7 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-            >
-              <MapPin size={16} className="inline ml-1" />{showMap ? "Ẩn bản đồ " : "Xem bản đồ"}
-            </button>
+           
           </div>
         </div>
         {showMap && selectedProvince && (
@@ -195,7 +190,13 @@ const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
           </div>
         )}
       </div>
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-between mt-6">
+        <button
+              onClick={toggleMap}
+              className="bg-[#6666e5] text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+             {showMap ? "Ẩn bản đồ " : "Xem bản đồ"}
+            </button>
         <button
           onClick={() => setCurrentStep(2)}
           className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
@@ -217,7 +218,7 @@ const ShippingStep = ({ setCurrentStep, setShippingMethod, setShipPrice, handleO
             type="radio"
             name="shipping"
             id="standard"
-            className="absolute left-4 top-4"
+            className="absolute left-4 top-5"
             defaultChecked
             onChange={() => {
               setShippingMethod("Miễn phí");
@@ -240,7 +241,7 @@ const ShippingStep = ({ setCurrentStep, setShippingMethod, setShipPrice, handleO
             type="radio"
             name="shipping"
             id="express"
-            className="absolute left-4 top-4"
+            className="absolute left-4 top-5"
             onChange={() => {
               setShippingMethod("Nhanh");
               setShipPrice(30000);
@@ -480,90 +481,24 @@ export default function FashionCheckout() {
       return sum + price * item.quantity;
     }, 0);
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="flex border-b">
-          <button
-            className={`flex-1 py-3 font-medium text-sm ${activeTab === 'qr' ? 'text-black border-b-2 border-black' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('qr')}
-          >
-            Mã QR
-          </button>
-          <button
-            className={`flex-1 py-3 font-medium text-sm ${activeTab === 'bank' ? 'text-black border-b-2 border-black' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('bank')}
-          >
-            Thông tin chuyển khoản
-          </button>
-        </div>
-        {activeTab === 'qr' && (
-          <div className="p-6 flex flex-col items-center">
-            <div className="border-2 border-gray-200 rounded-lg p-2 mb-4">
-              <img
-                src={`https://qr.sepay.vn/img?bank=MBBank&acc=0335404974&template=compact&amount=${totalPrice + shipPrice}&des=${orderId}`}
-                alt="QR Code Payment"
-                className="w-64 h-64"
-              />
-            </div>
-            <p className="text-gray-500 text-sm text-center mb-4">
-              Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã QR
-            </p>
-            <div className="bg-gray-50 p-3 rounded-lg w-full">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-700">Số tiền:</span>
-                <span className="font-bold text-black">{total}</span>
-              </div>
-            </div>
-          </div>
-        )}
-        {activeTab === 'bank' && (
-          <div className="p-6">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <CreditCard size={20} className="text-gray-600" />
-                  <span className="text-gray-600">Ngân hàng</span>
-                </div>
-                <span className="font-medium">{bankInfo.bankName}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <ArrowRight size={20} className="text-gray-600" />
-                  <span className="text-gray-600">Tên tài khoản</span>
-                </div>
-                <span className="font-medium">{bankInfo.accountName}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <ArrowRight size={20} className="text-gray-600" />
-                  <span className="text-gray-600">Số tài khoản</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium">{bankInfo.accountNumber}</span>
-                  <button
-                    onClick={() => copyToClipboard(bankInfo.accountNumber)}
-                    className="text-black hover:text-gray-600"
-                  >
-                    {copied ? <CheckCircle size={18} /> : <Copy size={18} />}
-                  </button>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <ArrowRight size={20} className="text-gray-600" />
-                  <span className="text-gray-600">Số tiền</span>
-                </div>
-                <span className="font-medium">{bankInfo.amount}</span>
-              </div>
-            </div>
-            <button
-              className="w-full mt-6 bg-[#6666e5] text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-              onClick={() => setActiveTab('qr')}
-            >
-              Xem mã QR
-            </button>
-          </div>
-        )}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden p-6 flex flex-col items-center">
+      <div className="border-2 border-gray-200 rounded-lg p-2 mb-4">
+        <img
+          src={`https://qr.sepay.vn/img?bank=MBBank&acc=0335404974&template=compact&amount=${totalPrice + shipPrice}&des=${orderId}`}
+          alt="QR Code Payment"
+          className="w-64 h-64"
+        />
       </div>
+      <p className="text-gray-500 text-sm text-center mb-4">
+        Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã QR
+      </p>
+      <div className="bg-gray-50 p-3 rounded-lg w-full">
+        <div className="flex justify-between items-center">
+          <span className="text-gray-700">Số tiền:</span>
+          <span className="font-bold text-black">{total.toLocaleString('vi-VN')} VND</span>
+        </div>
+      </div>
+    </div>
     );
   };
 
@@ -586,7 +521,7 @@ export default function FashionCheckout() {
                 className="mr-3"
               />
               <label htmlFor="qr" className="flex items-center cursor-pointer">
-                <QrCode size={20} className="mr-2" />
+                <QrCode size={20} className="w-5 h-5 mr-2" />
                 <span className="font-medium">Thanh toán QR/Chuyển khoản</span>
               </label>
             </div>
@@ -610,7 +545,7 @@ export default function FashionCheckout() {
                 className="mr-3"
               />
               <label htmlFor="cod" className="flex items-center cursor-pointer">
-                <Home size={20} className="mr-2" />
+                <Home className="w-5 h-5 mr-2" />
                 <span className="font-medium">Thanh toán khi nhận hàng (COD)</span>
               </label>
             </div>
@@ -629,7 +564,7 @@ export default function FashionCheckout() {
                 className="mr-3"
               />
               <label htmlFor="card" className="flex items-center cursor-pointer">
-                <CreditCard size={20} className="mr-2" />
+                <CreditCard  className=" w-5 h-5 mr-2" />
                 <span className="font-medium">Thẻ tín dụng/Ghi nợ</span>
               </label>
             </div>
@@ -654,14 +589,14 @@ export default function FashionCheckout() {
             </div>
           </div>
         </div>
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        {/* <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <div className="flex items-start">
             <input type="checkbox" id="terms" className="mt-1 mr-3" />
             <label htmlFor="terms" className="text-gray-600 text-sm">
               Tôi đã đọc và đồng ý với <a href="#" className="text-black underline">Điều khoản dịch vụ</a> và <a href="#" className="text-black underline">Chính sách bảo mật</a> của cửa hàng.
             </label>
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-between mt-6">
           <button
             onClick={() => setCurrentStep(2)}
@@ -687,7 +622,7 @@ export default function FashionCheckout() {
           <CheckCircle size={40} className="text-green-500" />
         </div>
         <h2 className="text-2xl font-bold mb-4">Đặt hàng thành công!</h2>
-        <p className="text-gray-600 mb-8">Cảm ơn bạn đã mua sắm tại Fashion Store.</p>
+        <p className="text-gray-600 mb-8">AmethystWorld Store.</p>
         <div className="bg-gray-50 p-6 rounded-lg mb-8 mx-auto max-w-md">
           <div className="text-left mb-6">
             <div className="flex justify-between items-center mb-4">
@@ -708,20 +643,17 @@ export default function FashionCheckout() {
               <span className="font-bold">{(totalPrice + shipPrice).toLocaleString('vi-VN')} VND</span>
             </div>
           </div>
-          {paymentMethod === 'qr' && (
+          {/* {paymentMethod === 'qr' && (
             <div className="text-left p-4 bg-yellow-50 rounded-lg border border-yellow-200">
               <p className="text-sm text-yellow-800 font-medium mb-2">Thông tin thanh toán</p>
               <p className="text-sm text-gray-600">
                 Vui lòng chuyển khoản số tiền <span className="font-bold">{bankInfo.amount}</span> đến tài khoản {bankInfo.bankName} - {bankInfo.accountName} để hoàn tất đơn hàng.
               </p>
             </div>
-          )}
+          )} */}
         </div>
-        <div className="space-y-4">
-          <h3 className="font-medium text-lg">Thông tin đơn hàng đã được gửi qua email của bạn</h3>
-          <p className="text-gray-600">
-            Bạn có thể kiểm tra trạng thái đơn hàng bất kỳ lúc nào trong tài khoản của mình
-          </p>
+        <div className="space-x-2.5">
+          <h3 className="font-medium text-lg"> Bạn có thể kiểm tra trạng thái đơn hàng bất kỳ lúc nào trong tài khoản của mình</h3>
         </div>
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
           <button className="bg-[#6666e5] text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors">
