@@ -1,11 +1,11 @@
 import { ChevronLeft, ChevronRight, Heart, ShoppingBag, Sparkles, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const FashionBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [banner, setBanner] = useState([]);
-
+  const navigate = useNavigate();
   const slides = [
     {
       title: "Bộ Sưu Tập Mùa Hè 2025",
@@ -17,16 +17,16 @@ const FashionBanner = () => {
       imageUrl: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
       category: "THỜI TRANG"
     },
-    {
-      title: "Trang Sức Cao Cấp",
-      subtitle: "Sang trọng & Tinh tế",
-      description: "Những món trang sức độc đáo tôn vinh vẻ đẹp tự nhiên của bạn",
-      buttonText: "Xem Bộ Sưu Tập",
-      bgGradient: "from-amber-500/80 via-orange-600/80 to-red-600/80",
-      accentColor: "text-yellow-100",
-      imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      category: "TRANG SỨC"
-    },
+    // {
+    //   title: "Trang Sức Cao Cấp",
+    //   subtitle: "Sang trọng & Tinh tế",
+    //   description: "Những món trang sức độc đáo tôn vinh vẻ đẹp tự nhiên của bạn",
+    //   buttonText: "Xem Bộ Sưu Tập",
+    //   bgGradient: "from-amber-500/80 via-orange-600/80 to-red-600/80",
+    //   accentColor: "text-yellow-100",
+    //   imageUrl: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    //   category: "TRANG SỨC"
+    // },
     {
       title: "Phụ Kiện Thời Trang",
       subtitle: "Hoàn thiện phong cách",
@@ -38,6 +38,7 @@ const FashionBanner = () => {
       category: "PHỤ KIỆN"
     }
   ];
+
 
   useEffect(() => {
     setIsVisible(true);
@@ -74,7 +75,7 @@ const FashionBanner = () => {
           <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgGradient}`}></div>
         </div>
       ))}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-5">
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none z-5">
         <div className="absolute top-20 left-20 w-32 h-32 bg-white/5 rounded-full animate-pulse"></div>
         <div className="absolute top-40 right-32 w-24 h-24 bg-white/10 rounded-full animate-bounce delay-300"></div>
         <div className="absolute bottom-32 left-1/3 w-16 h-16 bg-white/5 rounded-full animate-ping delay-500"></div>
@@ -84,7 +85,7 @@ const FashionBanner = () => {
         <Star className="absolute top-1/3 right-1/3 w-6 h-6 text-white/20 animate-bounce delay-200" />
         <Heart className="absolute bottom-1/3 left-1/5 w-7 h-7 text-white/25 animate-pulse delay-400" />
         <ShoppingBag className="absolute top-1/2 right-1/5 w-6 h-6 text-white/15 animate-bounce delay-600" />
-      </div>
+      </div> */}
       <div className="relative z-10 h-full">
         <div className="grid lg:grid-cols-2 h-full">
           <div className="flex items-center justify-center lg:justify-start px-4 sm:px-8 lg:px-16 py-8">
@@ -117,14 +118,14 @@ const FashionBanner = () => {
               {/* CTA Buttons */}
               <div className={`transform transition-all duration-1000 delay-800 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl flex items-center justify-center space-x-2">
+                  <button onClick={() => navigate("/shop")} className="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl flex items-center justify-center space-x-2">
                     <span>{currentSlideData.buttonText}</span>
                     <ShoppingBag className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
-              <div className={`transform transition-all duration-1000 delay-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              {/* <div className={`transform transition-all duration-1000 delay-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
                 <div className="flex justify-center lg:justify-start items-center mt-8 space-x-6 text-white/80">
                   <div className="text-center">
                     <div className="text-2xl font-bold">4.9</div>
@@ -144,19 +145,19 @@ const FashionBanner = () => {
                     <div className="text-xs">Yêu thích</div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
           <div className="hidden lg:flex items-center justify-center p-8">
             <div className={`transform transition-all duration-1000 delay-1200 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20">
+              {/* <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20">
                 <div className="text-white text-center">
                   <div className="text-6xl mb-4">✨</div>
                   <h3 className="text-2xl font-bold mb-2">Sản phẩm nổi bật</h3>
                   <p className="text-white/80 mb-4">Giảm giá đến 50%</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
