@@ -1,4 +1,4 @@
-import React, {createContext, useState, useEffect, useContext} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getCart } from "../service/Cart.Service";
 
@@ -12,11 +12,13 @@ export const CartProvider = ({children}) => {
 
 
     const updateCartCount = async () => {
-        if(!token) {
-            setCartCount(0);
-            setCartItems([]);
+        if (!token) {
+            const localCart = JSON.parse(localStorage.getItem('cartItem')) || [];
+            setCartItems(localCart);
+            setCartCount(localCart.reduce((sum, item) => sum + item.quantity, 0));
             return;
         }
+
         
         try {
             const response = await getCart(token);

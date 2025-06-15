@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import { useCart } from '../../context/CartContext';
 import { deleteCart } from '../../service/Cart.Service';
 import { formatPrice } from '../../utils/formatUtils';
-const API_URL = import.meta.env.VITE_API_URL;
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 /**
  * 
  * @param {Object} props
