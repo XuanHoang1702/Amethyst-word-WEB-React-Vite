@@ -93,7 +93,7 @@ export const createAddress = async (token, data) =>
                 housE_NUMBER: data.housE_NUMBER,
                 street: data.street,
                 city: data.city,
-                postaL_CODE: data.postaL_CODE,
+                postal_CODE: data.postal_CODE,
                 country: data.country,
                 typE_ADDRESS: data.typE_ADDRESS
             }, {
