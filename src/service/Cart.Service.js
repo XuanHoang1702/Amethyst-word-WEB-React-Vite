@@ -92,7 +92,7 @@ export const removeFromCart = (productId) => {
     const index = cart.findIndex(item => item.producT_ID === Number(productId));
 
     if (index !== -1) {
-        cart.splice(index, 1); // Xóa phần tử
+        cart.splice(index, 1);
         localStorage.setItem('cartItem', JSON.stringify(cart));
         console.log('Đã xóa sản phẩm:', productId);
     } else {
