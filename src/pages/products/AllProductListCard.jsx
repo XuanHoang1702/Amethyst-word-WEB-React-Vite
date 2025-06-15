@@ -5,6 +5,8 @@ import { addToCart } from '../../service/Cart.Service';
 import { AddWishList } from '../../service/WishList.Service';
 import { formatPrice } from '../../utils/formatUtils';
 import { useWishlist } from '../../context/WishListContext';
+import { getProductImage } from '../../service/Product.Service';
+import { useEffect, useState } from 'react';
 const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 const renderStars = (rating) => {
   return (
@@ -20,6 +22,7 @@ const renderStars = (rating) => {
 };
 
 const AllProductsListCard = ({ product }) => {
+  const [imageUrl, setImageUrl] = useState('');
   const { incrementCount } = useWishlist();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -44,7 +47,19 @@ const AllProductsListCard = ({ product }) => {
   //     toast.error('Thêm vào giỏ hàng thất bại');
   //   }
   // };
+  useEffect(()=>{
+    const fetchImage = async () => {
+      try{
+        const response = await getProductImage(product.producT_ID);
+        setImageUrl(response[0].imagE_NAME);
 
+      }
+      catch(error){
+        console.error('Error fetching product image:', error);
+      }
+    }
+    fetchImage()
+  },[product.producT_ID])
   const handleAddToWishList = async () => {
     if (token) {
       const response = await AddWishList(token, product.producT_ID);
@@ -70,7 +85,7 @@ const AllProductsListCard = ({ product }) => {
         <div className="relative w-full md:w-1/3 h-64">
           <img
             // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
-             src={product.imagE_NAME ? `${API_IMAGE}/${product.imagE_NAME}` : '/placeholder-image.jpg'}
+             src={imageUrl? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
             alt={product.producT_NAME || product.alt}
             className="w-full h-full object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

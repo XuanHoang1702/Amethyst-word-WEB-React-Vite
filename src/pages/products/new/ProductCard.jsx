@@ -62,7 +62,7 @@ const ProductCard = ({ product }) => {
       <div className="relative">
         <img
 
-          src={product.imagE_NAME ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
+          src={imageUrl ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
           alt={product.alt}
           className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${product.producT_ID}`)}
