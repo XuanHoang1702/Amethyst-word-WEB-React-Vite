@@ -181,6 +181,7 @@ const ProductDetail = ({ id }) => {
 
             <p className="text-gray-600 mb-6">{product.producT_DESCRIPTION || product.producT_DETAIL}</p>
             <div className="mb-6">
+              <h3 className='text-xl text-purple-600 font-bold mb-3'>Số lượng: <span className='text-red-600'>{product.producT_QUANTITY}</span></h3>
               <h3 className="text-xl text-purple-600 font-bold mb-3">Chọn màu</h3>
               <div className="flex space-x-3">
                 {colors.map(colorObj => {
@@ -236,7 +237,11 @@ const ProductDetail = ({ id }) => {
                   <Minus size={16} />
                 </button>
                 <span className="px-3 py-2">{quantity}</span>
-                <button className="px-3 py-2" onClick={() => setQuantity(quantity + 1)}>
+                <button 
+                  className="px-3 py-2" 
+                  onClick={() => setQuantity(quantity + 1)}
+                  disabled={quantity >= product.quantitY_TOTAL}
+                >
                   <Plus size={16} />
                 </button>
               </div>
