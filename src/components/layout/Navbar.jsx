@@ -153,6 +153,7 @@ const Navbar = () => {
                 <Link
                   key={index}
                   to={item.menU_LINK}
+                  onClick={() => document.title = `${item.menU_NAME} | AmethystWorld`}
                   className="text-white hover:text-black whitespace-nowrap px-1 transition-all duration-200 hover:scale-105"
                 >
                   {item.menU_NAME}
@@ -219,7 +220,7 @@ const Navbar = () => {
                   <Link
                     key={index}
                     to={item.menU_LINK}
-                    onClick={toggleNavDrawer}
+                    onClick={() => document.title = `${item.menU_NAME} | AmethystWorld`}
                     className="text-gray-800 hover:text-purple-600 text-base"
                   >
                     {item.menU_NAME}
