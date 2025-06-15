@@ -129,7 +129,7 @@ const CategoryList = () => {
                 onClick={() => handleCategoryClick(category.id)}
                 className="flex flex-col items-center p-4 text-center border-r border-b hover:bg-gray-50 transition-colors cursor-pointer transform hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out"
               >
-                <div className="w-16 h-16 mb-2 rounded-full overflow-hidden flex items-center justify-center bg-yellow-100">
+                <div className="w-16 h-16 mb-2 rounded-full overflow-hidden flex items-center justify-center bg-purple-100">
                   <IconComponent className="text-2xl text-gray-700"
                   color={category.color || "#444"} />
                 </div>
