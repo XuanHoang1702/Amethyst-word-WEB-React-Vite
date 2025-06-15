@@ -3,7 +3,6 @@ import React from 'react';
 const ProductSort = ({ sortBy, onSortChange }) => {
   return (
     <div className="hidden md:flex items-center gap-2 text-sm">
-      <span>Showing 1-10 of 100 Products</span>
       <span className="mx-2">|</span>
       <span>Sort by:</span>
       <select 
@@ -11,7 +10,7 @@ const ProductSort = ({ sortBy, onSortChange }) => {
         value={sortBy}
         onChange={(e) => onSortChange(e.target.value)}
       >
-        <option value="default">Mặc định</option>
+        <option value="default">Sắp xếp theo giá tiền </option>
         <option value="price-asc">Giá tiền: Từ thấp đến cao</option>
         <option value="price-desc">Giá tiền: Từ cao đến thấp</option>
       </select>
