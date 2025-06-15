@@ -208,4 +208,20 @@ export const ProductFilter = async(brandId=null, categoryId=null, priceMin=0, pr
     }
 }
 
-
+export const getProductImage = async (productId) =>{
+    try{
+        const response = await axios.get(`${API_URL}/api/Product/GetImage`, {
+            headers:{
+                'Content-Type':'application/json',
+                'ngrok-skip-browser-warning': 'true',
+            },
+            params: {
+                id: productId
+            }
+        })
+        return response.data
+    }
+    catch(error){
+        throw error.response || { message: 'Lỗi kết nối server' }
+    }
+}
