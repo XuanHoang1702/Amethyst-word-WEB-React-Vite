@@ -19,20 +19,51 @@ export const getCart = async (token) => {
     }
 }
 
-export const addToCart = async (token, productId, quantity,colorId, sizeId) => {
+export const addToCart = async (token, productId, quantity, colorId, sizeId) => {
     try {
-        const response = await axios.post(`${API_URL}/api/Cart/Create`, {
-            producT_ID: productId,
-            quantity: quantity,
-            coloR_ID: colorId,
-            sizE_ID: sizeId
-        }, {
+
+        const cartResponse = await axios.get(`${API_URL}/api/Cart/GetList`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'ngrok-skip-browser-warning': 'true',
             },
         });
-        return response.data;
+        const cartItems = cartResponse.data || [];
+        const existingItem = cartItems.find(item =>
+            item.producT_ID === productId &&
+            item.coloR_ID === colorId &&
+            item.sizE_ID === sizeId
+        );
+
+        if (existingItem) {
+            const newQuantity = existingItem.quantity + quantity;
+            const updateResponse = await axios.put(`${API_URL}/api/Cart/UpdateQuantity`, {
+                producT_ID: productId,
+                coloR_ID: colorId,
+                sizE_ID: sizeId,
+                quantity: newQuantity
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            return updateResponse.data;
+        } else {
+            const response = await axios.post(`${API_URL}/api/Cart/Create`, {
+                producT_ID: productId,
+                quantity: quantity,
+                coloR_ID: colorId,
+                sizE_ID: sizeId
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            return response.data;
+        }
     } catch (error) {
         console.error('Error adding to cart:', error);
         throw error;
@@ -58,43 +89,52 @@ export const deleteCart = async (token, productId) => {
     }
 }
 
-export const addToCartNoAuth = (producT_ID, producT_NAME, producT_PRICE, imagE_NAME, coloR_NAME, sizE_NAME, quantity) => {
+export const addToCartNoAuth = (producT_ID, producT_NAME, producT_PRICE, imagE_NAME, coloR_ID, coloR_NAME, sizE_ID, sizE_NAME, quantity, quantitY_TOTAL) => {
     const cart = JSON.parse(localStorage.getItem("cartItem")) || [];
+    let isNewItemAdded = false;
 
     const existingIndex = cart.findIndex(item =>
-        item.producT_ID === producT_ID &&
-        item.producT_NAME === producT_NAME &&
-        item.producT_PRICE == producT_PRICE &&
-        item.coloR_NAME === coloR_NAME &&
-        item.sizE_NAME === sizE_NAME
+        Number(item.producT_ID) === Number(producT_ID) &&
+        Number(item.coloR_ID) === Number(coloR_ID) &&
+        Number(item.sizE_ID) === Number(sizE_ID)
     );
 
     if (existingIndex !== -1) {
-        cart[existingIndex].quantity += quantity;
+        const currentItem = cart[existingIndex];
+        const newQuantity = currentItem.quantity + quantity;
+        cart[existingIndex].quantity = Math.min(newQuantity, currentItem.quantitY_TOTAL || Infinity);
     } else {
         cart.push({
         producT_ID,
         producT_NAME,
         producT_PRICE,
         imagE_NAME,
+        coloR_ID,
         coloR_NAME,
+        sizE_ID,
         sizE_NAME,
-        quantity
+        quantity,
+        quantitY_TOTAL
         });
+        isNewItemAdded = true;
     }
 
     localStorage.setItem("cartItem", JSON.stringify(cart));
+    return isNewItemAdded;
 };
 
-export const removeFromCart = (productId) => {
+export const removeFromCart = (productId, colorId, sizeId) => {
     const cart = JSON.parse(localStorage.getItem('cartItem')) || [];
 
-    const index = cart.findIndex(item => item.producT_ID === Number(productId));
+    const index = cart.findIndex(item => 
+        item.producT_ID === Number(productId) &&
+        item.coloR_ID === colorId &&
+        item.sizE_ID === sizeId
+    );
 
     if (index !== -1) {
         cart.splice(index, 1);
         localStorage.setItem('cartItem', JSON.stringify(cart));
-        console.log('Đã xóa sản phẩm:', productId);
     } else {
         console.warn('Không tìm thấy sản phẩm để xóa:', productId);
     }
