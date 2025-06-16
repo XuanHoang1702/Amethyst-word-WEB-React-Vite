@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaHeart, FaShoppingCart, FaEye, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {formatPrice} from '../../../utils/formatUtils';
-const API_URL = import.meta.env.VITE_API_URL;
+import { getProductImage } from '../../../service/Product.Service';
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 /**
  * Render stars based on rating
  * @param {Object} props
@@ -26,15 +29,28 @@ const renderStars = (rating) => {
     </div>
   );
 };
+
 const ProductRelateCard = ({ product }) => {
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] =useState('')
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await getProductImage(product.producT_ID);
+        setImageUrl(response[0].imagE_NAME);
+      } catch (error) {
+        console.error('Error fetching product image:', error);
+      }
+    };
+  
+    fetchImage();
+  }, [product.producT_ID]);
 
   return (
     <div class="bg-white rounded-lg shadow-md overflow-hidden group">
       <div class="relative">
       <img
-              src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-                      // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+               src={imageUrl ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
             alt={product.alt}
             className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
             onClick={() => navigate(`/details/${product.producT_ID}`)}

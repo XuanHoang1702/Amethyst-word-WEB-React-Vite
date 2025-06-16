@@ -29,6 +29,15 @@ const ProductCard = ({ product }) => {
   const [ imageUrl, setImageUrl ] = useState('');
   const token = localStorage.getItem("token")
 
+  const isNewProduct = () => {
+    if (!product.createDate) return false;
+    const createdDate = new Date(product.createDate);
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - createdDate.getTime();
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+    return daysDifference <= 3;
+  };
+
   const AddToWishList = async () => {
     if (token) {
       const response = await AddWishList(token, product.producT_ID);
@@ -68,7 +77,7 @@ const ProductCard = ({ product }) => {
           onClick={() => navigate(`/details/${product.producT_ID}`)}
         />
 
-        {product.producT_PRICE && (
+        {product.producT_PRICE && isNewProduct() && (
           <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
             MỚI
           </div>
