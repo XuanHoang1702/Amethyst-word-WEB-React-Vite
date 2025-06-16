@@ -161,35 +161,35 @@ const ProductDetail = ({ id }) => {
   return (
     <div className="bg-white">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <div className="flex flex-col md:flex-row">
             <div className="hidden md:flex flex-col space-y-4 mr-6">
-              {selectImage.images.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img.url}
-                  alt={img.altText}
-                  onClick={() => setMainImage(img.url)}
-                  className={`w-32 h-32 object-cover rounded-lg cursor-pointer border ${mainImage === img.url ? 'border-black' : 'border-gray-300'}`}
-                />
-              ))}
-            </div>
-            <div className="bg-gray-100 rounded-lg p-4 flex-1 flex items-center justify-center mb-4 md:mb-0">
-              <img
-               src={mainImage || '/placeholder-image.jpg'}
-                alt="Ảnh sản phẩm chính"
-                className="max-w-full max-h-[700px] object-contain"
-              />
-            </div>
-            <div className="md:hidden flex overflow-x-scroll space-x-4 mb-4">
-            {selectImage?.images?.map((img, idx) => (
-              <img
-                key={idx}
-                src={img.url}
-                alt={img.altText}
-                onClick={() => setMainImage(img.url)}
-                className="w-20 h-20 object-cover rounded-lg border"
-              />
+              {selectImage?.images?.map((img, idx) => (
+        <img
+          key={idx}
+          src={img.url}
+          alt={img.altText}
+          onClick={() => setMainImage(img.url)}
+          className={`w-32 h-32 object-cover rounded-lg cursor-pointer border ${mainImage === img.url ? 'border-black' : 'border-gray-300'}`}
+        />
+      ))}
+    </div>
+    <div className="w-full max-w-[500px] h-auto bg-white rounded-lg overflow-hidden flex items-center justify-center">
+      <img
+        src={mainImage || '/placeholder-image.jpg'}
+        alt="Ảnh sản phẩm chính"
+        className="w-full h-full object-contain"
+      />
+    </div>
+    <div className="md:hidden flex overflow-x-scroll space-x-4 mb-4">
+      {selectImage?.images?.map((img, idx) => (
+        <img
+          key={idx}
+          src={img.url}
+          alt={img.altText}
+          onClick={() => setMainImage(img.url)}
+          className="w-20 h-20 object-cover rounded-lg border"
+        />
             ))}
             </div>
           </div>
@@ -205,7 +205,7 @@ const ProductDetail = ({ id }) => {
                   <span className="text-2xl font-bold text-red-600 mr-3">
                     {formatPrice(calculateDiscountedPrice(product.producT_PRICE, product.discounT_PERCENT))}
                   </span>
-                  <span className="text-xl text-gray-400 line-through mr-3">
+                  <span className="text-2xl text-gray-400 line-through mr-3">
                     {formatPrice(product.producT_PRICE)}
                   </span>
                   <span className="bg-red-100 text-red-600 px-2 py-1 text-sm rounded">
@@ -217,9 +217,9 @@ const ProductDetail = ({ id }) => {
               )}
             </div>
             <p className="text-gray-600 mb-6">{product.producT_DESCRIPTION || product.producT_DETAIL}</p>
-            <h3 className="text-xl text-purple-600 font-bold mb-3">Số lượng: <span className="text-red-600">{product.quantitY_TOTAL}</span></h3>
+            <h3 className="text-2xl text-purple-600 font-bold mb-3">Số lượng: <span className="text-red-600">{product.quantitY_TOTAL}</span></h3>
             <div className="mb-6">
-              <h3 className="text-xl text-purple-600 font-bold mb-3">Chọn màu</h3>
+              <h3 className="text-2xl text-purple-600 font-bold mb-3">Chọn màu</h3>
               <div className="flex space-x-3">
                 {colors.map((color) => {
                   const colorMap = {
@@ -243,7 +243,7 @@ const ProductDetail = ({ id }) => {
               </div>
             </div>
             <div className="mb-6">
-              <h3 className="text-xl text-purple-600 font-bold mb-3">Chọn kích cỡ</h3>
+              <h3 className="text-2xl text-purple-600 font-bold mb-3">Chọn kích cỡ</h3>
               <div className="flex space-x-3">
                 {sizes.map((size) => (
                   <button
@@ -266,17 +266,21 @@ const ProductDetail = ({ id }) => {
                   disabled={quantity >= product.quantitY_TOTAL}
                 ><Plus size={16} /></button>
               </div>
-              <button className="flex bg-gradient-to-r from-[#4b0082] to-[#9966cc] text-white py-2 px-4 rounded-md hover:bg-gray-800" onClick={handleAddToCart}>
+              <button className="flex bg-gradient-to-r from-[#905eb4] to-[#9966cc] text-white py-2 px-4 rounded-md hover:bg-gray-800" onClick={handleAddToCart}>
                 <ShoppingBag size={16} className="mr-2" />
                 Thêm vào giỏ
               </button>
             </div>
           </div>
+          <div className='mt-2 text-start px-3 py-4'>
+          <h3 className="text-2xl text-purple-600 font-bold mb-3">Mô tả sản phẩm </h3>
+          <span className="text-black-300 mb-6">{product.content || product.producT_DETAIL}</span>
+         
+          </div>
         </div>
+       
       </div>
-    <div className='mt-16'>
-      <div className='border-gray'></div>
-    </div>
+ 
     </div>   
   );
 };
