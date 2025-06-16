@@ -131,11 +131,11 @@ const Navbar = () => {
       return menuList.length > 5 ? "text-xs" : "text-sm";
     }
     return "text-xs";
-  }, [windowWidth, menuList.length]);
+  }, [windowWidth, menuList.length]); 
 
   return (
     <>
-      <nav className="bg-gradient-to-r from-[#4b0082] to-[#9966cc] text-white p-3 md:p-4 fixed top-0 left-0 right-0 z-50 shadow-md">
+      <nav className="bg-gradient-to-r from-[#905eb4] to-[#9966cc] text-white p-3 md:p-4 fixed top-0 left-0 right-0 z-50 shadow-md">
         <div className="container mx-auto flex items-center justify-between px-2">
           <div className="flex items-center flex-grow-0 flex-shrink-0">
             <Link to="/" className="flex items-center space-x-1 group">

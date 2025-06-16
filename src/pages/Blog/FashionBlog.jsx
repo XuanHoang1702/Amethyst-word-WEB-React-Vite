@@ -170,7 +170,7 @@ const FashionBlog = () => {
                 Xem tất cả <ChevronRight size={16} />
               </a>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
               {products.map(product => (
                 <BestSellerCard key={product.producT_ID} product={product} />
               ))}

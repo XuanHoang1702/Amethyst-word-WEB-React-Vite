@@ -6,9 +6,42 @@ import BlogHeader from '../../components/layout/BlogHeader';
 import BlogSidebar from '../../components/layout/BlogSideBar';
 import BlogFooter from '../../components/layout/BlogFooters';
 // import { relatedProducts } from '../../service/ProductData';
-import ProductRelateCard from '../products/related/ProductRelateCard';
-import {ProductRelated} from '../../service/Product.Service'
-import img1 from '../../assets/image/sale04.jpg'
+import ProductRelateList from '../products/related/ProductRelateList';
+import {ProductRelated, GetProductDetail} from '../../service/Product.Service'
+import samplePosts from '../../service/BlogService'; 
+
+const fakeFetchPost = (id) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const foundPost = samplePosts.find(p => p.id === parseInt(id));
+      if (foundPost) {
+        const postData = {
+          ...foundPost,
+          subtitle: foundPost.excerpt,
+          content: `
+            <p>${foundPost.excerpt}</p>
+            <p>Đây là nội dung chi tiết hơn cho bài viết "${foundPost.title}". Bạn có thể thêm nhiều đoạn văn, hình ảnh và các yếu tố khác vào đây để làm cho bài viết phong phú hơn.</p>
+            <h2>${foundPost.category}</h2>
+            <p>Khám phá thêm về chủ đề này và những điều thú vị khác.</p>
+            <h3>Tác giả: ${foundPost.author}</h3>
+            <p>Trong thời trang, ${foundPost.author} nổi tiếng với những đóng góp quan trọng và góc nhìn độc đáo. Bài viết này là một minh chứng nữa cho sự am hiểu sâu sắc của họ về các xu hướng hiện tại và tương lai.</p>
+          `,
+          tags: [foundPost.category, 'Thời trang', 'Phong cách', 'Mùa hè', 'Xu hướng'].filter((value, index, self) => self.indexOf(value) === index), 
+          author: {
+            name: foundPost.author,
+            avatar: foundPost.image, 
+            bio: 'Chuyên gia thời trang với nhiều năm kinh nghiệm trong ngành. Thường xuyên đưa ra những phân tích sâu sắc về xu hướng thời trang toàn cầu.'
+          },
+          views: Math.floor(Math.random() * 1000) + 500, 
+        };
+        resolve(postData);
+      } else {
+        reject(new Error('Bài viết không tồn tại'));
+      }
+    }, Math.floor(Math.random() * 1000) + 500); 
+  });
+};
+
 const BlogPostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
@@ -33,48 +66,41 @@ const BlogPostDetail = () => {
       return;
     }
     
-    try {
-      setTimeout(() => {
-
-        const postData = {
-          id: parseInt(id),
-          title: 'Xu hướng thời trang mùa hè 2025: Tươi mới và Bền vững',
-          subtitle: 'Khám phá những phong cách mới nhất cho mùa hè năm nay từ các sàn diễn thời trang hàng đầu',
-          content: `
-            <p>Mùa hè năm 2025 đang đến gần và các nhà thiết kế thời trang hàng đầu đã giới thiệu những bộ sưu tập với nhiều xu hướng mới mẻ và thú vị. Đây là thời điểm để cập nhật tủ đồ của bạn với những phong cách hot nhất.</p>
-            
-            <h2>1. Thời trang bền vững lên ngôi</h2>
-            <p>Không chỉ là một xu hướng tạm thời, thời trang bền vững đang trở thành tiêu chuẩn mới trong ngành công nghiệp thời trang. Các thương hiệu lớn đều đang chuyển hướng sang sử dụng những chất liệu thân thiện với môi trường và quy trình sản xuất có trách nhiệm.</p>
-            <p>Vải tái chế, cotton hữu cơ và các sợi tự nhiên như linen, hemp đang được ưa chuộng hơn bao giờ hết. Không chỉ thân thiện với môi trường, những chất liệu này còn mang lại cảm giác thoáng mát, rất phù hợp cho mùa hè.</p>
-            
-            <!-- Nội dung đầy đủ... -->
-          `,
-          category: 'Xu hướng thời trang',
-          tags: ['Thời trang mùa hè', 'Xu hướng 2025', 'Thời trang bền vững', 'Phong cách'],
-          author: {
-            name: 'Nguyễn Thị Minh',
-            avatar: img1,
-            bio: 'Chuyên gia thời trang với hơn 10 năm kinh nghiệm trong ngành. Thường xuyên đưa ra những phân tích sâu sắc về xu hướng thời trang toàn cầu.'
-          },
-          date: '2025-04-20',
-          image: img1,
-          views: 1254,
-          rating: 4.8,
-          commentCount: 24,
-          relatedProductIds: [101, 102, 103, 104, 105, 106]
-        };
+    const fetchPostData = async () => {
+      try {
+        const postData = await fakeFetchPost(id);
         setPost(postData);
    
         const commentsData = [
         ];
         setComments(commentsData);
+
+        // Fetch related products based on relatedProductIds
+        if (postData.relatedProductIds && postData.relatedProductIds.length > 0) {
+          const fetchedRelatedProducts = await Promise.all(
+            postData.relatedProductIds.map(async (productId) => {
+              try {
+                const productDetail = await GetProductDetail(productId);
+                return productDetail;
+              } catch (productError) {
+                console.error(`Error fetching product detail for ID ${productId}:`, productError);
+                return null;
+              }
+            })
+          );
+          console.log("Fetched related products:", fetchedRelatedProducts);
+          setRelatedProducts(fetchedRelatedProducts.filter(Boolean));
+        }
+        console.log("Related products state after setting:", relatedProducts);
+
+      } catch (err) {
+        setError(err.message || 'Có lỗi xảy ra khi tải dữ liệu bài viết');
+        console.error('Error fetching post data:', err);
+      } finally {
         setIsLoading(false);
-      }, 1000);
-    } catch (err) {
-      setError('Có lỗi xảy ra khi tải dữ liệu bài viết');
-      setIsLoading(false);
-      console.error('Error fetching post data:', err);
-    }
+      }
+    };
+    fetchPostData();
   }, [id]);
 
   
@@ -278,6 +304,13 @@ const BlogPostDetail = () => {
               </div>
             ))}
           </div>
+
+          <h2 className="text-2xl font-semibold mb-4">Sản phẩm liên quan</h2>
+          {relatedProducts.length > 0 && (
+            <ProductRelateList products={relatedProducts} />
+          )}
+
+          <h2 className="text-2xl font-semibold mb-4">Trả lời bình luận</h2>
         </div>
 
         <div className="md:col-span-4">
@@ -297,7 +330,7 @@ const BlogPostDetail = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedProducts.map(product => (
-            <ProductRelateCard key={product.producT_ID} product={product} />
+            <ProductRelateList key={product.producT_ID} product={product} />
         ))}
             </div>
           </div>
