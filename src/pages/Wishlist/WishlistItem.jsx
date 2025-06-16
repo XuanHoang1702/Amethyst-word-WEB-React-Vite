@@ -49,7 +49,7 @@ const WishlistItem = ({ item, OnDelete}) => {
           // src={`${API_URL}/images/${item.imagE_NAME}`}
           src={item.imagE_NAME ? `${API_IMAGE}/${item.imagE_NAME}` : '/placeholder-image.jpg'}
           alt={item.alt}
-          className="w-full h-64 object-cover transition-transform group-hover:scale-105 cursor-pointer"
+          className="w-full h-56 object-cover transition-transform group-hover:scale-105 cursor-pointer"
           onClick={() => navigate(`/details/${item.producT_ID}`)}
         />
         {item.discount && (
@@ -74,9 +74,9 @@ const WishlistItem = ({ item, OnDelete}) => {
             </p>
           )}
         </div>
-        <button className="w-full mt-2 p-4 mr-2 flex items-center justify-center  bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition">
+        {/* <button className="w-full mt-2 p-4 mr-2 flex items-center justify-center  bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition">
          <FaShoppingCart size={25} />
-        </button>
+        </button> */}
       </div>
     </div>
   );

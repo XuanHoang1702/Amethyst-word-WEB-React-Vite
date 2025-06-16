@@ -52,7 +52,7 @@ const Shop = () => {
     pageNumber: parsed.pageNumber ? Number(parsed.pageNumber) : 1,
     pageSize: parsed.pageSize ? Number(parsed.pageSize) : 8,
     priceMin: parsed.priceMin ? Number(parsed.priceMin) : 0,
-    pricaMax: parsed.pricaMax ? Number(parsed.pricaMax) : 9999,
+    pricaMax: parsed.pricaMax ? Number(parsed.pricaMax) : 10000000,
   });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Shop = () => {
       pageNumber: parsed.pageNumber ? Number(parsed.pageNumber) : 1,
       pageSize: parsed.pageSize ? Number(parsed.pageSize) : 8,
       priceMin: parsed.priceMin ? Number(parsed.priceMin) : 0,
-      pricaMax: parsed.pricaMax ? Number(parsed.pricaMax) : 9999,
+      pricaMax: parsed.pricaMax ? Number(parsed.pricaMax) : 10000000,
     });
   }, [location.search]);
 

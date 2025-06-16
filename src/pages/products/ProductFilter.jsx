@@ -15,7 +15,7 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [priceRange, setPriceRange] = useState([
     initialFilters?.priceMin || 0,
-    initialFilters?.pricaMax || 9999,
+    initialFilters?.pricaMax || 10000000,
   ]);
   const [selectedCategories, setSelectedCategories] = useState(initialFilters?.categoryId || []);
   const [selectedBrands, setSelectedBrands] = useState(initialFilters?.brandId || []);
@@ -25,7 +25,7 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
     pageNumber: initialFilters?.pageNumber || 1,
     pageSize: initialFilters?.pageSize || 8,
     priceMin: initialFilters?.priceMin || 0,
-    pricaMax: initialFilters?.pricaMax || 9999,
+    pricaMax: initialFilters?.pricaMax || 10000000,
   });
   const [expandedSections, setExpandedSections] = useState({
     categories: true,
@@ -72,7 +72,7 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
       pageNumber: initialFilters?.pageNumber || 1,
       pageSize: initialFilters?.pageSize || 8,
       priceMin: initialFilters?.priceMin || 0,
-      pricaMax: initialFilters?.pricaMax || 9999,
+      pricaMax: initialFilters?.pricaMax || 10000000,
     };
     setFilters(newFilters);
     setPriceRange([newFilters.priceMin, newFilters.pricaMax]);
@@ -149,12 +149,12 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
       categoryId: [],
       brandId: [],
       priceMin: 0,
-      pricaMax: 9999,
+      pricaMax: 10000000,
       pageNumber: 1,
       pageSize: filters.pageSize,
     };
     setFilters(resetFilters);
-    setPriceRange([0, 9999]);
+    setPriceRange([0, 10000000]);
     setSelectedCategories([]);
     setSelectedBrands([]);
     onFilterChange(resetFilters);
@@ -245,7 +245,7 @@ const ProductFilters = ({ onFilterChange, initialFilters }) => {
                 onChange={handlePriceChange}
                 valueLabelDisplay="auto"
                 min={0}
-                max={9999}
+                max={10000000}
                 step={100}
                 sx={{ color: "#c034eb" }}
                 valueLabelFormat={(value) => `${value.toLocaleString()}₫`}
@@ -289,7 +289,7 @@ ProductFilters.defaultProps = {
     pageNumber: 1,
     pageSize: 8,
     priceMin: 0,
-    pricaMax: 9999,
+    pricaMax: 10000000,
   },
 };
 

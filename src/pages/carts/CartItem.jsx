@@ -25,16 +25,24 @@ const CartItem = ({ product }) => {
   const { updateCartCount, updateQuantity } = useCart();
   const token = localStorage.getItem('token');
   
+  const stock = Number(
+    product.totaL_QUANTITY ?? product.quantity_total ?? product.quantitY_TOTAL ?? product.stock ?? 0
+  );
+
   const increaseQuantity = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    updateQuantity(product.producT_ID, newQuantity);
+    if (quantity < stock) {
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
+      updateQuantity(product.producT_ID, newQuantity, product.coloR_ID, product.sizE_ID);
+    }
   };
+
+  // Fix: disable button when quantity >= stock
 
   const decreaseQuantity = () => {
     const newQuantity = quantity > 1 ? quantity - 1 : 1;
     setQuantity(newQuantity);
-    updateQuantity(product.producT_ID, newQuantity);
+    updateQuantity(product.producT_ID, newQuantity, product.coloR_ID, product.sizE_ID);
   };
 
   
@@ -42,7 +50,7 @@ const CartItem = ({ product }) => {
   const handleDelete = async () => {
     try {
       if (!token) {
-        removeFromCart(product.producT_ID);
+        removeFromCart(product.producT_ID, product.coloR_ID, product.sizE_ID);
         toast.success('Xóa sản phẩm thành công');
         await updateCartCount();
         setTimeout(() => {
@@ -97,6 +105,7 @@ const CartItem = ({ product }) => {
             <button
               className="border rounded px-2 py-1 text-xl font-medium"
               onClick={increaseQuantity}
+              disabled={quantity >= stock}
             >
               +
             </button>

@@ -10,7 +10,7 @@ export default function ProfileTab({ user }) {
     housE_NUMBER: '',
     street: '',
     city: '',
-    postaL_CODE: '',
+    postal_CODE: '',
     country: '',
     typE_ADDRESS: ''
   })
@@ -19,7 +19,9 @@ export default function ProfileTab({ user }) {
     fullName: `${user?.USER_FIRST_NAME || ''} ${user?.USER_LAST_NAME || ''}`.trim(),
     email: user?.USER_EMAIL || '',
     phone: user?.USER_PHONE || '',
+    selectedAddressId: null,
   });
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -29,11 +31,25 @@ export default function ProfileTab({ user }) {
     try {
       if (token === null) {
         setAddress([]);
+        setSelectedAddress(null);
         return;
       } else {
         const userInfo = await GetAddress(token);
         console.log(userInfo);
         setAddress(userInfo);
+        if(userInfo && userInfo.length > 0){
+          setSelectedAddress(userInfo[0]);
+          setFormData(prev => ({
+            ...prev,
+            selectedAddressId: userInfo[0].id || userInfo[0].USER_ADDRESS_ID
+          }));
+        } else {
+          setSelectedAddress(null);
+          setFormData(prev => ({
+            ...prev,
+            selectedAddressId: null
+          }));
+        }
       }
     } catch (error) {
       console.error("Error fetching address:", error);
@@ -138,6 +154,9 @@ export default function ProfileTab({ user }) {
       {
         setIsEditing(false);
         setSuccessMessage('Cập nhật thông tin thành công');
+        // Cập nhật selectedAddress theo selectedAddressId
+        const selected = address.find(item => (item.id || item.USER_ADDRESS_ID) === formData.selectedAddressId);
+        setSelectedAddress(selected || null);
       }
       else{
         setError('Lỗi cập nhật thông tin');
@@ -151,18 +170,25 @@ export default function ProfileTab({ user }) {
 
   const handleSaveAddressClick = async()=> {
     try{
-      const response = await createAddress(newAddress);
+      const response = await createAddress(token, newAddress);
       setSuccessMessage('Tạo địa điểm thành công');
       setIsAddingAddress(false);
       setNewAddress({
         housE_NUMBER: '',
         street: '',
         city: '',
-        postaL_CODE: '',
+        postal_CODE: '',
         country: '',
         typE_ADDRESS: ''
       })
-      fetchAddress();
+      // Cập nhật selectedAddress và formData.selectedAddressId ngay sau khi tạo địa chỉ mới
+      setSelectedAddress(response);
+      setFormData(prev => ({
+        ...prev,
+        selectedAddressId: response.id || response.USER_ADDRESS_ID
+      }));
+      // Bỏ fetchAddress để tránh ghi đè selectedAddress
+      // fetchAddress();
     }
     catch(error){
       setError('Lỗi lưu thông tin');
@@ -259,14 +285,39 @@ export default function ProfileTab({ user }) {
 
               <div>
                 <label className="block text-sm font-medium text-slate-500 mb-1">Địa chỉ</label>
+              {!isEditing ? (
                 <div className="flex items-center">
                   <MapPin size={16} className="text-slate-400 mr-2" />
-                  {address.map((item, index) => (
-                    <p key={index}>
-                      {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
+                  {selectedAddress ? (
+                    <p>
+                      {selectedAddress.typE_ADDRESS}: {selectedAddress.housE_NUMBER}, {selectedAddress.street}, {selectedAddress.city}, {selectedAddress.country} ({selectedAddress.postaL_CODE})
                     </p>
-                  ))}
+                  ) : (
+                    <p>Chưa có địa chỉ</p>
+                  )}
                 </div>
+              ) : (
+                <select
+                  className="border border-slate-300 rounded px-3 py-2 w-full"
+                  value={formData.selectedAddressId || ''}
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    setFormData(prev => ({
+                      ...prev,
+                      selectedAddressId: selectedId
+                    }));
+                    const selected = address.find(item => (item.id || item.USER_ADDRESS_ID) === selectedId);
+                    setSelectedAddress(selected || null);
+                  }}
+                >
+                  <option value="" disabled>Chọn địa chỉ</option>
+                  {address.map((item) => (
+                    <option key={item.id || item.USER_ADDRESS_ID} value={item.id || item.USER_ADDRESS_ID}>
+                      {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
+                    </option>
+                  ))}
+                </select>
+              )}
               </div>
             </div>
           </div>
@@ -275,35 +326,37 @@ export default function ProfileTab({ user }) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="p-6 flex justify-between items-center border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-800">Địa chỉ giao hàng</h2>
-          <button onClick={()=>setIsAddingAddress(true)} className="flex items-center text-indigo-600 hover:text-indigo-700 text-sm font-medium">
-            <span className="text-lg mr-1">+</span>
-            <span>Thêm địa chỉ</span>
-          </button>
-        </div>
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="p-6 flex justify-between items-center border-b border-slate-100">
+              <h2 className="text-lg font-semibold text-slate-800">Địa chỉ giao hàng</h2>
+              <button onClick={()=>setIsAddingAddress(true)} className="flex items-center text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                <span className="text-lg mr-1">+</span>
+                <span>Thêm địa chỉ</span>
+              </button>
+            </div>
 
         <div className="p-6">
-          <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 hover:border-indigo-300 transition cursor-pointer">
-            <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center">
-                <span className="inline-block px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-medium mr-2">
-                  Mặc định
-                </span>
-                <p className="font-medium text-slate-800">{formData.fullName}</p>
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 hover:border-indigo-300 transition cursor-pointer">
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex items-center">
+                  <span className="inline-block px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-medium mr-2">
+                    Mặc định
+                  </span>
+                  <p className="font-medium text-slate-800">{formData.fullName}</p>
+                </div>
+                {/* Bỏ nút chỉnh sửa */}
               </div>
-              <button className="text-indigo-600 hover:text-indigo-700 text-sm">Chỉnh sửa</button>
+              <p className="text-slate-600 text-sm mb-1">{user?.USER_PHONE || ''}</p>
+              <div className="text-slate-600 text-sm">
+                {selectedAddress ? (
+                  <p>
+                    {selectedAddress.typE_ADDRESS}: {selectedAddress.housE_NUMBER}, {selectedAddress.street}, {selectedAddress.city}, {selectedAddress.country} ({selectedAddress.postaL_CODE})
+                  </p>
+                ) : (
+                  <p>Chưa có địa chỉ</p>
+                )}
+              </div>
             </div>
-            <p className="text-slate-600 text-sm mb-1">{user?.USER_PHONE || ''}</p>
-            <div className="text-slate-600 text-sm">
-              {address.map((item, index) => (
-                <p key={index}>
-                  {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
-                </p>
-              ))}
-            </div>
-          </div>
         </div>
         {isAddingAddress && (
           <div className='p-6 mt-4 bg-slate-100 rounded-lg border border-slate-300'>
