@@ -1,5 +1,3 @@
-
-
 import { Minus, Plus, ShoppingBag, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -119,16 +117,27 @@ const ProductDetail = ({ id }) => {
       }
 
       if (!token) {
-        addToCartNoAuth(
+        // Lấy tên ảnh đầu tiên (ảnh chính) từ selectImage.images[0].url
+        const mainImageName = selectImage?.images?.[0]?.url?.split('/').pop() || product.imagE_NAME;
+
+        const isNewItem = addToCartNoAuth(
           product.producT_ID,
           product.producT_NAME,
           product.producT_PRICE,
-          product.imagE_NAME,
+          mainImageName,
+          selectedColor.id,
           selectedColor.coloR_NAME,
+          selectedSize.id,
           selectedSize.sizE_NAME,
-          quantity
+          quantity,
+          product.quantitY_TOTAL
         );
-        toast.success('Thêm sản phẩm vào giỏ hàng thành công');
+        if (isNewItem) {
+          toast.success('Thêm sản phẩm vào giỏ hàng thành công');
+        } else {
+          toast.error('Sản phẩm đã tồn tại trong giỏ hàng, số lượng đã được cập nhật.');
+        }
+        
         updateCartCount();
         return;
       }
@@ -257,7 +266,7 @@ const ProductDetail = ({ id }) => {
                   disabled={quantity >= product.quantitY_TOTAL}
                 ><Plus size={16} /></button>
               </div>
-              <button className="flex bg-[#6666e5] text-white py-2 px-4 rounded-md hover:bg-gray-800" onClick={handleAddToCart}>
+              <button className="flex bg-gradient-to-r from-[#4b0082] to-[#9966cc] text-white py-2 px-4 rounded-md hover:bg-gray-800" onClick={handleAddToCart}>
                 <ShoppingBag size={16} className="mr-2" />
                 Thêm vào giỏ
               </button>
@@ -265,7 +274,10 @@ const ProductDetail = ({ id }) => {
           </div>
         </div>
       </div>
+    <div className='mt-16'>
+      <div className='border-gray'></div>
     </div>
+    </div>   
   );
 };
 

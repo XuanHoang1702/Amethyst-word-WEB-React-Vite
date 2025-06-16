@@ -15,7 +15,7 @@ export const CartProvider = ({children}) => {
         if (!token) {
             const localCart = JSON.parse(localStorage.getItem('cartItem')) || [];
             setCartItems(localCart);
-            setCartCount(localCart.reduce((sum, item) => sum + item.quantity, 0));
+            setCartCount(localCart.length);
             return;
         }
 
@@ -39,14 +39,17 @@ export const CartProvider = ({children}) => {
         }
     };
 
-    const updateQuantity = (productId, quantity) => {
+    const updateQuantity = (productId, newQuantity, colorId, sizeId) => {
         setCartItems(prevItems => {
-            return prevItems.map(item => {
-                if(item.producT_ID === productId) {
-                    return {...item, quantity: quantity};
+            // Cập nhật localStorage ngay lập tức
+            const updatedCartItems = prevItems.map(item => {
+                if (item.producT_ID === productId && item.coloR_ID === colorId && item.sizE_ID === sizeId) {
+                    return { ...item, quantity: newQuantity };
                 }
                 return item;
             });
+            localStorage.setItem('cartItem', JSON.stringify(updatedCartItems));
+            return updatedCartItems;
         });
     };
 
