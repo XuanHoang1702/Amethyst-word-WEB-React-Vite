@@ -1,15 +1,13 @@
 
-import { ArrowRight, Check, CheckCircle, ChevronLeft, ChevronRight, Clock, Copy, CreditCard, Home, ShoppingBag, Truck, Wallet } from 'lucide-react';
+import { Check, CheckCircle, ChevronLeft, ChevronRight, Clock, CreditCard, Home, ShoppingBag, Truck, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCart } from '../../context/CartContext';
-import { MapPin } from "lucide-react";
-import { getCart } from '../../service/Cart.Service';
-import { CreateOrder, GetStatus } from '../../service/Order.Service';
+import { CreateOrder } from '../../service/Order.Service';
+import { CreateOrderDetail } from '../../service/OrderDetail.Service';
 import { GetAddress, GetInformation } from '../../service/User.Service';
 import WebSocketService from '../../service/WebSocket.Service';
-import { CreateOrderDetail } from '../../service/OrderDetail.Service';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
@@ -367,23 +365,25 @@ export default function FashionCheckout() {
         return;
       }
       const data = {
-        addresS_ID: address[0].id,
-        totaL_QUANTITY: totalQuantity,
-        totaL_PRICE: totalPrice + shipPrice,
-        note: shippingMethod,
-        ordeR_STATUS: 1,
+        ADDRESS_ID: address[0].id,
+        TOTAL_QUANTITY: totalQuantity,
+        TOTAL_PRICE: totalPrice + shipPrice,
+        NOTE: shippingMethod,
+        ORDER_STATUS: 1,
       };
       const response = await CreateOrder(token, data);
       const createdOrderId = response.result;
       setOrderId(createdOrderId);
+
       const transformedCartItems = cartItems.map(item => ({
-        producT_ID: item.producT_ID,
-        quantity: item.quantity,
-        producT_PRICE: item.producT_PRICE,
-        coloR_ID: item.coloR_ID,
-        sizE_ID: item.sizE_ID,
-        subtotal: item.producT_PRICE * item.quantity
+        PRODUCT_ID: item.producT_ID,
+        QUANTITY: item.quantity,
+        PRODUCT_PRICE: item.producT_PRICE,
+        COLOR_ID: item.coloR_ID,
+        SIZE_ID: item.sizE_ID,
+        SUBTOTAL: item.producT_PRICE * item.quantity
       }));
+
       await CreateOrderDetail(createdOrderId, transformedCartItems);
       setCurrentStep(3);
       toast.success("Đơn hàng đã được tạo thành công!");
@@ -397,13 +397,6 @@ export default function FashionCheckout() {
     fetchUserData();
     fetchAddress();
   }, []);
-
-  const bankInfo = {
-    bankName: "BIDV",
-    accountNumber: "6150889954",
-    accountName: "Trần Xuân Hoàng",
-    amount: "1,100,000 VND"
-  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
