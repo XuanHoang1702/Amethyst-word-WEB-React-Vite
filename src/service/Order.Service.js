@@ -2,7 +2,6 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL
 
 export const CreateOrder = async (token, input) => {
-    console.log('Creating order with input:', input);
     try {
         const response = await axios.post(`${API_URL}/api/Order/CreateOrder`, input, {
             headers: {
