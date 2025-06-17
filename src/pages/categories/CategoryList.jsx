@@ -67,7 +67,7 @@ const CategoryList = () => {
 
   // Auto-scroll giống BrandLogos
   useEffect(() => {
-    const scrollSpeed = 0.5;
+    const scrollSpeed = -0.5;
 
     const step = () => {
       if (containerRef.current) {
