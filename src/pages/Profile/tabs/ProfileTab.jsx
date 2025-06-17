@@ -35,7 +35,6 @@ export default function ProfileTab({ user }) {
         return;
       } else {
         const userInfo = await GetAddress(token);
-        console.log(userInfo);
         setAddress(userInfo);
         if(userInfo && userInfo.length > 0){
           setSelectedAddress(userInfo[0]);
@@ -181,14 +180,12 @@ export default function ProfileTab({ user }) {
         country: '',
         typE_ADDRESS: ''
       })
-      // Cập nhật selectedAddress và formData.selectedAddressId ngay sau khi tạo địa chỉ mới
       setSelectedAddress(response);
       setFormData(prev => ({
         ...prev,
         selectedAddressId: response.id || response.USER_ADDRESS_ID
       }));
-      // Bỏ fetchAddress để tránh ghi đè selectedAddress
-      // fetchAddress();
+
     }
     catch(error){
       setError('Lỗi lưu thông tin');

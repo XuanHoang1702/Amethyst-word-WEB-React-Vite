@@ -1,48 +1,20 @@
-import { useState } from 'react';
-import { Star, ChevronDown, Send } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getReview } from '../../service/Review.Service';
 
-// Dữ liệu đánh giá cố định
-const reviewsData = [
-  {
-    id: 1,
-    name: 'Samantha D.',
-    rating: 5,
-    date: '14 tháng 8, 2023',
-    comment: 'Áo thun này rất sáng! Thiết kế độc đáo và vải rất thoải mái.',
-    verified: true
-  },
-  {
-    id: 2,
-    name: 'Alex M.',
-    rating: 4,
-    date: '15 tháng 8, 2023',
-    comment: 'Áo thun này vượt qua mong đợi của tôi! Màu sắc rực rỡ.',
-    verified: true
-  },
-  // Thêm các review khác nếu cần
-];
-
-export default function ProductReviews() {
-  // State cho lọc và phân trang
+const ProductReviews= ({product})=>{
   const [filterRating, setFilterRating] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [reviewsData, setReviewsData] = useState([]);
   const reviewsPerPage = 5;
 
-  // State cho form review mới
-  const [newReview, setNewReview] = useState({
-    name: '',
-    rating: 0,
-    comment: ''
-  });
 
-  // Lọc và phân trang reviews
   const filteredReviews = filterRating > 0 
     ? reviewsData.filter(review => review.rating === filterRating)
     : reviewsData;
 
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = filteredReviews.slice(indexOfFirstReview, indexOfLastReview);
   const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
 
   // Hàm render sao đơn giản
@@ -55,13 +27,18 @@ export default function ProductReviews() {
       />
     ));
   };
+  useEffect(()=>{
+    const fetchReview = async () => {
+      try {
+        const data = await getReview(product);
+        setReviewsData(data);
+      } catch (error) {
+        console.error("Lỗi khi tải đánh giá:", error);
+      }
+    }
+    fetchReview();
+  },[])
 
-  // Xử lý submit review mới
-  const handleSubmitReview = (e) => {
-    e.preventDefault();
-    alert(`Đã gửi đánh giá từ ${newReview.name} (${newReview.rating} sao)`);
-    setNewReview({ name: '', rating: 0, comment: '' });
-  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
@@ -90,7 +67,7 @@ export default function ProductReviews() {
       </div>
 
       {/* Form review đơn giản */}
-      <div className="bg-gray-50 p-4 rounded-lg mb-6">
+      {/* <div className="bg-gray-50 p-4 rounded-lg mb-6">
         <h3 className="font-medium mb-3">Viết đánh giá của bạn</h3>
         <form onSubmit={handleSubmitReview}>
           <input
@@ -134,12 +111,12 @@ export default function ProductReviews() {
             Gửi đánh giá
           </button>
         </form>
-      </div>
+      </div> */}
 
       {/* Danh sách reviews */}
       <div className="space-y-4">
-        {currentReviews.length > 0 ? (
-          currentReviews.map((review) => (
+        {reviewsData.length > 0 ? (
+          reviewsData.map((review) => (
             <div key={review.id} className="border-b pb-4">
               <div className="flex justify-between">
                 <div>
@@ -190,3 +167,4 @@ export default function ProductReviews() {
     </div>
   );
 }
+export default ProductReviews;
