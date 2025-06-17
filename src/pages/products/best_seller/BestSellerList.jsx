@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-import BestSellerCard from './BestSellerCard';
 import { ProductBestSeller } from '../../../service/Product.Service';
+import BestSellerCard from './BestSellerCard';
 
 const BestSellerList = () => {
     const [products, setProducts] = useState([]);
