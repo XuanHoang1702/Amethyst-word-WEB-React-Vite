@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { FaEnvelope, FaFacebookF, FaHeadset, FaInstagram, FaMapMarkerAlt, FaPhone, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { FaEnvelope, FaFacebookF, FaHeadset, FaInstagram, FaMapMarkerAlt, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { MenuNavBarService } from '../../service/MenuNavBar.Service';
 const Footer = () => {
@@ -66,6 +65,14 @@ const Footer = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+                  <div>
+                        <h3 className="font-bold mb-4">THÔNG TIN LIÊN HỆ</h3>
+                        <div className="text-white">
+                        <p className="flex items-start"><FaMapMarkerAlt className=" mr-2 mt-1"/> ĐỊA CHỈ: {contactInfo.address}</p>
+                            <p className="flex items-center"><FaEnvelope className="mr-2" /> EMAIL: {contactInfo.email}</p>
+                            <p className="flex items-center"><FaHeadset className="mr-2" /> HOTLINE: {contactInfo.hotline}</p>
+                        </div>
+                    </div>
                     <div>
                         <h3 className="font-bold mb-4">VỀ CHÚNG TÔI</h3>
                         <p className="text-white">
@@ -91,14 +98,7 @@ const Footer = () => {
                             Nếu cần hỗ trợ, vui lòng liên hệ đội ngũ chăm sóc khách hàng của chúng tôi. Chúng tôi luôn sẵn sàng giúp bạn giải đáp mọi thắc mắc hoặc vấn đề.
                         </p>
                     </div>
-                    <div>
-                        <h3 className="font-bold mb-4">THÔNG TIN LIÊN HỆ</h3>
-                        <div className="text-white">
-                        <p className="flex items-start"><FaMapMarkerAlt className=" mr-2 mt-1"/> ĐỊA CHỈ: {contactInfo.address}</p>
-                            <p className="flex items-center"><FaEnvelope className="mr-2" /> EMAIL: {contactInfo.email}</p>
-                            <p className="flex items-center"><FaHeadset className="mr-2" /> HOTLINE: {contactInfo.hotline}</p>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div className="border-t border-gray-700 mt-8 pt-4 text-center">
                     <p className="text-white">© 2025 Nhóm 1: Đồ án Reactjs + ASP.NET</p>

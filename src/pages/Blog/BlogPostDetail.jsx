@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, MessageCircle, Share2, Facebook, Twitter, Instagram, Mail, Copy, User, Calendar, Tag, Heart, ShoppingBag, Clock, ChevronRight } from 'lucide-react';
-import { FaArrowRight } from 'react-icons/fa';
+import { ArrowLeft, Calendar, Clock, Copy, Facebook, Heart, Instagram, Mail, Share2, Star, Tag, Twitter, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import BlogFooter from '../../components/layout/BlogFooters';
 import BlogHeader from '../../components/layout/BlogHeader';
 import BlogSidebar from '../../components/layout/BlogSideBar';
-import BlogFooter from '../../components/layout/BlogFooters';
 // import { relatedProducts } from '../../service/ProductData';
-import ProductRelateList from '../products/related/ProductRelateList';
-import {ProductRelated, GetProductDetail} from '../../service/Product.Service'
-import samplePosts from '../../service/BlogService'; 
-
+import samplePosts from '../../service/BlogService';
+import ProductBestSellerList from '../products/best_seller/BestSellerList';
 const fakeFetchPost = (id) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -46,7 +43,7 @@ const BlogPostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-    const [relatedProducts, setRelatedProducts] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState({ name: '', email: '', content: '' });
   const [rating, setRating] = useState(0);
@@ -57,7 +54,7 @@ const BlogPostDetail = () => {
   const [linkCopied, setLinkCopied] = useState(false);
   const [error, setError] = useState(null);
   useEffect(() => {
- 
+
     setIsLoading(true);
     setError(null);
     if (!id) {
@@ -73,25 +70,7 @@ const BlogPostDetail = () => {
    
         const commentsData = [
         ];
-        setComments(commentsData);
-
-        // Fetch related products based on relatedProductIds
-        if (postData.relatedProductIds && postData.relatedProductIds.length > 0) {
-          const fetchedRelatedProducts = await Promise.all(
-            postData.relatedProductIds.map(async (productId) => {
-              try {
-                const productDetail = await GetProductDetail(productId);
-                return productDetail;
-              } catch (productError) {
-                console.error(`Error fetching product detail for ID ${productId}:`, productError);
-                return null;
-              }
-            })
-          );
-          console.log("Fetched related products:", fetchedRelatedProducts);
-          setRelatedProducts(fetchedRelatedProducts.filter(Boolean));
-        }
-        console.log("Related products state after setting:", relatedProducts);
+        setComments(commentsData)
 
       } catch (err) {
         setError(err.message || 'Có lỗi xảy ra khi tải dữ liệu bài viết');
@@ -108,7 +87,6 @@ const BlogPostDetail = () => {
   if (isLoading) {
     return (
       <div>
-        <BlogHeader />
         <div className="container mx-auto px-4 py-16 flex justify-center items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
@@ -304,13 +282,6 @@ const BlogPostDetail = () => {
               </div>
             ))}
           </div>
-
-          <h2 className="text-2xl font-semibold mb-4">Sản phẩm liên quan</h2>
-          {relatedProducts.length > 0 && (
-            <ProductRelateList products={relatedProducts} />
-          )}
-
-          <h2 className="text-2xl font-semibold mb-4">Trả lời bình luận</h2>
         </div>
 
         <div className="md:col-span-4">
@@ -323,15 +294,10 @@ const BlogPostDetail = () => {
  <div className="bg-gray-100 py-12">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-bold">Sản Phẩm Nổi Bật</h2>
-              <a href="/shop" className="flex items-center text-blue-500 hover:underline">
-                Xem tất cả <ChevronRight size={16} />
-              </a>
+              
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedProducts.map(product => (
-            <ProductRelateList key={product.producT_ID} product={product} />
-        ))}
+            <div className="">
+              <ProductBestSellerList />
             </div>
           </div>
         </div>

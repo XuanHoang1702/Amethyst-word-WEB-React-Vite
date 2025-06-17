@@ -1,13 +1,13 @@
+import { FaArrowRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import Banner from '../../components/layout/Banner';
+import samplePosts from '../../service/BlogService';
+import BlogPostCard from '../Blog/BlogPostCard';
 import BrandLogos from '../brand/BrandLogo';
 import CategoryList from '../categories/CategoryList';
 import { ProductList } from '../products';
 import BestSellerList from '../products/best_seller/BestSellerList';
 import SaleList from '../products/sale/SaleList';
-import samplePosts from '../../service/BlogService'
-import { Link } from 'react-router-dom';
-import { FaArrowRight } from 'react-icons/fa';
-import BlogPostCard from '../Blog/BlogPostCard';
 const Home = () => {
   return (
     <div className="justify-center items-center max-w-full mx-auto">
@@ -15,7 +15,7 @@ const Home = () => {
         <Banner />
       </div>
       {/* <div className="w-full my-10 px-[90px]"> */}
-      <div className="w-full my-10">
+      <div className="w-full my-10 px-[90px]">
         <CategoryList />
         <div className="justify-center items-center ">
           <BrandLogos />
