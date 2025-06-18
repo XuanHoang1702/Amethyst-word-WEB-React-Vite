@@ -163,14 +163,14 @@ const ProductDetail = ({ id }) => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <div className="flex flex-col md:flex-row">
-            <div className="hidden md:flex flex-col space-y-4 mr-6">
+            <div className="hidden md:flex flex-col space-y-2 mr-6">
               {selectImage?.images?.map((img, idx) => (
         <img
           key={idx}
           src={img.url}
           alt={img.altText}
           onClick={() => setMainImage(img.url)}
-          className={`w-32 h-32 object-cover rounded-lg cursor-pointer border ${mainImage === img.url ? 'border-black' : 'border-gray-300'}`}
+          className={`w-40 h-40 object-cover rounded-lg cursor-pointer border ${mainImage === img.url ? 'border-black' : 'border-gray-300'}`}
         />
       ))}
     </div>
@@ -221,26 +221,26 @@ const ProductDetail = ({ id }) => {
             <div className="mb-6">
               <h3 className="text-2xl text-purple-600 font-bold mb-3">Chọn màu</h3>
               <div className="flex space-x-3">
-                {colors.map((color) => {
-                  const colorMap = {
-                    'Đen': '#000000', 'Trắng': '#FFFFFF', 'Đỏ': '#FF0000', 'Xanh dương': '#0000FF',
-                    'Tím': '#800080', 'Xám': '#A9A9A9', 'Nâu': '#D2691E', 'Hồng': '#FFC0CB',
-                    'Xanh lá': '#008000', 'Vàng': '#FFFF00', 'Vàng chuẩn': "#FFFF00",
-                  };
-                  const colorCode = colorMap[color.coloR_NAME] || '#ccc';
-                  return (
-                    <button
-                      key={color.id}
-                      className={`w-8 h-8 rounded-full border-2 ${selectedColor?.id === color.id ? 'border-blue-500' : 'border-gray-300'}`}
-                      style={{ backgroundColor: colorCode }}
-                      onClick={() => setSelectedColor(color)}
-                      title={color.coloR_NAME}
-                    >
-                      {colorCode === '#FFFFFF' && <div className="w-full h-full rounded-full border border-gray-300"></div>}
-                    </button>
-                  );
-                })}
-              </div>
+  {colors.map((color) => {
+    const colorCode = color.coloR_NAME || '#ccc'; // Giờ coloR_NAME đã là mã Hex
+    return (
+      <button
+        key={color.id}
+        className={`w-8 h-8 rounded-full border-2 ${
+          selectedColor?.id === color.id ? 'border-blue-500' : 'border-gray-300'
+        }`}
+        style={{ backgroundColor: colorCode }}
+        onClick={() => setSelectedColor(color)}
+        title={colorCode}
+      >
+        {colorCode === '#FFFFFF' && (
+          <div className="w-full h-full rounded-full border border-gray-300"></div>
+        )}
+      </button>
+    );
+  })}
+</div>
+
             </div>
             <div className="mb-6">
               <h3 className="text-2xl text-purple-600 font-bold mb-3">Chọn kích cỡ</h3>
@@ -275,13 +275,10 @@ const ProductDetail = ({ id }) => {
           <div className='mt-2 text-start px-3 py-4'>
           <h3 className="text-2xl text-purple-600 font-bold mb-3">Mô tả sản phẩm </h3>
           <span className="text-black-300 mb-6">{product.content || product.producT_DETAIL}</span>
-         
           </div>
         </div>
-       
       </div>
- 
-    </div>   
+    </div>
   );
 };
 

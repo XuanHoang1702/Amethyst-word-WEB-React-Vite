@@ -1,19 +1,18 @@
 
-import React, { useState, useEffect, useMemo , useRef} from 'react';
-import { Search, ChevronRight } from 'lucide-react';
-import BlogCategoryFilter from './BlogCategoryFilter';
-import BlogPostCard from './BlogPostCard';
+import { ChevronRight, Search } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import BlogSidebar from '../../components/layout/BlogSideBar';
-import BlogNewsletterSignup from './BlogNewsletterSignup';
-import BestSellerCard from '../products/best_seller/BestSellerCard';
 import FashionPagination from '../../components/panigation/Panigation';
+import BestSellerCard from '../products/best_seller/BestSellerCard';
+import BlogCategoryFilter from './BlogCategoryFilter';
+import BlogNewsletterSignup from './BlogNewsletterSignup';
+import BlogPostCard from './BlogPostCard';
 
 // import { bestsellerProducts } from '../../service/ProductData';
 import samplePosts from '../../service/BlogService';
 // import { relatedProducts } from '../../service/ProductData';
-import bg2 from '../../assets/image/360_F_597940292_dmaVD664ccNHMDJqi0Wv0SCSexklLyhO.jpg'
+import bg2 from '../../assets/image/360_F_597940292_dmaVD664ccNHMDJqi0Wv0SCSexklLyhO.jpg';
 
-import ScrollToTop from '../../utils/ScrollToTop';
 import { ProductBestSeller } from '../../service/Product.Service';
 const FashionBlog = () => {
   const [posts, setPosts] = useState([]);
@@ -34,8 +33,7 @@ const FashionBlog = () => {
   const blogRef = useRef(null);
       const fecthProducts = async () => {
           try {
-              const response = await ProductBestSeller(12);
-              console.log('Best seller: ', response);
+              const response = await ProductBestSeller(10);
               setProducts(response);
           } catch (error) {
               console.error('Error fetching products:', error);

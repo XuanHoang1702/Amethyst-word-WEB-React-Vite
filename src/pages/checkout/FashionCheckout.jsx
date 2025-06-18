@@ -9,6 +9,7 @@ import { CreateOrderDetail } from '../../service/OrderDetail.Service';
 import { GetAddress, GetInformation } from '../../service/User.Service';
 import WebSocketService from '../../service/WebSocket.Service';
 const API_URL = import.meta.env.VITE_API_URL;
+const IMAGE_URL = import.meta.env.VITE_API_IMAGE;
 
 const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
   const [provinces, setProvinces] = useState([]);
@@ -432,7 +433,7 @@ export default function FashionCheckout() {
         <div className="space-y-4 mb-6 max-h-[320px] overflow-y-auto pr-2">
           {cartItems.filter(item => selectedItems.includes(item.producT_ID)).map(item => (
             <div key={item.id} className="flex space-x-4">
-              <img src={item.imagE_NAME ? `${API_URL}/images/${item.imagE_NAME}` : '/placeholder-image.jpg'} className="w-16 h-20 object-cover rounded" />
+              <img src={item.imagE_NAME ? `${IMAGE_URL}/${item.imagE_NAME}` : '/placeholder-image.jpg'} className="w-16 h-20 object-cover rounded" />
               <div className="flex-1">
                 <h4 className="font-medium text-gray-800">{item.producT_NAME}</h4>
                 <div className="text-sm text-gray-500">
@@ -582,14 +583,6 @@ export default function FashionCheckout() {
             </div>
           </div>
         </div>
-        {/* <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-          <div className="flex items-start">
-            <input type="checkbox" id="terms" className="mt-1 mr-3" />
-            <label htmlFor="terms" className="text-gray-600 text-sm">
-              Tôi đã đọc và đồng ý với <a href="#" className="text-black underline">Điều khoản dịch vụ</a> và <a href="#" className="text-black underline">Chính sách bảo mật</a> của cửa hàng.
-            </label>
-          </div>
-        </div> */}
         <div className="flex justify-between mt-6">
           <button
             onClick={() => setCurrentStep(2)}

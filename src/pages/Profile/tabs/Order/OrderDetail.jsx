@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetOrderDetail } from '../../../../service/OrderDetail.Service';
 const API_URL = import.meta.env.VITE_API_URL;
-
+const API_IMAGE = import.meta.env.VITE_API_IMAGE
 const OrderDetail = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
@@ -119,7 +119,7 @@ const OrderDetail = () => {
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="h-16 w-16 bg-slate-200 rounded overflow-hidden mr-4 flex-shrink-0">
-                            <img src={`${API_URL}/images/${item.imagE_NAME}`} alt={item.name} className="h-full w-full object-cover" 
+                            <img src={`${API_IMAGE}/${item.imagE_NAME}`} alt={item.name} className="h-full w-full object-cover" 
                               onError={({ currentTarget }) => {
                                 currentTarget.onerror = null;
                                 currentTarget.src = '/images/placeholder.png';
