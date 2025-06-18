@@ -15,7 +15,7 @@ const Home = () => {
         <Banner />
       </div>
       {/* <div className="w-full my-10 px-[90px]"> */}
-      <div className="w-full my-10">
+      <div className="w-full my-10 px-[90px]">
         <CategoryList />
         <div className="justify-center items-center ">
           <BrandLogos />
