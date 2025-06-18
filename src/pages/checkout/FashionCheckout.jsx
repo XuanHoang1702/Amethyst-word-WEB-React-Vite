@@ -370,9 +370,9 @@ export default function FashionCheckout() {
         TOTAL_QUANTITY: totalQuantity,
         TOTAL_PRICE: totalPrice + shipPrice,
         NOTE: shippingMethod,
-        ORDER_STATUS: 1,
+        ORDER_STATUS: "1",
       };
-      const response = await CreateOrder(token, data);
+      const response = await CreateOrder(token, data);     
       const createdOrderId = response.result;
       setOrderId(createdOrderId);
 
