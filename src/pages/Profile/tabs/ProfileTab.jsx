@@ -238,23 +238,16 @@ export default function ProfileTab({ user }) {
 
               <div>
                 <label className="block text-sm font-medium text-slate-500 mb-1">Email</label>
-                {!isEditing ? (
-                  <div className="flex items-center">
-                    <Mail size={16} className="text-slate-400 mr-2" />
-                    <p className="text-slate-700">{formData.email}</p>
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <Mail size={16} className="text-slate-400 mr-2" />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full border border-slate-300 rounded px-3 py-2"
-                    />
-                  </div>
-                )}
+                <div className="flex items-center">
+                  <Mail size={16} className="text-slate-400 mr-2" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    disabled
+                    className="w-full border border-slate-300 rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
+                  />
+                </div>
               </div>
             </div>
 
@@ -294,26 +287,29 @@ export default function ProfileTab({ user }) {
                   )}
                 </div>
               ) : (
-                <select
-                  className="border border-slate-300 rounded px-3 py-2 w-full"
-                  value={formData.selectedAddressId || ''}
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    setFormData(prev => ({
-                      ...prev,
-                      selectedAddressId: selectedId
-                    }));
-                    const selected = address.find(item => (item.id || item.USER_ADDRESS_ID) === selectedId);
-                    setSelectedAddress(selected || null);
-                  }}
-                >
-                  <option value="" disabled>Chọn địa chỉ</option>
-                  {address.map((item) => (
-                    <option key={item.id || item.USER_ADDRESS_ID} value={item.id || item.USER_ADDRESS_ID}>
-                      {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center">
+                  <MapPin size={16} className="text-slate-400 mr-2" />
+                  <select
+                    className="border border-slate-300 rounded px-3 py-2 w-full"
+                    value={formData.selectedAddressId || ''}
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        selectedAddressId: selectedId
+                      }));
+                      const selected = address.find(item => (item.id || item.USER_ADDRESS_ID) === selectedId);
+                      setSelectedAddress(selected || null);
+                    }}
+                  >
+                    <option value="" disabled>Chọn địa chỉ</option>
+                    {address.map((item) => (
+                      <option key={item.id || item.USER_ADDRESS_ID} value={item.id || item.USER_ADDRESS_ID}>
+                        {item.typE_ADDRESS}: {item.housE_NUMBER}, {item.street}, {item.city}, {item.country} ({item.postaL_CODE})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
               </div>
             </div>
