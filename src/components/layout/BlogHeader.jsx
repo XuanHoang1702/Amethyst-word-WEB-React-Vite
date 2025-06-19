@@ -10,22 +10,22 @@ const BlogHeader = () => {
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
+          {/* <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
               <img src="/api/placeholder/40/40" alt="Logo" className="h-8 w-8 mr-2" />
               <span className="font-bold text-xl text-gray-800">FashionBlog</span>
             </Link>
-          </div>
+          </div> */}
           
-          <nav className="hidden md:flex space-x-8">
+          {/* <nav className="hidden md:flex space-x-8">
             <Link to="/" className="text-gray-600 hover:text-blue-500 font-medium">Trang chủ</Link>
             <Link to="/blog" className="text-blue-500 font-medium">Blog</Link>
             <Link to="/shop" className="text-gray-600 hover:text-blue-500 font-medium">Cửa hàng</Link>
             <Link to="/about" className="text-gray-600 hover:text-blue-500 font-medium">Giới thiệu</Link>
             <Link to="/contact" className="text-gray-600 hover:text-blue-500 font-medium">Liên hệ</Link>
-          </nav>
+          </nav> */}
           
-          <div className="hidden md:flex items-center space-x-6">
+          {/* <div className="hidden md:flex items-center space-x-6">
             <button
               className="text-gray-600 hover:text-blue-500"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -46,7 +46,7 @@ const BlogHeader = () => {
                 <option value="en">EN</option>
               </select>
             </div>
-          </div>
+          </div> */}
           
           <div className="md:hidden flex items-center space-x-4">
             <button
@@ -89,7 +89,7 @@ const BlogHeader = () => {
       </div>
       
       {/* Mobile Navigation */}
-      {isMenuOpen && (
+      {/* {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100">
           <div className="container mx-auto px-4 py-2">
             <nav className="flex flex-col space-y-2">
@@ -109,9 +109,9 @@ const BlogHeader = () => {
             </nav>
           </div>
         </div>
-      )}
+      )} */}
     </header>
   );
-};
+}; 
 
 export default BlogHeader;
