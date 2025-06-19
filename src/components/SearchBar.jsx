@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom';
 import { HiMagnifyingGlass, HiMiniXMark } from 'react-icons/hi2'
-import { ProductSearch } from '../service/Product.Service';
+import { ProductSearch, getProductImage } from '../service/Product.Service';
 import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ const SearchBar = () => {
     const searchRef = useRef(null);
     const inputRef = useRef(null);
     const navigate = useNavigate();
+    const [imageUrl, setImageUrl] = useState('');
 
     const validateSearch = (term) => {
         if (!term || term.length < 1) {
@@ -26,8 +28,8 @@ const SearchBar = () => {
         }
         return term.trim();
     };
+    
 
-  
     const debouncedSearch = useCallback(
         debounce(async (term, page) => {
             if (!term) return;
@@ -41,7 +43,6 @@ const SearchBar = () => {
                     throw new Error("Kết quả tìm kiếm không hợp lệ");
                 }
 
-                // Kiểm tra và giữ nguyên ID gốc của sản phẩm
                 const validatedResults = response.map(product => {
                     if (!product.producT_ID && product.producT_ID !== 0) {
                         console.warn("Sản phẩm thiếu ID:", product);
@@ -62,7 +63,7 @@ const SearchBar = () => {
         }, 500),
         []
     );
-    // Handle search input changes
+
     useEffect(() => {
         const validTerm = validateSearch(searchTerm);
         if (validTerm) {
@@ -151,6 +152,19 @@ const SearchBar = () => {
             setFilteredResults(searchResults);
         }
     }, [searchResults, searchTerm, showResults]);
+
+    useEffect(()=>{
+        const fetchImage = async () => {
+          try{
+            const response = await getProductImage(product.producT_ID);
+            setImageUrl(response[0].imagE_NAME);  
+          }
+          catch(error){
+            console.error('Error fetching product image:', error);
+          }
+        }
+        fetchImage();
+      },[])
 
     return (
         <div ref={searchRef} className={`flex items-center justify-center w-full transition-all duration-300 
@@ -244,20 +258,19 @@ const SearchBar = () => {
                                              setSearchTerm('');
                                          }}
                                      >
-                                            <img 
-                                                src={product.imagE_NAME ? `${API_URL}/images/${product.imagE_NAME}` : '/placeholder-image.jpg'}
-                                                // src={product.imagE_NAME ? `https://i.imgur.com/${product.imagE_NAME}.jpg` : '/placeholder-image.jpg'}
+                                            {/* <img 
+                                                src={imageUrl ? `${API_IMAGE}/${imageUrl}` : '/placeholder-image.jpg'}
                                                 alt={product.producT_NAME}
                                                 className="w-20 h-20 object-cover rounded"
                                                 onError={(e) => {
                                                     e.target.src = '/placeholder-image.jpg';
                                                 }}
-                                            />
+                                            /> */}
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-medium  truncate text-gray-500">
+                                            <div className="font-bold  truncate text-black">
                                                 {product.producT_NAME}
                                             </div>
-                                            <div className="text-sm text-gray-500">
+                                            <div className="text-sm text-purple-400">
                                                 {product.producT_PRICE?.toLocaleString()}₫
                                             </div>
                                         </div>

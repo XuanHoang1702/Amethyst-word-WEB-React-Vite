@@ -1,5 +1,3 @@
-
-
 import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
 console.log('API_URL:', API_URL);
@@ -93,7 +91,7 @@ export const createAddress = async (token, data) =>
                 housE_NUMBER: data.housE_NUMBER,
                 street: data.street,
                 city: data.city,
-                postal_CODE: data.postal_CODE,
+                postal_CODE: data.postaL_CODE,
                 country: data.country,
                 typE_ADDRESS: data.typE_ADDRESS
             }, {
@@ -135,6 +133,30 @@ export const UpdateInformation = async ( userData)=>{
     }
     catch (error) {
         throw error.response?.data || { message: error.message || 'Lỗi cập nhật thông tin' };
+    }
+}
+
+export const updateAddress = async (token, addressData) => {
+    try {
+        const response = await axios.put(`${API_URL}/api/Address/Update`, {
+            id: addressData.id,
+            housE_NUMBER: addressData.housE_NUMBER,
+            street: addressData.street,
+            city: addressData.city,
+            postal_CODE: addressData.postaL_CODE,
+            country: addressData.country,
+            typE_ADDRESS: addressData.typE_ADDRESS
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (response.data?.result?.MESSAGE) {
+            throw new Error(response.data.result.MESSAGE);
+        }
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { message: error.message || 'Lỗi cập nhật địa chỉ' };
     }
 }
 
