@@ -46,7 +46,7 @@ const App  = () => {
             <Route path="/contact" element={<ContactPage/>} />
             <Route path="/wishlist" element={<PrivateRoute element={<Wishlist />} />}/>
             <Route path="/details/:id" element={<Details />} />
-            <Route path="/checkout" element={<FashionCheckout />} />
+            <Route path="/checkout" element={<PrivateRoute element={<FashionCheckout/>} />} />
             <Route path="/blog" element={<FashionBlog />} />
             <Route path="/blog/:id" element={<BlogPostDetail />} />
             <Route path="/profile" element={<PrivateRoute element={<FashionUserProfile />}/>} />

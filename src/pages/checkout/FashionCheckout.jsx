@@ -476,7 +476,6 @@ export default function FashionCheckout() {
 
       await CreateOrderDetail(createdOrderId, transformedCartItems);
       setCurrentStep(3);
-      toast.success("Đơn hàng đã được tạo thành công!");
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("Đã có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
@@ -496,6 +495,7 @@ export default function FashionCheckout() {
 
   const handlePlaceOrder = () => {
     setCurrentStep(4);
+    toast.success("Đơn hàng đã được tạo thành công!");
   };
 
   const renderStepIndicator = () => {
