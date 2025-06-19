@@ -1,4 +1,4 @@
-   import { Edit2, Mail, MapPin, Phone, User } from 'lucide-react';
+import { Edit2, Mail, MapPin, Phone, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { GetAddress, UpdateInformation, createAddress } from '../../../service/User.Service';
 
