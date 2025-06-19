@@ -86,8 +86,8 @@ const ProductReviews= ({product})=>{
                 onClick={() => setNewReview({...newReview, rating: star})}
               >
                 <Star 
-                  size={20} 
-                  className={
+                  size={20}
+className={
                     star <= newReview.rating 
                       ? "fill-yellow-400 text-yellow-400" 
                       : "text-gray-300"
