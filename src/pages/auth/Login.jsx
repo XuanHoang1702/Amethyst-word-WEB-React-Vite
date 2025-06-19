@@ -26,7 +26,7 @@ const Login = ()=>{
           autoClose: 1000,
         });
         setTimeout(() => {
-          navigate('/home');
+          navigate('/');
           window.location.reload();
         }, 2000);
       }
