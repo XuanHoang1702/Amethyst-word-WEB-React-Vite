@@ -120,10 +120,10 @@ const ProductReviews= ({product})=>{
             <div key={review.id} className="border-b pb-4">
               <div className="flex justify-between">
                 <div>
-                  <h4 className="font-medium">{review.name}</h4>
+                  <h4 className="font-medium">{review.useR_LAST_NAME}</h4>
                   <div className="flex items-center">
                     <div className="flex mr-2">
-                      {renderStars(review.rating)}
+                      {renderStars(review.rate)}
                     </div>
                     <span className="text-sm text-gray-500">{review.date}</span>
                   </div>

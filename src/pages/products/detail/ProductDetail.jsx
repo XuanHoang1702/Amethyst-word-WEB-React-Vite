@@ -161,7 +161,7 @@ const ProductDetail = ({ id }) => {
   return (
     <div className="bg-white">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col md:flex-row">
             <div className="hidden md:flex flex-col space-y-2 mr-6">
               {selectImage?.images?.map((img, idx) => (
@@ -221,26 +221,25 @@ const ProductDetail = ({ id }) => {
             <div className="mb-6">
               <h3 className="text-2xl text-purple-600 font-bold mb-3">Chọn màu</h3>
               <div className="flex space-x-3">
-  {colors.map((color) => {
-    const colorCode = color.coloR_NAME || '#ccc'; // Giờ coloR_NAME đã là mã Hex
-    return (
-      <button
-        key={color.id}
-        className={`w-8 h-8 rounded-full border-2 ${
-          selectedColor?.id === color.id ? 'border-blue-500' : 'border-gray-300'
-        }`}
-        style={{ backgroundColor: colorCode }}
-        onClick={() => setSelectedColor(color)}
-        title={colorCode}
-      >
-        {colorCode === '#FFFFFF' && (
-          <div className="w-full h-full rounded-full border border-gray-300"></div>
-        )}
-      </button>
-    );
-  })}
-</div>
-
+                {colors.map((color) => {
+                  const colorCode = color.coloR_NAME || '#ccc'; // Giờ coloR_NAME đã là mã Hex
+                  return (
+                    <button
+                      key={color.id}
+                      className={`w-8 h-8 rounded-full border-2 ${
+                        selectedColor?.id === color.id ? 'border-blue-500' : 'border-gray-300'
+                      }`}
+                      style={{ backgroundColor: colorCode }}
+                      onClick={() => setSelectedColor(color)}
+                      title={colorCode}
+                    >
+                      {colorCode === '#FFFFFF' && (
+                        <div className="w-full h-full rounded-full border border-gray-300"></div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             <div className="mb-6">
               <h3 className="text-2xl text-purple-600 font-bold mb-3">Chọn kích cỡ</h3>
@@ -273,11 +272,15 @@ const ProductDetail = ({ id }) => {
             </div>
           </div>
           <div className='mt-2 text-start px-3 py-4'>
-          <h3 className="text-2xl text-purple-600 font-bold mb-3">Mô tả sản phẩm </h3>
-          <span className="text-black-300 mb-6">{product.content || product.producT_DETAIL}</span>
+          <h3 className="text-2xl text-purple-600 font-bold">Mô tả sản phẩm </h3>
           </div>
         </div>
       </div>
+                <div className="text-gray-700 space-y-4 leading-relaxed">
+            {product.content?.split('.').filter(p => p.trim() !== '').map((paragraph, idx) => (
+              <p key={idx}>{paragraph.trim()}.</p>
+            ))}
+          </div>
     </div>
   );
 };
