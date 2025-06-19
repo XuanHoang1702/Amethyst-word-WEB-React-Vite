@@ -1,4 +1,3 @@
-
 import { Check, CheckCircle, ChevronLeft, ChevronRight, Clock, CreditCard, Home, ShoppingBag, Truck, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +10,7 @@ import WebSocketService from '../../service/WebSocket.Service';
 const API_URL = import.meta.env.VITE_API_URL;
 const IMAGE_URL = import.meta.env.VITE_API_IMAGE;
 
-const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
+const AddressStep = ({ user = {}, setCurrentStep = () => {}, defaultAddress }) => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -20,6 +19,15 @@ const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
   const [selectedWard, setSelectedWard] = useState("");
   const [homeAddress, setHomeAddress] = useState("");
   const [showMap, setShowMap] = useState(false);
+
+  useEffect(() => {
+    if (defaultAddress) {
+      setHomeAddress(defaultAddress.homeAddress || "");
+      setSelectedProvince(defaultAddress.province || "");
+      setSelectedDistrict(defaultAddress.district || "");
+      setSelectedWard(defaultAddress.ward || "");
+    }
+  }, [defaultAddress]);
 
   const fullAddress = `${homeAddress}, ${selectedWard}, ${selectedDistrict}, ${selectedProvince}`;
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
@@ -111,7 +119,7 @@ const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
             readOnly
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block text-gray-700 mb-2">Tỉnh / Thành phố</label>
           <select
             className="w-full p-3 border border-gray-300 rounded-lg"
@@ -170,7 +178,6 @@ const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
               value={fullAddress}
               readOnly
             />
-           
           </div>
         </div>
         {showMap && selectedProvince && (
@@ -189,13 +196,87 @@ const AddressStep = ({ user = {}, setCurrentStep = () => {} }) => {
           </div>
         )}
       </div>
+      {/* Kết thúc grid nhập địa chỉ, đóng div ở đây để tránh lồng vào grid readonly */}
+      </div>
+ 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label className="block text-gray-700 mb-2">Số nhà</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={defaultAddress?.homeAddress || ""}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Đường</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={defaultAddress?.street || ""}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Tỉnh/Thành phố</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={defaultAddress?.city || ""}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Mã bưu điện</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={defaultAddress?.postalCode || ""}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Quốc gia</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={defaultAddress?.country || ""}
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700 mb-2">Loại địa chỉ</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={defaultAddress?.type || ""}
+            readOnly
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label className="block text-gray-700 mb-2">Địa chỉ đầy đủ</label>
+          <input
+            type="text"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            value={[
+              defaultAddress?.homeAddress,
+              defaultAddress?.street,
+              defaultAddress?.city,
+              defaultAddress?.postalCode,
+              defaultAddress?.country
+            ].filter(Boolean).join(", ")}
+            readOnly
+          />
+        </div>
+      </div>
       <div className="flex justify-between mt-6">
-        <button
+        {/* <button
               onClick={toggleMap}
               className="bg-[#6666e5] text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
             >
              {showMap ? "Ẩn bản đồ " : "Xem bản đồ"}
-            </button>
+            </button> */}
         <button
           onClick={() => setCurrentStep(2)}
           className="bg-[#6666e5] text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
@@ -297,6 +378,14 @@ export default function FashionCheckout() {
   const [orderId, setOrderId] = useState("");
   const [message, setMessage] = useState('');
   const [orderStatus, setOrderStatus] = useState(null);
+  const defaultAddress = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('userAddress'));
+    } catch {
+      return null;
+    }
+  })();
+  const defaultAddressId = localStorage.getItem('defaultAddressId');
 
   const handleHome = () => {
     navigate('/');
@@ -361,12 +450,12 @@ export default function FashionCheckout() {
         toast.error("Vui lòng đăng nhập để đặt hàng.");
         return;
       }
-      if (!address.length) {
+      if (!address.length && !defaultAddressId) {
         toast.error("Vui lòng thêm địa chỉ giao hàng.");
         return;
       }
       const data = {
-        ADDRESS_ID: address[0].id,
+        ADDRESS_ID: defaultAddressId || (address[0]?.id),
         TOTAL_QUANTITY: totalQuantity,
         TOTAL_PRICE: totalPrice + shipPrice,
         NOTE: shippingMethod,
@@ -387,7 +476,6 @@ export default function FashionCheckout() {
 
       await CreateOrderDetail(createdOrderId, transformedCartItems);
       setCurrentStep(3);
-      toast.success("Đơn hàng đã được tạo thành công!");
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("Đã có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
@@ -407,6 +495,7 @@ export default function FashionCheckout() {
 
   const handlePlaceOrder = () => {
     setCurrentStep(4);
+    toast.success("Đơn hàng đã được tạo thành công!");
   };
 
   const renderStepIndicator = () => {
@@ -584,12 +673,14 @@ export default function FashionCheckout() {
           </div>
         </div>
         <div className="flex justify-between mt-6">
-          <button
+          {/* <button
             onClick={() => setCurrentStep(2)}
             className="border border-black text-gray-600 rounded-lg px-6 py-3 hover:text-black transition-colors"
           >
-            <ChevronLeft size={16} className="inline ml-1" /> Quay lại
-          </button>
+            <ChevronLeft size={16} className="inline ml-1"
+            
+             /> Quay lại
+          </button> */}
           <button
             onClick={handlePlaceOrder}
             className="bg-[#6666e5] text-white px-10 py-3 rounded-lg hover:bg-gray-800 transition-colors"
@@ -683,7 +774,7 @@ export default function FashionCheckout() {
         {renderStepIndicator()}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className={`${currentStep === 4 ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
-            {currentStep === 1 && <AddressStep user={user} setCurrentStep={setCurrentStep} />}
+            {currentStep === 1 && <AddressStep user={user} setCurrentStep={setCurrentStep} defaultAddress={defaultAddress} />}
             {currentStep === 2 && <ShippingStep setCurrentStep={setCurrentStep} setShippingMethod={setShippingMethod} setShipPrice={setShipPrice} handleOrderAndDetail={handleOrderAndDetail} />}
             {currentStep === 3 && renderPaymentStep()}
             {currentStep === 4 && renderOrderConfirmation()}
