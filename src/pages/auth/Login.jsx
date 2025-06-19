@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import bg1 from '../../assets/image/phoi-do-voi-mau-tim-pastel_672db6744d5545cfb058f353237dd4d4.webp';
 import { login } from "../../service/User.Service";
+const API_URL = import.meta.env.VITE_API_URL;
 const Login = ()=>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +27,7 @@ const Login = ()=>{
           autoClose: 1000,
         });
         setTimeout(() => {
-          navigate('/home');
+          navigate('/');
           window.location.reload();
         }, 2000);
       }
@@ -61,7 +62,7 @@ const Login = ()=>{
   const handleGoogleLoginSuccess = (credentialResponse) => {
     console.log("Google Login Success:", credentialResponse);
     alert("Đăng nhập bằng Google thành công!");
-    fetch("https://localhost:5000/api/User/GoogleResponse", {
+    fetch(`${API_URL}/api/User/GoogleResponse`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +76,7 @@ const Login = ()=>{
     .catch(error => console.error("Lỗi khi gửi dữ liệu:", error));
   };
   
+
 
 
   const handleGoogleLoginFailure = (error) => {
